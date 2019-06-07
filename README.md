@@ -16,5 +16,7 @@ Contact: Lorenzo Picinali (l.picinali@imperial.ac.uk) and Arcadio Reyes-Lecuona 
 
 ## Acknowledgements
 
-We would like to acknowledge Angel Rodríguez-Rivero for his help in testing the first release of this software. 
+![European Union](docs/images/EU_flag.png "European Union") This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
+
+We would also like to acknowledge Angel Rodríguez-Rivero for his help in testing the first release of this software. 
 
