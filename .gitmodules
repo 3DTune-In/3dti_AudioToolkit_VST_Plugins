@@ -1,3 +1,6 @@
 [submodule "libs/JUCE"]
 	path = libs/JUCE
 	url = https://github.com/WeAreROLI/JUCE.git
+[submodule "libs/3dti_AudioToolkit"]
+	path = libs/3dti_AudioToolkit
+	url = https://github.com/3DTune-In/3dti_AudioToolkit.git
