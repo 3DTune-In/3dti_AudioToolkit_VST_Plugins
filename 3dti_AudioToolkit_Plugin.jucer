@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="KqPFID" name="3D Tune-In Toolkit" projectType="audioplug"
-              jucerVersion="5.4.3" headerPath="../../libs/3dti_AudioToolkit/3dti_Toolkit&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include&#10;"
+              jucerVersion="5.4.5" headerPath="../../libs/3dti_AudioToolkit/3dti_Toolkit&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include&#10;"
               defines="_3DTI_AXIS_CONVENTION_BINAURAL_TEST_APP&#10;_3DTI_ANGLE_CONVENTION_LISTEN&#10;"
               pluginVST3Category="Spatial" pluginRTASCategory="512" pluginAAXCategory="512"
               pluginVSTCategory="kPlugCategSpacializer" pluginAUMainType="'aupn'"
