@@ -18,6 +18,7 @@
 * \b Acknowledgement: This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
 */
 
+#include <thread>
 #include "Utils.h"
 #include "Toolkit3dtiProcessor.h"
 
@@ -152,6 +153,7 @@ void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf, const File& b
     } else {
       // Failed to aquire lock for assigning new implementation
       // Try again
+      std::this_thread::yield();
     }
   }
 }
