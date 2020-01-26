@@ -6,7 +6,7 @@
               pluginVST3Category="Spatial" pluginRTASCategory="512" pluginAAXCategory="512"
               pluginVSTCategory="kPlugCategSpacializer" pluginAUMainType="'aupn'"
               pluginFormats="buildVST" pluginManufacturer="3D Tune-In" aaxIdentifier="eu.3d-tune-in.toolkitplugin"
-              bundleIdentifier="eu.3d-tune-in.toolkitplugin" version="1.0.0"
+              bundleIdentifier="eu.3d-tune-in.toolkitplugin" version="1.0.1"
               companyWebsite="http://3d-tune-in.eu">
   <MAINGROUP id="J6xy11" name="3D Tune-In Toolkit">
     <GROUP id="{7E66D3A7-5BFC-CA2F-8ED8-8DEFC273D8EA}" name="Resources">
