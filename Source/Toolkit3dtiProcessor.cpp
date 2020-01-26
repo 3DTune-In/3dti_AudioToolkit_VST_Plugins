@@ -21,8 +21,6 @@
 #include "Utils.h"
 #include "Toolkit3dtiProcessor.h"
 
-std::mutex mtx;
-
 void copySourceSettings(CSingleSourceRef oldSource, CSingleSourceRef newSource);
 
 ScopedPointer<Toolkit3dtiProcessorImpl> CreateImpl(double sampleRate, int samplesPerBlock) {

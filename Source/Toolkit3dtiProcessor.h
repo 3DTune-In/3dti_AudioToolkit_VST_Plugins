@@ -101,6 +101,8 @@ public:
   AudioParameterFloat reverbDistanceAttenuation; // ranges from -6 to 0 dB
   
 private:
+    
+  std::mutex mtx;
   
   void reset(ScopedPointer<Toolkit3dtiProcessorImpl>, const File& hrtf, const File& brir);
   void updateParameters(Toolkit3dtiProcessorImpl& impl);
