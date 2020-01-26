@@ -144,7 +144,8 @@ void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf, const File& b
   while (true) {
     if ( mtx.try_lock() ) {
       
-      pimpl.reset(impl.get());
+      pimpl = std::move(impl);
+      
       mtx.unlock();
       break;
       
