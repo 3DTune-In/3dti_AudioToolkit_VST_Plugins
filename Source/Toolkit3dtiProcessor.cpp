@@ -159,7 +159,7 @@ void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf, const File& b
 }
 
 void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
-  if ( pimpl.get() == nullptr ) {
+  if ( pimpl == nullptr ) {
     return;
   }
   
@@ -169,7 +169,7 @@ void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& 
     return;
   }
   
-  updateParameters(*pimpl.get());
+  updateParameters(*pimpl);
 
   // Process audio
   auto bufferSize = buffer.getNumSamples();
