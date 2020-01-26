@@ -23,8 +23,8 @@
 
 void copySourceSettings(CSingleSourceRef oldSource, CSingleSourceRef newSource);
 
-ScopedPointer<Toolkit3dtiProcessorImpl> CreateImpl(double sampleRate, int samplesPerBlock) {
-  ScopedPointer<Toolkit3dtiProcessorImpl> impl( new Toolkit3dtiProcessorImpl );
+Toolkit3dtiProcessor::Impl::Ptr CreateImpl(double sampleRate, int samplesPerBlock) {
+  Toolkit3dtiProcessor::Impl::Ptr impl( new Toolkit3dtiProcessor::Impl );
   
   // Declaration and initialization of stereo buffer
   impl->mOutputBuffer.left.resize(samplesPerBlock);
@@ -94,10 +94,10 @@ void Toolkit3dtiProcessor::setup(double sampleRate, int samplesPerBlock) {
   int brirIndex = pimpl ? pimpl->brirIndex : 0;
   File brir = getBundledBRIR(brirIndex, sampleRate);
   
-  reset(impl, hrtf, brir);
+  reset(std::move(impl), hrtf, brir);
 }
 
-void Toolkit3dtiProcessor::reset(ScopedPointer<Toolkit3dtiProcessorImpl> impl, const File& hrtf, const File& brir) {
+void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf, const File& brir) {
   if ( !hrtf.existsAsFile() ) {
     DBG("HRTF file doesn't exist");
   }
@@ -130,7 +130,7 @@ void Toolkit3dtiProcessor::reset(ScopedPointer<Toolkit3dtiProcessorImpl> impl, c
   
   // Add a sound source
   auto position = getSourcePosition();
-  addSoundSource(*impl, position);
+  addSoundSource(*impl.get(), position);
   
   if ( pimpl != nullptr ) {
     for ( int i = 0; i < pimpl->sources.size(); i++ ) {
@@ -144,7 +144,7 @@ void Toolkit3dtiProcessor::reset(ScopedPointer<Toolkit3dtiProcessorImpl> impl, c
   while (true) {
     if ( mtx.try_lock() ) {
       
-      pimpl = impl;
+      pimpl.reset(impl.get());
       mtx.unlock();
       break;
       
@@ -166,7 +166,7 @@ void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& 
     return;
   }
   
-  updateParameters(*pimpl);
+  updateParameters(*pimpl.get());
 
   // Process audio
   auto bufferSize = buffer.getNumSamples();
@@ -235,7 +235,7 @@ void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& 
   mtx.unlock();
 }
 
-void Toolkit3dtiProcessor::updateParameters(Toolkit3dtiProcessorImpl& impl) {
+void Toolkit3dtiProcessor::updateParameters(Impl& impl) {
   if ( enableCustomizedITD ) {
     impl.mListener->EnableCustomizedITD();
   } else {
@@ -283,7 +283,7 @@ bool Toolkit3dtiProcessor::loadHRTF(const File& file) {
 }
 
 // TODO: Move to private implmentation
-bool Toolkit3dtiProcessor::loadHRTF(Toolkit3dtiProcessorImpl& impl, const File& file) {
+bool Toolkit3dtiProcessor::loadHRTF(Impl& impl, const File& file) {
   DBG("Loading HRTF: " << file.getFullPathName());
   bool success = false;
   success = loadResourceFile(impl, file, true);
@@ -296,7 +296,7 @@ bool Toolkit3dtiProcessor::loadHRTF_ILD(const File& file) {
   return loadHRTF_ILD(*pimpl, file);
 }
 
-bool Toolkit3dtiProcessor::loadHRTF_ILD(Toolkit3dtiProcessorImpl& impl, const File& file) {
+bool Toolkit3dtiProcessor::loadHRTF_ILD(Impl& impl, const File& file) {
   auto path = file.getFullPathName().toStdString();
   DBG("Loading HRTF ILD: " << path);
   auto fileSampleRate = ILD::GetSampleRateFrom3dti(path);
@@ -327,7 +327,7 @@ bool Toolkit3dtiProcessor::loadBRIR(const File& file) {
   return true;
 }
 
-bool Toolkit3dtiProcessor::loadBRIR(Toolkit3dtiProcessorImpl &impl, const File& file) {
+bool Toolkit3dtiProcessor::loadBRIR(Impl &impl, const File& file) {
   DBG("Loading BRIR: " << file.getFullPathName());
   bool success = loadResourceFile(impl, file, false);
   impl.brirIndex = brirPathToBundledIndex(file);
@@ -335,7 +335,7 @@ bool Toolkit3dtiProcessor::loadBRIR(Toolkit3dtiProcessorImpl &impl, const File& 
   return success;
 }
 
-bool Toolkit3dtiProcessor::loadResourceFile(Toolkit3dtiProcessorImpl &impl, const File& file, bool isHRTF) {
+bool Toolkit3dtiProcessor::loadResourceFile(Impl &impl, const File& file, bool isHRTF) {
   int sampleRate = impl.mCore.GetAudioState().sampleRate;
   int fileSampleRate = checkResourceSampleRate(file, isHRTF);
   // TODO: Throw exception / return error and trigger warning from editor
@@ -356,7 +356,7 @@ bool Toolkit3dtiProcessor::loadResourceFile(Toolkit3dtiProcessorImpl &impl, cons
   return false;
 }
 
-void Toolkit3dtiProcessor::addSoundSource(Toolkit3dtiProcessorImpl &impl, Common::CVector3& position) {
+void Toolkit3dtiProcessor::addSoundSource(Impl &impl, Common::CVector3& position) {
   if ( impl.sources.size() == 1 ) {
     DBG("Only one source allowed at this time.");
     return;
