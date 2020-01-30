@@ -33,20 +33,24 @@ using CEnvironmentRef = shared_ptr<Binaural::CEnvironment>;
 using CSingleSourceRef = shared_ptr<Binaural::CSingleSourceDSP>;
 using CMonoBufferPairf = Common::CEarPair<CMonoBuffer<float>>;
 
-struct Toolkit3dtiProcessorImpl {
-  Binaural::CCore                 mCore;
-  CEnvironmentRef                 mEnvironment;
-  CListenerRef                    mListener;
-  CMonoBufferPairf                mOutputBuffer;
-  std::vector<CSingleSourceRef>   sources;
-  int  hrtfIndex;
-  int  brirIndex;
-  File hrtfPath;
-  File brirPath;
-};
-
 class Toolkit3dtiProcessor {
 public:
+    
+  struct Impl {
+    using Ptr = std::unique_ptr<Impl>;
+        
+    Binaural::CCore                 mCore;
+    CEnvironmentRef                 mEnvironment;
+    CListenerRef                    mListener;
+    CMonoBufferPairf                mOutputBuffer;
+    std::vector<CSingleSourceRef>   sources;
+    int  hrtfIndex;
+    int  brirIndex;
+    File hrtfPath;
+    File brirPath;
+  };
+  
+  //============================================================================
   Toolkit3dtiProcessor();
   
   //============================================================================
@@ -101,17 +105,19 @@ public:
   AudioParameterFloat reverbDistanceAttenuation; // ranges from -6 to 0 dB
   
 private:
+    
+  std::mutex mtx;
   
-  void reset(ScopedPointer<Toolkit3dtiProcessorImpl>, const File& hrtf, const File& brir);
-  void updateParameters(Toolkit3dtiProcessorImpl& impl);
-  void addSoundSource(Toolkit3dtiProcessorImpl& impl, Common::CVector3& position);
-  bool loadResourceFile(Toolkit3dtiProcessorImpl& impl, const File& file, bool isHRTF);
-  bool loadHRTF(Toolkit3dtiProcessorImpl& impl, const File& file);
-  bool loadHRTF_ILD(Toolkit3dtiProcessorImpl& impl, const File& file);
-  bool loadBRIR(Toolkit3dtiProcessorImpl& impl, const File& file);
+  void reset(Impl::Ptr p, const File& hrtf, const File& brir);
+  void updateParameters(Impl& impl);
+  void addSoundSource(Impl& impl, Common::CVector3& position);
+  bool loadResourceFile(Impl& impl, const File& file, bool isHRTF);
+  bool loadHRTF(Impl& impl, const File& file);
+  bool loadHRTF_ILD(Impl& impl, const File& file);
+  bool loadBRIR(Impl& impl, const File& file);
   
   //============================================================================
-  ScopedPointer<Toolkit3dtiProcessorImpl> pimpl;
+  Impl::Ptr pimpl;
   
   Common::CTransform mTransform;    // Source transform
   
