@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "3DTI Toolkit VST"
-#define MyAppVersion "1.0.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "3D Tune-In"
 #define MyAppURL "https://www.3d-tune-in.eu"
 #define MyAppExeName "3DTI-VST-Installer.exe"
@@ -23,7 +23,7 @@ UsePreviousAppDir=no
 DisableDirPage=no
 DefaultDirName=C:/VSTPlugins
 CreateAppDir=no       
-OutputBaseFilename=3DTI_Toolkit_VST_plugin_WIN_Installer-v0.7.4
+OutputBaseFilename=3DTI_Toolkit_VST_plugin_WIN_Installer-v1.0.1
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
