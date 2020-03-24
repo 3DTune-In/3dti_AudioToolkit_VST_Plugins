@@ -279,7 +279,7 @@ void Toolkit3dtiPluginAudioProcessor::updateHostParameters() {
     if ( AudioProcessorParameter* p = treeState.getParameter(parameter.first) ) {
       const float newValue = treeState.getParameterRange(parameter.first).convertTo0to1(parameter.second);
       
-      if ( p->getValue() != newValue )
+      if ( fabs(p->getValue() - newValue) > std::numeric_limits<float>::epsilon() )
         p->setValueNotifyingHost(newValue);
     }
   }
