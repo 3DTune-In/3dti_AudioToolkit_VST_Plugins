@@ -52,22 +52,22 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
 {
   auto position = getCore().getSourcePosition();
   
-  treeState.createAndAddParameter("Azimuth", "Azimuth", "", NormalisableRange<float>(-180.f, 180.f), position.GetAzimuthDegrees(), nullptr, nullptr);
+  treeState.createAndAddParameter("Azimuth", "Azimuth", "", NormalisableRange<float>(-180.f, 180.f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr);
   treeState.addParameterListener("Azimuth", this);
   
-  treeState.createAndAddParameter("Elevation", "Elevation", "", NormalisableRange<float>(-89.f, 89.f), position.GetElevationDegrees(), nullptr, nullptr);
+  treeState.createAndAddParameter("Elevation", "Elevation", "", NormalisableRange<float>(-89.f, 89.f), position.GetElevationDegrees(), [](float value) { return String (value, 1); }, nullptr);
   treeState.addParameterListener("Elevation", this);
 
-  treeState.createAndAddParameter("Distance", "Distance", "", NormalisableRange<float>(0.f, 40.f), position.GetDistance(), nullptr, nullptr);
+  treeState.createAndAddParameter("Distance", "Distance", "", NormalisableRange<float>(0.f, 40.f), position.GetDistance(), [](float value) { return String (value, 2); }, nullptr);
   treeState.addParameterListener("Distance", this);
   
-  treeState.createAndAddParameter("X", "X", "", NormalisableRange<float>(-40.f, 40.f), position.x, nullptr, nullptr);
+  treeState.createAndAddParameter("X", "X", "", NormalisableRange<float>(-40.f, 40.f), position.x, [](float value) { return String (value, 2); }, nullptr);
   treeState.addParameterListener("X", this);
   
-  treeState.createAndAddParameter("Y", "Y", "", NormalisableRange<float>(-40.f, 40.f), position.y, nullptr, nullptr);
+  treeState.createAndAddParameter("Y", "Y", "", NormalisableRange<float>(-40.f, 40.f), position.y, [](float value) { return String (value, 2); }, nullptr);
   treeState.addParameterListener("Y", this);
   
-  treeState.createAndAddParameter("Z", "Z", "", NormalisableRange<float>(-40.f, 40.f), position.z, nullptr, nullptr);
+  treeState.createAndAddParameter("Z", "Z", "", NormalisableRange<float>(-40.f, 40.f), position.z, [](float value) { return String (value, 2); }, nullptr);
   treeState.addParameterListener("Z", this);
   
   treeState.createAndAddParameter("Source Attenuation", "Src Attenuation", "", getCore().sourceDistanceAttenuation.range, getCore().sourceDistanceAttenuation.get(), nullptr, nullptr);
@@ -88,7 +88,7 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
   addBooleanHostParameter(treeState, "Custom Head", getCore().enableCustomizedITD);
   treeState.addParameterListener("Custom Head", this);
   
-  treeState.createAndAddParameter("Head Circumference", "Head Circumference", "", NormalisableRange<float>(getCore().headCircumference.getRange().getStart(), getCore().headCircumference.getRange().getEnd()), getCore().headCircumference.get(), nullptr, nullptr);
+  treeState.createAndAddParameter("Head Circumference", "Head Circumference", "", NormalisableRange<float>(getCore().headCircumference.getRange().getStart(), getCore().headCircumference.getRange().getEnd()), getCore().headCircumference.get(), [](float value) { return String (value, 0); }, nullptr);
   treeState.addParameterListener("Head Circumference", this);
   
   addBooleanHostParameter(treeState, "Enable Anechoic", true);
@@ -97,10 +97,10 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
   addBooleanHostParameter(treeState, "Enable Reverb", true);
   treeState.addParameterListener("Enable Reverb", this);
   
-  treeState.createAndAddParameter("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()-1), 0, nullptr, nullptr);
+  treeState.createAndAddParameter("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr);
   treeState.addParameterListener("HRTF", this);
   
-  treeState.createAndAddParameter("BRIR", "BRIR", "", NormalisableRange<float>(0, BundledBRIRs.size()-1), 0, nullptr, nullptr);
+  treeState.createAndAddParameter("BRIR", "BRIR", "", NormalisableRange<float>(0, BundledBRIRs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr);
   treeState.addParameterListener("BRIR", this);
 
   treeState.state = ValueTree("3D Tune-In Parameters");
