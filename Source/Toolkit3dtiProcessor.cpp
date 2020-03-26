@@ -64,8 +64,6 @@ Toolkit3dtiProcessor::Toolkit3dtiProcessor()
 #endif
   
   mTransform.SetPosition( Common::CVector3(1,0,0) );
-  
-  setup(44100.0, 512);
 }
 
 void Toolkit3dtiProcessor::setup(double sampleRate, int samplesPerBlock) {
@@ -79,7 +77,7 @@ void Toolkit3dtiProcessor::setup(double sampleRate, int samplesPerBlock) {
       return;
     }
   }
-  
+
   // Create new internal implementation
   auto impl = CreateImpl(sampleRate, samplesPerBlock);
   
@@ -141,34 +139,19 @@ void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf, const File& b
     }
   }
   
+  const ScopedLock sl (loadLock);
   // Assign the new private implementation
-  while (true) {
-    if ( mtx.try_lock() ) {
-      
-      pimpl = std::move(impl);
-      
-      mtx.unlock();
-      break;
-      
-    } else {
-      // Failed to aquire lock for assigning new implementation
-      // Try again
-      std::this_thread::yield();
-    }
-  }
+  pimpl = std::move(impl);
 }
 
 void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
-  if ( pimpl == nullptr ) {
+  if ( pimpl == nullptr) {
+    buffer.clear();
     return;
   }
   
-  // Try to aquire lock
-  // If it fails we are in internal setup process
-  if ( !mtx.try_lock() ) {
-    return;
-  }
-  
+  const ScopedTryLock sl (loadLock);
+    
   updateParameters(*pimpl);
 
   // Process audio
@@ -234,8 +217,6 @@ void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& 
         buffer.getWritePointer(0)[i] = pimpl->mOutputBuffer.left[i];
     }
   }
-  
-  mtx.unlock();
 }
 
 void Toolkit3dtiProcessor::updateParameters(Impl& impl) {

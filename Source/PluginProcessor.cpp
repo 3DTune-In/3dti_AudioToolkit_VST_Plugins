@@ -48,14 +48,16 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
                      #endif
                        ),
 #endif
-      treeState(*this, nullptr)
+      treeState(*this, nullptr),
+      inFifo (2, 512),
+      outFifo(2, 512)
 {
   auto position = getCore().getSourcePosition();
   
   treeState.createAndAddParameter("Azimuth", "Azimuth", "", NormalisableRange<float>(-180.f, 180.f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr);
   treeState.addParameterListener("Azimuth", this);
   
-  treeState.createAndAddParameter("Elevation", "Elevation", "", NormalisableRange<float>(-89.f, 89.f), position.GetElevationDegrees(), [](float value) { return String (value, 1); }, nullptr);
+  treeState.createAndAddParameter("Elevation", "Elevation", "", NormalisableRange<float>(-89.f, 89.f), position.GetElevationDegrees(), [](float value) { return String (value, 0); }, nullptr);
   treeState.addParameterListener("Elevation", this);
 
   treeState.createAndAddParameter("Distance", "Distance", "", NormalisableRange<float>(0.f, 40.f), position.GetDistance(), [](float value) { return String (value, 2); }, nullptr);
@@ -174,7 +176,15 @@ void Toolkit3dtiPluginAudioProcessor::changeProgramName (int index, const String
 
 //==============================================================================
 void Toolkit3dtiPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
-  getCore().setup(sampleRate, samplesPerBlock);
+  inFifo.clear();
+  inFifo.setSize (getTotalNumOutputChannels(), samplesPerBlock * 2);
+  outFifo.clear();
+  outFifo.setSize(getTotalNumOutputChannels(), samplesPerBlock * 2);
+   
+  scratchBuffer.setSize(getTotalNumOutputChannels(), samplesPerBlock);
+    
+  getCore().setup (sampleRate, samplesPerBlock);
+  
   startTimer(60);
 }
 
@@ -214,17 +224,50 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
   auto inChannels  = getTotalNumInputChannels();
   auto outChannels = getTotalNumOutputChannels();
 
-  // In case we have more outputs than inputs, this code clears any output
-  // channels that didn't contain input data, (because these aren't
-  // guaranteed to be empty - they may contain garbage).
-  // This is here to avoid people getting screaming feedback
-  // when they first compile a plugin, but obviously you don't need to keep
-  // this code if your algorithm always overwrites all the output channels.
-  for (auto i = inChannels; i < outChannels; ++i) {
-      buffer.clear(i, 0, buffer.getNumSamples());
-  }
+  for (auto i = inChannels; i < outChannels; ++i)
+    buffer.clear(i, 0, buffer.getNumSamples());
   
-  getCore().processBlock(buffer, midiMessages);
+  int bufferSize = buffer.getNumSamples();
+    
+  // Some hosts send buffers of varying sizes so we maintain
+  // an internal buffer to pass the correct size to the 3dti core
+  int index = 0;
+  while (index < bufferSize)
+  {
+    int chunkSize   = std::min(128, bufferSize-index);
+    int numChannels = buffer.getNumChannels();
+      
+    AudioBuffer<float> temp(numChannels, chunkSize);
+      
+    for (int ch = 0; ch < buffer.getNumChannels(); ch++)
+      temp.copyFrom(ch, 0, buffer, ch, index, chunkSize);
+      
+    inFifo.addToFifo(temp);
+      
+    if (inFifo.getNumReady() >= getBlockSize())
+    {
+      inFifo.readFromFifo(scratchBuffer, getBlockSize());
+        
+      // Main process
+      getCore().processBlock(scratchBuffer, midiMessages);
+          
+      outFifo.addToFifo(scratchBuffer);
+    }
+      
+    index += chunkSize;
+  }
+    
+  if (outFifo.getNumReady() < bufferSize)
+  {
+    int diff = bufferSize - outFifo.getNumReady();
+    outFifo.addSilenceToFifo(diff);
+
+    // Update the host latency
+    int latency = getLatencySamples() + diff;
+    setLatencySamples(latency);
+  }
+    
+  outFifo.readFromFifo(buffer);
 }
 
 //==============================================================================

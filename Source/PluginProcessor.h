@@ -20,8 +20,9 @@
 
 #pragma once
 
+#include <JuceHeader.h>
+#include <ff_buffers/ff_buffers_AudioBufferFIFO.h>
 #include "Toolkit3dtiProcessor.h"
-#include "../JuceLibraryCode/JuceHeader.h"
 
 //==============================================================================
 /**
@@ -72,13 +73,17 @@ public:
   AudioProcessorValueTreeState treeState;
   
 private:
-  Toolkit3dtiProcessor mCore;
   
   void timerCallback() override { updateHostParameters(); }
   
   void updateHostParameters();
   
   void parameterChanged(const String& parameterID, float newValue) override;
+    
+  AudioBuffer<float> scratchBuffer;
+  AudioBufferFIFO<float> inFifo, outFifo;
+    
+  Toolkit3dtiProcessor mCore;
   
   //==============================================================================
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Toolkit3dtiPluginAudioProcessor)

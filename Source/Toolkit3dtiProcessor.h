@@ -26,7 +26,7 @@
 #include <BRIR/BRIRFactory.h>
 #include <BRIR/BRIRCereal.h>
 #include <ILD/ILDCereal.h>
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 
 using CListenerRef = shared_ptr<Binaural::CListener>;
 using CEnvironmentRef = shared_ptr<Binaural::CEnvironment>;
@@ -105,8 +105,7 @@ public:
   AudioParameterFloat reverbDistanceAttenuation; // ranges from -6 to 0 dB
   
 private:
-    
-  std::mutex mtx;
+  CriticalSection loadLock;
   
   void reset(Impl::Ptr p, const File& hrtf, const File& brir);
   void updateParameters(Impl& impl);
