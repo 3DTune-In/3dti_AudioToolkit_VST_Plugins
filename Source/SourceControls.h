@@ -61,7 +61,7 @@ public:
     zLabel.setJustificationType( Justification::left );
     addAndMakeVisible( zLabel );
     
-    azimuthSlider.setRange( -180.f, 180.f, 2 );
+    azimuthSlider.setRange( 0.0f, 359.99f, 2 );
     azimuthSlider.setTextValueSuffix(" deg");
     azimuthSlider.setTextBoxStyle( Slider::TextBoxRight, false, 65, 24 );
     azimuthSlider.addListener( this );
@@ -105,7 +105,7 @@ public:
   void updateGui() {
     auto position = mCore.getSourcePosition();
     distanceSlider.setValue(position.GetDistance(), dontSendNotification);
-    azimuthSlider.setValue(mapAzimuthToSliderValue(position.GetAzimuthDegrees()), dontSendNotification);
+    azimuthSlider.setValue(position.GetAzimuthDegrees(), dontSendNotification);
     elevationSlider.setValue(mapElevationToSliderValue(position.GetElevationDegrees()), dontSendNotification);
     xSlider.setValue( position.x, dontSendNotification );
     ySlider.setValue( position.y, dontSendNotification );
@@ -138,7 +138,7 @@ public:
     auto position = mCore.getSourcePosition();
     
     if ( slider == &azimuthSlider ) {
-      position.SetFromAED(mapSliderValueToAzimuth(slider->getValue()), position.GetElevationDegrees(), position.GetDistance() );
+      position.SetFromAED(slider->getValue(), position.GetElevationDegrees(), position.GetDistance());
     } else if ( slider == &elevationSlider ) {
       auto value = slider->getValue();
       position.SetFromAED(position.GetAzimuthDegrees(), mapSliderValueToElevation(value), position.GetDistance());

@@ -54,7 +54,7 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
 {
   auto position = getCore().getSourcePosition();
   
-  treeState.createAndAddParameter("Azimuth", "Azimuth", "", NormalisableRange<float>(-180.f, 180.f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr);
+  treeState.createAndAddParameter("Azimuth", "Azimuth", "", NormalisableRange<float>(0.0f, 359.99f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr);
   treeState.addParameterListener("Azimuth", this);
   
   treeState.createAndAddParameter("Elevation", "Elevation", "", NormalisableRange<float>(-89.f, 89.f), position.GetElevationDegrees(), [](float value) { return String (value, 0); }, nullptr);
@@ -299,7 +299,7 @@ void Toolkit3dtiPluginAudioProcessor::updateHostParameters() {
   auto position = getCore().getSourcePosition();
   
   std::unordered_map<String, float> parameters = {
-    {"Azimuth", mapAzimuthToSliderValue(position.GetAzimuthDegrees())},
+    {"Azimuth", position.GetAzimuthDegrees()},
     {"Distance", position.GetDistance()},
     {"Elevation", mapElevationToSliderValue(position.GetElevationDegrees())},
     {"X", position.x},
@@ -332,7 +332,8 @@ void Toolkit3dtiPluginAudioProcessor::parameterChanged(const String& parameterID
   auto position = getCore().getSourcePosition();
   
   if ( parameterID == "Azimuth" ) {
-    position.SetFromAED( mapSliderValueToAzimuth(newValue), position.GetElevationDegrees(), position.GetDistance() );
+    DBG("Azimuth: " + String(newValue));
+    position.SetFromAED( newValue, position.GetElevationDegrees(), position.GetDistance() );
   } else if ( parameterID == "Distance" ) {
     position.SetFromAED( position.GetAzimuthDegrees(), position.GetElevationDegrees(), newValue );
   } else if ( parameterID == "Elevation" ) {

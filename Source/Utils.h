@@ -128,14 +128,6 @@ static inline float mapSliderValueToElevation(float s) {
   return (s < 0.f) ? jmap<float>(s, -89.f, 0.f, 271.f, 360.f) : jmap<float>(s, 0.f, 89.f, 0.0f, 89.f);
 }
 
-static inline float mapAzimuthToSliderValue(float a) {
-  return (a < 180.f) ? jmap<float>(a, 0.1f, 179.9f, 0.f, 180.f) : jmap<float>(a, 359.9f, 180.1f, 0.f, -180.f);
-}
-
-static inline float mapSliderValueToAzimuth(float s) {
-  return (s < 0.f) ? jmap<float>(s, -180.f, 0.f, 180.1f, 359.9f) : jmap<float>(s, 0.f, 180.f, 0.1f, 179.9f);
-}
-
 static inline void mapParameterToSlider( Slider& slider, const AudioParameterInt& parameter, int interval = 1 ) {
   slider.setRange( (double)parameter.getRange().getStart(), (double)parameter.getRange().getEnd(), (double)interval );
   slider.setValue( parameter );
