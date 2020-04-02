@@ -59,7 +59,7 @@ Toolkit3dtiPluginAudioProcessorEditor::Toolkit3dtiPluginAudioProcessorEditor (To
   addAndMakeVisible( aboutButton );
   
   toolkitVersionLabel.setFont(Font(15.f, Font::plain));
-  toolkitVersionLabel.setText("Version " +  String(JucePlugin_VersionString) + " (3DTI Toolkit v1.3)", dontSendNotification);
+  toolkitVersionLabel.setText("Version " +  String(JucePlugin_VersionString) + " (3DTI Toolkit v1.4)", dontSendNotification);
 
   startTimer(30);
 }
