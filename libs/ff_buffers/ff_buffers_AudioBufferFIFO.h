@@ -83,7 +83,7 @@ public:
     void addToFifo (const juce::AudioBuffer<FloatType>& samples, int numSamples=-1)
     {
         const int addSamples = numSamples < 0 ? samples.getNumSamples() : numSamples;
-        assert (getFreeSpace() >= addSamples);
+        jassert (getFreeSpace() >= addSamples);
 
         int start1, size1, start2, size2;
         prepareToWrite (addSamples, start1, size1, start2, size2);
