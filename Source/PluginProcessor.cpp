@@ -75,10 +75,10 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
   treeState.createAndAddParameter("Source Attenuation", "Src Attenuation", "", getCore().sourceDistanceAttenuation.range, getCore().sourceDistanceAttenuation.get(), nullptr, nullptr);
   treeState.addParameterListener("Source Attenuation", this);
   
-  treeState.createAndAddParameter("Reverb Gain", "Reverb Gain", "", getCore().reverbGain.range, getCore().reverbGain.get(), nullptr, nullptr);
+  treeState.createAndAddParameter("Reverb Gain", "Reverb Gain", "", getReverbProcessor().reverbGain.range, getReverbProcessor().reverbGain.get(), nullptr, nullptr);
   treeState.addParameterListener("Reverb Gain", this);
   
-  treeState.createAndAddParameter("Reverb Attenuation", "Rev Attenuation", "", getCore().reverbDistanceAttenuation.range, getCore().reverbDistanceAttenuation.get(), nullptr, nullptr);
+  treeState.createAndAddParameter("Reverb Attenuation", "Rev Attenuation", "", getReverbProcessor().reverbDistanceAttenuation.range, getReverbProcessor().reverbDistanceAttenuation.get(), nullptr, nullptr);
   treeState.addParameterListener("Reverb Attenuation", this);
   
   addBooleanHostParameter(treeState, "Near Field", getCore().enableNearDistanceEffect);
@@ -183,7 +183,13 @@ void Toolkit3dtiPluginAudioProcessor::prepareToPlay (double sampleRate, int samp
    
   scratchBuffer.setSize(getTotalNumOutputChannels(), samplesPerBlock);
     
+  Common::TAudioStateStruct audioState;
+  audioState.bufferSize = samplesPerBlock;
+  audioState.sampleRate = sampleRate;
+  mCore.SetAudioState (audioState);
+    
   getCore().setup (sampleRate, samplesPerBlock);
+  getReverbProcessor().setup (sampleRate, samplesPerBlock);
   
   startTimer(60);
 }
@@ -252,7 +258,7 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
       getCore().processAnechoic(scratchBuffer, midiMessages);
 #ifndef DEBUG
       // NOTE(Ragnar): Reverb processing is too heavy for debug mode
-      getCore().processReverb(scratchBuffer, midiMessages);
+      getReverbProcessor().process (scratchBuffer);
 #endif
           
       outFifo.addToFifo(scratchBuffer);
@@ -310,8 +316,8 @@ void Toolkit3dtiPluginAudioProcessor::updateHostParameters() {
     {"Y", position.y},
     {"Z", position.z},
     {"Source Attenuation", getCore().sourceDistanceAttenuation},
-    {"Reverb Gain", getCore().reverbGain},
-    {"Reverb Attenuation", getCore().reverbDistanceAttenuation},
+    {"Reverb Gain", getReverbProcessor().reverbGain},
+    {"Reverb Attenuation", getReverbProcessor().reverbDistanceAttenuation},
     {"Near Field", getCore().enableNearDistanceEffect},
     {"Far Field", getCore().enableFarDistanceEffect},
     {"Custom Head", getCore().enableCustomizedITD},
@@ -319,7 +325,7 @@ void Toolkit3dtiPluginAudioProcessor::updateHostParameters() {
     {"Enable Anechoic", getCore().getSources().front()->IsAnechoicProcessEnabled()},
     {"Enable Reverb", getCore().getSources().front()->IsReverbProcessEnabled()},
     {"HRFT", getCore().getHrtfIndex() },
-    {"BRIR", getCore().getBrirIndex() },
+    {"BRIR", getReverbProcessor().getBrirIndex() },
   };
 
   for ( auto const & parameter : parameters ) {
@@ -351,9 +357,9 @@ void Toolkit3dtiPluginAudioProcessor::parameterChanged(const String& parameterID
   } else if ( parameterID == "Source Attenuation" ) {
     getCore().sourceDistanceAttenuation = newValue;
   } else if ( parameterID == "Reverb Gain" ) {
-    getCore().reverbGain = newValue;
+    getReverbProcessor().reverbGain = newValue;
   } else if ( parameterID == "Reverb Attenuation" ) {
-    getCore().reverbDistanceAttenuation = newValue;
+    getReverbProcessor().reverbDistanceAttenuation = newValue;
   } else if ( parameterID == "Near Field" ) {
     getCore().enableNearDistanceEffect = (int)(newValue + 0.49f);
   } else if ( parameterID == "Far Field" ) {
@@ -385,7 +391,7 @@ void Toolkit3dtiPluginAudioProcessor::parameterChanged(const String& parameterID
   } else if ( parameterID == "HRTF" ) {
     getCore().loadHRTF((int)newValue);
   } else if ( parameterID == "BRIR" ) {
-    getCore().loadBRIR((int)newValue);
+    getReverbProcessor().loadBRIR((int)newValue);
   }
 
   getCore().setSourcePosition(position);

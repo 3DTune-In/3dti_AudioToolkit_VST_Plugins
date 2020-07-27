@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
-#include "Toolkit3dtiProcessor.h"
+#include <JuceHeader.h>
+#include "ReverbProcessor.h"
 #include "PluginProcessor.h"
 #include "Utils.h"
 
@@ -62,9 +62,9 @@ public:
   
   void sliderValueChanged (Slider* slider) override {
     if ( slider == &gainSlider ) {
-      mCore.reverbGain = (float)slider->getValue();
+      mReverb.reverbGain = (float)slider->getValue();
     } else {
-      mCore.reverbDistanceAttenuation = (float)slider->getValue();
+      mReverb.reverbDistanceAttenuation = (float)slider->getValue();
     }
   }
   
@@ -75,7 +75,7 @@ public:
     } else if ( text == "Load SOFA" ) {
       loadCustomBRIR("*.sofa");
     } else {
-      mCore.loadBRIR(brirMenu.getSelectedItemIndex());
+      mReverb.loadBRIR(brirMenu.getSelectedItemIndex());
     }
   }
   
@@ -90,7 +90,7 @@ private:
   void updateDistanceAttenuation();
   
   Toolkit3dtiPluginAudioProcessor& mProcessor;
-  Toolkit3dtiProcessor& mCore;
+  ReverbProcessor& mReverb;
   
   ComboBox brirMenu;
   Label gainLabel;

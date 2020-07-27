@@ -20,9 +20,9 @@
 
 #include "ReverbControls.h"
 
-ReverbControls::ReverbControls(Toolkit3dtiPluginAudioProcessor& processor)
-  : mProcessor(processor),
-    mCore(processor.getCore()),
+ReverbControls::ReverbControls(Toolkit3dtiPluginAudioProcessor& p)
+  : mProcessor(p),
+    mReverb (p.getReverbProcessor()),
     gainLabel("Gain Label", "Gain (dB)"),
     distanceAttenuationLabel("Distance Label", "dB attenuation per double distance")
 {
@@ -38,7 +38,7 @@ ReverbControls::ReverbControls(Toolkit3dtiPluginAudioProcessor& processor)
   gainLabel.setJustificationType( Justification::left );
   addAndMakeVisible( gainLabel );
   
-  mapParameterToSlider( gainSlider, mCore.reverbGain );
+  mapParameterToSlider( gainSlider, mReverb.reverbGain );
   gainSlider.setTextValueSuffix(" dB");
   gainSlider.setTextBoxStyle( Slider::TextBoxRight, false, 65, 24 );
   gainSlider.addListener( this );
@@ -53,7 +53,7 @@ ReverbControls::ReverbControls(Toolkit3dtiPluginAudioProcessor& processor)
   distanceAttenuationLabel.setJustificationType( Justification::left );
   addAndMakeVisible( distanceAttenuationLabel );
   
-  mapParameterToSlider( distanceAttenuationSlider, mCore.reverbDistanceAttenuation );
+  mapParameterToSlider( distanceAttenuationSlider, mReverb.reverbDistanceAttenuation );
   distanceAttenuationSlider.setTextValueSuffix(" dB");
   distanceAttenuationSlider.setTextBoxStyle( Slider::TextBoxRight, false, 65, 24 );
   distanceAttenuationSlider.addListener( this );
@@ -68,10 +68,11 @@ ReverbControls::ReverbControls(Toolkit3dtiPluginAudioProcessor& processor)
 }
 
 void ReverbControls::updateGui() {
-  gainSlider.setValue(mCore.reverbGain.get(), dontSendNotification);
-  distanceAttenuationSlider.setValue( mCore.reverbDistanceAttenuation, dontSendNotification );
-  if ( !mCore.getSources().empty() ) {
-    auto source = mCore.getSources().front();
+  gainSlider.setValue(mReverb.reverbGain.get(), dontSendNotification);
+  distanceAttenuationSlider.setValue(mReverb.reverbDistanceAttenuation, dontSendNotification );
+  
+  if ( !mProcessor.getSources().empty() ) {
+    auto source = mProcessor.getSources().front();
     bypassToggle.setToggleState(source->IsReverbProcessEnabled(), dontSendNotification);
     bool distanceAttenuationEnabled = source->IsDistanceAttenuationEnabledReverb();
     distanceAttenuationToggle.setToggleState(distanceAttenuationEnabled, dontSendNotification);
@@ -79,7 +80,7 @@ void ReverbControls::updateGui() {
     distanceAttenuationSlider.setEnabled(distanceAttenuationEnabled);
   }
   
-  auto brirIndex = mCore.getBrirIndex();
+  auto brirIndex = mReverb.getBrirIndex();
   if ( brirIndex != brirMenu.getSelectedItemIndex() && brirIndex < BundledBRIRs.size()-2 ) { // Show filename if custom file is selected
     brirMenu.setSelectedItemIndex(brirIndex, dontSendNotification);
   }
@@ -102,7 +103,7 @@ void ReverbControls::loadCustomBRIR(String fileTypes) {
                     chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
                                : result.toString (false));
                     
-                    mCore.loadBRIR(File(chosen.removeCharacters("\n")));
+                    // mProcessor.loadBRIR(File(chosen.removeCharacters("\n")));
                     
                     updateBrirLabel();
                   });
@@ -111,23 +112,23 @@ void ReverbControls::loadCustomBRIR(String fileTypes) {
 void ReverbControls::updateBypass() {
   bool enabled = bypassToggle.getToggleState();
   if ( enabled  ) {
-    mCore.getSources().front()->EnableReverbProcess();
+    mProcessor.getSources().front()->EnableReverbProcess();
   } else {
-    mCore.getSources().front()->DisableReverbProcess();
+    mProcessor.getSources().front()->DisableReverbProcess();
   }
   setAlpha( enabled + 0.4f );
 }
 
 void ReverbControls::updateBrirLabel() {
-  auto brir = mCore.getBrirPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);
-  brirMenu.setText(brir, dontSendNotification);
+//  auto brir = mProcessor.getBrirPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);
+//  brirMenu.setText(brir, dontSendNotification);
 }
 
 void ReverbControls::updateDistanceAttenuation() {
-  auto source = mCore.getSources().front();
-  if ( distanceAttenuationToggle.getToggleState() ) {
-    source->EnableDistanceAttenuationReverb();
-  } else {
-    source->DisableDistanceAttenuationReverb();
-  }
+//  auto source = mProcessor.getSources().front();
+//  if ( distanceAttenuationToggle.getToggleState() ) {
+//    source->EnableDistanceAttenuationReverb();
+//  } else {
+//    source->DisableDistanceAttenuationReverb();
+//  }
 }

@@ -23,6 +23,7 @@
 #include <JuceHeader.h>
 #include <ff_buffers/ff_buffers_AudioBufferFIFO.h>
 #include "Toolkit3dtiProcessor.h"
+#include "ReverbProcessor.h"
 
 //==============================================================================
 /**
@@ -30,11 +31,11 @@
 class Toolkit3dtiPluginAudioProcessor  : public AudioProcessor, private AudioProcessorValueTreeState::Listener, private Timer
 {
 public:
-  //==============================================================================
+  //============================================================================
   Toolkit3dtiPluginAudioProcessor();
   ~Toolkit3dtiPluginAudioProcessor();
 
-  //==============================================================================
+  //============================================================================
   void prepareToPlay (double sampleRate, int samplesPerBlock) override;
   void releaseResources() override;
 
@@ -44,11 +45,11 @@ public:
 
   void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
 
-  //==============================================================================
+  //============================================================================
   AudioProcessorEditor* createEditor() override;
   bool hasEditor() const override;
 
-  //==============================================================================
+  //============================================================================
   const String getName() const override;
 
   bool acceptsMidi() const override;
@@ -56,19 +57,24 @@ public:
   bool isMidiEffect() const override;
   double getTailLengthSeconds() const override;
 
-  //==============================================================================
+  //============================================================================
   int getNumPrograms() override;
   int getCurrentProgram() override;
   void setCurrentProgram (int index) override;
   const String getProgramName (int index) override;
   void changeProgramName (int index, const String& newName) override;
 
-  //==============================================================================
+  //============================================================================
   void getStateInformation (MemoryBlock& destData) override;
   void setStateInformation (const void* data, int sizeInBytes) override;
   
-  //==============================================================================
-  Toolkit3dtiProcessor& getCore() { return mCore; }
+  //============================================================================
+  Toolkit3dtiProcessor& getCore()       { return mSpatializer; }
+  ReverbProcessor& getReverbProcessor() { return mReverb; }
+    
+  const std::vector<CSingleSourceRef>& getSources() {
+      return getCore().getSources();
+  }
   
   AudioProcessorValueTreeState treeState;
   
@@ -80,10 +86,12 @@ private:
   
   void parameterChanged(const String& parameterID, float newValue) override;
     
-  AudioBuffer<float> scratchBuffer;
+  AudioBuffer<float>     scratchBuffer;
   AudioBufferFIFO<float> inFifo, outFifo;
     
-  Toolkit3dtiProcessor mCore;
+  Binaural::CCore mCore;
+  Toolkit3dtiProcessor mSpatializer {mCore};
+  ReverbProcessor mReverb {mCore};
   
   //==============================================================================
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Toolkit3dtiPluginAudioProcessor)

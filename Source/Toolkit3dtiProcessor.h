@@ -23,13 +23,10 @@
 #include <BinauralSpatializer/3DTI_BinauralSpatializer.h>
 #include <HRTF/HRTFFactory.h>
 #include <HRTF/HRTFCereal.h>
-#include <BRIR/BRIRFactory.h>
-#include <BRIR/BRIRCereal.h>
 #include <ILD/ILDCereal.h>
 #include <JuceHeader.h>
 
 using CListenerRef = shared_ptr<Binaural::CListener>;
-using CEnvironmentRef = shared_ptr<Binaural::CEnvironment>;
 using CSingleSourceRef = shared_ptr<Binaural::CSingleSourceDSP>;
 using CMonoBufferPairf = Common::CEarPair<CMonoBuffer<float>>;
 
@@ -38,26 +35,24 @@ public:
     
   struct Impl {
     using Ptr = std::unique_ptr<Impl>;
-        
-    Binaural::CCore                 mCore;
-    CEnvironmentRef                 mEnvironment;
+    
+    Impl (Binaural::CCore& core)  : mCore (core) {};
+      
+    Binaural::CCore&                mCore;
     CListenerRef                    mListener;
     CMonoBufferPairf                mOutputBuffer;
     std::vector<CSingleSourceRef>   sources;
     int  hrtfIndex;
-    int  brirIndex;
     File hrtfPath;
-    File brirPath;
   };
   
   //============================================================================
-  Toolkit3dtiProcessor();
+  Toolkit3dtiProcessor(Binaural::CCore& core);
   
   //============================================================================
   void setup(double sampleRate, int frameSize);
   
   void processAnechoic (AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
-  void processReverb   (AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
   
   //============================================================================
   // Note(Ragnar): Currently never larger than 1
@@ -69,13 +64,9 @@ public:
   bool loadHRTF(int bundledIndex); // A number between 0-6 for bundled HRTFs
   bool loadHRTF(const File& file);
   bool loadHRTF_ILD(const File& file);
-  bool loadBRIR(int bundledIndex); // A number between 0-2 for bundled HRTFs
-  bool loadBRIR(const File& file);
   
   int getHrtfIndex() const { return pimpl->hrtfIndex; };
-  int getBrirIndex() const { return pimpl->brirIndex; };
   const File& getHrtfPath() const { return pimpl->hrtfPath; }
-  const File& getBrirPath() const { return pimpl->brirPath; }
   
   //============================================================================
   float getHeadRadius() const {
@@ -102,24 +93,20 @@ public:
   AudioParameterInt spatializationMode;
   // AudioParameterFloat sourceGain; // ranges from -12 to + 12 dB
   AudioParameterFloat sourceDistanceAttenuation; // ranges from -6 to 0 dB
-  AudioParameterFloat reverbGain; // ranges from -12 to + 12 dB
-  AudioParameterFloat reverbDistanceAttenuation; // ranges from -6 to 0 dB
   
 private:
   CriticalSection loadLock;
   
-  void reset(Impl::Ptr p, const File& hrtf, const File& brir);
+  void reset(Impl::Ptr p, const File& hrtf);
   void updateParameters(Impl& impl);
   void addSoundSource(Impl& impl, Common::CVector3& position);
   bool loadResourceFile(Impl& impl, const File& file, bool isHRTF);
   bool loadHRTF(Impl& impl, const File& file);
   bool loadHRTF_ILD(Impl& impl, const File& file);
-  bool loadBRIR(Impl& impl, const File& file);
   
   //============================================================================
+  Binaural::CCore& mCore;
   Impl::Ptr pimpl;
   
   Common::CTransform mTransform;    // Source transform
-  
-  float reverbPower = 0.f;
 };

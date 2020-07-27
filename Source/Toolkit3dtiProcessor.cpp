@@ -23,39 +23,29 @@
 
 void copySourceSettings(CSingleSourceRef oldSource, CSingleSourceRef newSource);
 
-Toolkit3dtiProcessor::Impl::Ptr CreateImpl(double sampleRate, int samplesPerBlock) {
-  Toolkit3dtiProcessor::Impl::Ptr impl( new Toolkit3dtiProcessor::Impl );
+Toolkit3dtiProcessor::Impl::Ptr CreateImpl(Binaural::CCore& core) {
+  Toolkit3dtiProcessor::Impl::Ptr impl (new Toolkit3dtiProcessor::Impl (core));
   
+  auto blockSize  = core.GetAudioState().bufferSize;
+    
   // Declaration and initialization of stereo buffer
-  impl->mOutputBuffer.left.resize(samplesPerBlock);
-  impl->mOutputBuffer.right.resize(samplesPerBlock);
-  
-  Common::TAudioStateStruct audioState;
-  audioState.bufferSize = samplesPerBlock;
-  audioState.sampleRate = sampleRate;
-  
-  impl->mCore.SetAudioState(audioState);
-  impl->mCore.SetHRTFResamplingStep(15);
+  impl->mOutputBuffer.left .resize(blockSize);
+  impl->mOutputBuffer.right.resize(blockSize);
   
   // Create listener
   impl->mListener = impl->mCore.CreateListener();
-  
-  // Environment setup
-  impl->mEnvironment = impl->mCore.CreateEnvironment();
-  impl->mEnvironment->SetReverberationOrder(TReverberationOrder::BIDIMENSIONAL); // Setting number of ambisonic channels for reverb processing
-  
+    
   return impl;
 }
 
-Toolkit3dtiProcessor::Toolkit3dtiProcessor()
-  : enableCustomizedITD("0", "Custom Head Circumference", false),
+Toolkit3dtiProcessor::Toolkit3dtiProcessor(Binaural::CCore& core)
+  : mCore (core),
+    enableCustomizedITD("0", "Custom Head Circumference", false),
     headCircumference("1", "Head Circumference", 450, 620, 550),
     enableNearDistanceEffect("2", "Near Distance Effect", true),
     enableFarDistanceEffect("3", "Far Distance Effect", false),
     spatializationMode("4", "SpatializationMode", 0, 2, 2),
-    sourceDistanceAttenuation("5", "Source Distance Attenuation", NormalisableRange<float>(-6.f, 0.f, 0.1f), -6.f),
-    reverbGain("6", "Reverb Gain", NormalisableRange<float>(-30.f, 6.f, 0.1f), -3.f),
-    reverbDistanceAttenuation("7", "Reverb Distance Attenuation", NormalisableRange<float>(-6.f, 0.f, 0.1f), -3.f)
+    sourceDistanceAttenuation("5", "Source Distance Attenuation", NormalisableRange<float>(-6.f, 0.f, 0.1f), -6.f)
 {
 #if DEBUG
   ERRORHANDLER3DTI.SetVerbosityMode(VERBOSITYMODE_ERRORSANDWARNINGS);
@@ -78,7 +68,7 @@ void Toolkit3dtiProcessor::setup(double sampleRate, int samplesPerBlock) {
   }
 
   // Create new internal implementation
-  auto impl = CreateImpl(sampleRate, samplesPerBlock);
+  auto impl = CreateImpl (mCore);
   
   // Load HRTF
   // If we have an existing section we reload
@@ -86,16 +76,10 @@ void Toolkit3dtiProcessor::setup(double sampleRate, int samplesPerBlock) {
   int hrtfIndex = pimpl ? pimpl->hrtfIndex : 0;
   File hrtf = getBundledHRTF(hrtfIndex, sampleRate);
   
-  // Load BRIR
-  // If we have an existing section we reload
-  // the same BRIR but of new sample rate
-  int brirIndex = pimpl ? pimpl->brirIndex : 0;
-  File brir = getBundledBRIR(brirIndex, sampleRate);
-  
-  reset(std::move(impl), hrtf, brir);
+  reset(std::move(impl), hrtf);
 }
 
-void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf, const File& brir) {
+void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf) {
   if ( !hrtf.existsAsFile() ) {
     DBG("HRTF file doesn't exist");
   }
@@ -109,11 +93,6 @@ void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf, const File& b
     DBG("HRTF ILD file doesn't exist");
   }
   loadHRTF_ILD( *impl, hrtfILD );
-  
-  if ( !brir.existsAsFile() ) {
-    DBG("BRIR file doesn't exist");
-  }
-  loadBRIR( *impl, brir );
   
   // Load near field ILD
   File nearFieldConf = ILDDirectory().getChildFile(SampleRateToNearFieldILD.at((int)sampleRate));
@@ -196,61 +175,6 @@ void Toolkit3dtiProcessor::processAnechoic (AudioBuffer<float>& buffer, MidiBuff
   }
 }
 
-void Toolkit3dtiProcessor::processReverb (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
-{
-  if ( pimpl == nullptr) {
-    buffer.clear();
-    return;
-  }
-  
-  const ScopedTryLock sl (loadLock);
-  if (! sl.isLocked())
-    return;
-    
-  updateParameters(*pimpl);
-
-  // Process audio
-  auto bufferSize = buffer.getNumSamples();
-  
-  // Initializes buffer with zeros
-  _3dti_clear(pimpl->mOutputBuffer);
-    
-  bool reverbEnabled = getSources().front()->IsReverbProcessEnabled();
-  if ( reverbEnabled || reverbPower > 0.f ) {
-    // Reverberation processing of all sources
-    CMonoBufferPairf reverbBuffer;
-    pimpl->mEnvironment->ProcessVirtualAmbisonicReverb(reverbBuffer.left, reverbBuffer.right);
-    auto reverbGain  = Decibels::decibelsToGain(this->reverbGain.get());
-    reverbBuffer.left.ApplyGain(reverbGain);
-    reverbBuffer.right.ApplyGain(reverbGain);
-
-    // Adding reverberated sound to the output mix
-    if ( reverbBuffer.left.size() == bufferSize ) {
-      // Checking size of buffer because if a BRIR is not loaded
-      // it will be zero and trigger a crash when added to output
-      pimpl->mOutputBuffer.left  += reverbBuffer.left;
-      pimpl->mOutputBuffer.right += reverbBuffer.right;
-    }
-
-    reverbPower = reverbBuffer.left.GetPower();
-  }
-
-  // Fill the output with processed audio
-  // Incoming buffer should have two channels
-  // for spatialised audio but we check just in case
-  int numChannels = std::max (buffer.getNumChannels(), 2);
-  
-  for ( int i = 0; i < bufferSize; i++ ) {
-    switch (numChannels) {
-      case 2:
-        buffer.getWritePointer(1)[i] = pimpl->mOutputBuffer.right[i];
-      default:
-        buffer.getWritePointer(0)[i] = pimpl->mOutputBuffer.left[i];
-    }
-  }
-}
-}
-
 void Toolkit3dtiProcessor::updateParameters(Impl& impl) {
   if ( enableCustomizedITD ) {
     impl.mListener->EnableCustomizedITD();
@@ -281,20 +205,16 @@ void Toolkit3dtiProcessor::updateParameters(Impl& impl) {
   
   auto magnitudes = impl.mCore.GetMagnitudes();
   magnitudes.SetAnechoicDistanceAttenuation(sourceDistanceAttenuation);
-  magnitudes.SetReverbDistanceAttenuation(reverbDistanceAttenuation);
   impl.mCore.SetMagnitudes(magnitudes);
 }
 
 bool Toolkit3dtiProcessor::loadHRTF(int bundledIndex) {
   auto sampleRate = pimpl->mCore.GetAudioState().sampleRate;
-  return loadHRTF(getBundledHRTF(bundledIndex, sampleRate));
+  return loadHRTF (getBundledHRTF(bundledIndex, sampleRate));
 }
 
 bool Toolkit3dtiProcessor::loadHRTF(const File& file) {
-  auto sampleRate = pimpl->mCore.GetAudioState().sampleRate;
-  auto blockSize  = pimpl->mCore.GetAudioState().bufferSize;
-  File brir = getBundledBRIR(pimpl->brirIndex, sampleRate);
-  reset(CreateImpl(sampleRate, blockSize), file, brir);
+  reset (CreateImpl (mCore), file);
   return true;
 }
 
@@ -330,27 +250,6 @@ bool Toolkit3dtiProcessor::loadHRTF_ILD(Impl& impl, const File& file) {
   return success;
 }
 
-bool Toolkit3dtiProcessor::loadBRIR(int bundledIndex) {
-  auto sampleRate = pimpl->mCore.GetAudioState().sampleRate;
-  return loadBRIR(getBundledBRIR(bundledIndex, sampleRate));
-}
-
-bool Toolkit3dtiProcessor::loadBRIR(const File& file) {
-  auto sampleRate = pimpl->mCore.GetAudioState().sampleRate;
-  auto blockSize  = pimpl->mCore.GetAudioState().bufferSize;
-  File hrtf = getBundledHRTF(pimpl->hrtfIndex, sampleRate);
-  reset(CreateImpl(sampleRate, blockSize), hrtf, file);
-  return true;
-}
-
-bool Toolkit3dtiProcessor::loadBRIR(Impl &impl, const File& file) {
-  DBG("Loading BRIR: " << file.getFullPathName());
-  bool success = loadResourceFile(impl, file, false);
-  impl.brirIndex = brirPathToBundledIndex(file);
-  impl.brirPath = file;
-  return success;
-}
-
 bool Toolkit3dtiProcessor::loadResourceFile(Impl &impl, const File& file, bool isHRTF) {
   int sampleRate = impl.mCore.GetAudioState().sampleRate;
   int fileSampleRate = checkResourceSampleRate(file, isHRTF);
@@ -366,8 +265,6 @@ bool Toolkit3dtiProcessor::loadResourceFile(Impl &impl, const File& file, bool i
   if ( isHRTF ) {
     bool specificDelays;
     return isSofa ? HRTF::CreateFromSofa(path, impl.mListener, specificDelays) : HRTF::CreateFrom3dti(path, impl.mListener);
-  } else {
-    return isSofa ? BRIR::CreateFromSofa(path, impl.mEnvironment) : BRIR::CreateFrom3dti(path, impl.mEnvironment);
   }
   return false;
 }

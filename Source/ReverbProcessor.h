@@ -19,3 +19,43 @@
 */
 
 #pragma once
+
+#include <BinauralSpatializer/3DTI_BinauralSpatializer.h>
+#include <BRIR/BRIRFactory.h>
+#include <BRIR/BRIRCereal.h>
+#include <JuceHeader.h>
+
+//==============================================================================
+class ReverbProcessor
+{
+public:
+    //==========================================================================
+    ReverbProcessor (Binaural::CCore& core);
+    
+    void setup (double sampleRate, int samplesPerBlock);
+    
+    //==========================================================================
+    void process (AudioBuffer<float>& buffer);
+    
+    //==========================================================================
+    bool loadBRIR (int bundledIndex);  // A number between 0-2 for bundled HRTFs
+    bool loadBRIR (const File& file);
+    
+    int         getBrirIndex() const { return mBRIRIndex; }
+    const File& getBrirPath()  const { return mBRIRPath;  }
+    
+    //==========================================================================
+    AudioParameterFloat reverbGain;                // ranges from -12 to +12 dB
+    AudioParameterFloat reverbDistanceAttenuation; // ranges from -6 to 0 dB
+    
+private:
+    double getSampleRate();
+    //==========================================================================
+    Binaural::CCore& mCore;
+    Common::CEarPair<CMonoBuffer<float>>    mOutputBuffer;
+    std::shared_ptr<Binaural::CEnvironment> mEnvironment;
+    
+    bool isLoading;
+    int  mBRIRIndex;
+    File mBRIRPath;
+};
