@@ -103,7 +103,7 @@ void ReverbControls::loadCustomBRIR(String fileTypes) {
                     chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
                                : result.toString (false));
                     
-                    // mProcessor.loadBRIR(File(chosen.removeCharacters("\n")));
+                    mReverb.loadBRIR(File(chosen.removeCharacters("\n")));
                     
                     updateBrirLabel();
                   });
@@ -120,15 +120,15 @@ void ReverbControls::updateBypass() {
 }
 
 void ReverbControls::updateBrirLabel() {
-//  auto brir = mProcessor.getBrirPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);
-//  brirMenu.setText(brir, dontSendNotification);
+  auto brir = mReverb.getBrirPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);
+  brirMenu.setText(brir, dontSendNotification);
 }
 
 void ReverbControls::updateDistanceAttenuation() {
-//  auto source = mProcessor.getSources().front();
-//  if ( distanceAttenuationToggle.getToggleState() ) {
-//    source->EnableDistanceAttenuationReverb();
-//  } else {
-//    source->DisableDistanceAttenuationReverb();
-//  }
+  auto source = mProcessor.getSources().front();
+  if ( distanceAttenuationToggle.getToggleState() ) {
+    source->EnableDistanceAttenuationReverb();
+  } else {
+    source->DisableDistanceAttenuationReverb();
+  }
 }
