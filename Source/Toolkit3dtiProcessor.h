@@ -56,7 +56,8 @@ public:
   //============================================================================
   void setup(double sampleRate, int frameSize);
   
-  void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
+  void processAnechoic (AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
+  void processReverb   (AudioBuffer<float>& buffer, MidiBuffer& midiMessages);
   
   //============================================================================
   // Note(Ragnar): Currently never larger than 1

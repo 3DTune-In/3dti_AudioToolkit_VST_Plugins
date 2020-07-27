@@ -18,7 +18,6 @@
 * \b Acknowledgement: This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
 */
 
-#include <thread>
 #include "Utils.h"
 #include "Toolkit3dtiProcessor.h"
 
@@ -144,13 +143,15 @@ void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf, const File& b
   pimpl = std::move(impl);
 }
 
-void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+void Toolkit3dtiProcessor::processAnechoic (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
   if ( pimpl == nullptr) {
     buffer.clear();
     return;
   }
   
   const ScopedTryLock sl (loadLock);
+  if (! sl.isLocked())
+    return;
     
   updateParameters(*pimpl);
 
@@ -180,8 +181,40 @@ void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& 
     }
   }
 
-#ifndef DEBUG // NOTE(Ragnar): Reverb processing is too heavy for debug mode
+  // Fill the output with processed audio
+  // Incoming buffer should have two channels
+  // for spatialised audio but we check just in case
+  int numChannels = std::max(buffer.getNumChannels(), 2);
+  
+  for ( int i = 0; i < bufferSize; i++ ) {
+    switch (numChannels) {
+      case 2:
+        buffer.getWritePointer(1)[i] = pimpl->mOutputBuffer.right[i];
+      default:
+        buffer.getWritePointer(0)[i] = pimpl->mOutputBuffer.left[i];
+    }
+  }
+}
 
+void Toolkit3dtiProcessor::processReverb (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+{
+  if ( pimpl == nullptr) {
+    buffer.clear();
+    return;
+  }
+  
+  const ScopedTryLock sl (loadLock);
+  if (! sl.isLocked())
+    return;
+    
+  updateParameters(*pimpl);
+
+  // Process audio
+  auto bufferSize = buffer.getNumSamples();
+  
+  // Initializes buffer with zeros
+  _3dti_clear(pimpl->mOutputBuffer);
+    
   bool reverbEnabled = getSources().front()->IsReverbProcessEnabled();
   if ( reverbEnabled || reverbPower > 0.f ) {
     // Reverberation processing of all sources
@@ -201,13 +234,11 @@ void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& 
 
     reverbPower = reverbBuffer.left.GetPower();
   }
-  
-#endif
 
   // Fill the output with processed audio
   // Incoming buffer should have two channels
   // for spatialised audio but we check just in case
-  int numChannels = std::max(buffer.getNumChannels(), 2);
+  int numChannels = std::max (buffer.getNumChannels(), 2);
   
   for ( int i = 0; i < bufferSize; i++ ) {
     switch (numChannels) {
@@ -217,6 +248,7 @@ void Toolkit3dtiProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& 
         buffer.getWritePointer(0)[i] = pimpl->mOutputBuffer.left[i];
     }
   }
+}
 }
 
 void Toolkit3dtiProcessor::updateParameters(Impl& impl) {

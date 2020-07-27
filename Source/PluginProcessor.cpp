@@ -249,7 +249,11 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
       inFifo.readFromFifo(scratchBuffer, getBlockSize());
         
       // Main process
-      getCore().processBlock(scratchBuffer, midiMessages);
+      getCore().processAnechoic(scratchBuffer, midiMessages);
+#ifndef DEBUG
+      // NOTE(Ragnar): Reverb processing is too heavy for debug mode
+      getCore().processReverb(scratchBuffer, midiMessages);
+#endif
           
       outFifo.addToFifo(scratchBuffer);
     }
