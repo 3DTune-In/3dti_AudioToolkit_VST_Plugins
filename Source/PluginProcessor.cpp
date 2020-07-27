@@ -233,50 +233,44 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
   for (auto i = inChannels; i < outChannels; ++i)
     buffer.clear(i, 0, buffer.getNumSamples());
   
-  int bufferSize = buffer.getNumSamples();
-    
+  int numSamples  = buffer.getNumSamples();
+  int numChannels = buffer.getNumChannels();
+
+  AudioBuffer<float> temp (numChannels, 1);
   // Some hosts send buffers of varying sizes so we maintain
   // an internal buffer to pass the correct size to the 3dti core
-  int index = 0;
-  while (index < bufferSize)
+  for (int sample = 0; sample < numSamples; ++sample)
   {
-    int chunkSize   = std::min(128, bufferSize-index);
-    int numChannels = buffer.getNumChannels();
-      
-    AudioBuffer<float> temp(numChannels, chunkSize);
-      
-    for (int ch = 0; ch < buffer.getNumChannels(); ch++)
-      temp.copyFrom(ch, 0, buffer, ch, index, chunkSize);
+    temp.setDataToReferTo (buffer.getArrayOfWritePointers(),
+                           numChannels, sample, 1);
       
     inFifo.addToFifo(temp);
-      
+
     if (inFifo.getNumReady() >= getBlockSize())
     {
       inFifo.readFromFifo(scratchBuffer, getBlockSize());
-        
+
       // Main process
       getCore().processAnechoic(scratchBuffer, midiMessages);
 #ifndef DEBUG
       // NOTE(Ragnar): Reverb processing is too heavy for debug mode
       getReverbProcessor().process (scratchBuffer);
 #endif
-          
       outFifo.addToFifo(scratchBuffer);
     }
-      
-    index += chunkSize;
   }
     
-  if (outFifo.getNumReady() < bufferSize)
+  int numReady = outFifo.getNumReady();
+  if (numReady < numSamples)
   {
-    int diff = bufferSize - outFifo.getNumReady();
+    int diff = numSamples - numReady;
     outFifo.addSilenceToFifo(diff);
 
     // Update the host latency
     int latency = getLatencySamples() + diff;
     setLatencySamples(latency);
   }
-    
+
   outFifo.readFromFifo(buffer);
 }
 
