@@ -44,6 +44,8 @@ public:
     int         getBrirIndex() const { return mBRIRIndex; }
     const File& getBrirPath()  const { return mBRIRPath;  }
     
+    float       getPower()     const { return mPower; };
+    
     //==========================================================================
     AudioParameterFloat reverbGain;                // ranges from -12 to +12 dB
     AudioParameterFloat reverbDistanceAttenuation; // ranges from -6 to 0 dB
@@ -58,4 +60,6 @@ private:
     bool isLoading;
     int  mBRIRIndex;
     File mBRIRPath;
+    
+    float mPower;
 };

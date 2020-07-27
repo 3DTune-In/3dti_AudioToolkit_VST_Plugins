@@ -78,6 +78,8 @@ void ReverbProcessor::process (AudioBuffer<float>& buffer)
                 buffer.getWritePointer(0)[i] = mOutputBuffer.left[i];
         }
     }
+    
+    mPower = mOutputBuffer.left.GetPower();
 }
 
 bool ReverbProcessor::loadBRIR (int bundledIndex)
