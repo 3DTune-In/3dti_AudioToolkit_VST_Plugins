@@ -254,7 +254,13 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
       getCore().processAnechoic(scratchBuffer, midiMessages);
 #ifndef DEBUG
       // NOTE(Ragnar): Reverb processing is too heavy for debug mode
-      getReverbProcessor().process (scratchBuffer);
+      
+      AudioBuffer<float> reverbBuffer (scratchBuffer);
+      
+      getReverbProcessor().process (reverbBuffer);
+
+      for (int ch = 0; ch < numChannels; ch++)
+        scratchBuffer.addFrom (ch, 0, reverbBuffer, ch, 0, numSamples);
 #endif
       outFifo.addToFifo(scratchBuffer);
     }
