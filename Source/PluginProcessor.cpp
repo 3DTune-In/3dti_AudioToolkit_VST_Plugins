@@ -188,8 +188,8 @@ void Toolkit3dtiPluginAudioProcessor::prepareToPlay (double sampleRate, int samp
   audioState.sampleRate = sampleRate;
   mCore.SetAudioState (audioState);
     
-  getCore().setup (sampleRate, samplesPerBlock);
-  getReverbProcessor().setup (sampleRate, samplesPerBlock);
+  mSpatializer.setup (sampleRate, samplesPerBlock);
+  mReverb.setup (sampleRate, samplesPerBlock);
   
   startTimer(60);
 }
@@ -252,15 +252,18 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
 
       // Main process
       getCore().processAnechoic(scratchBuffer, midiMessages);
-#ifndef DEBUG
-      // NOTE(Ragnar): Reverb processing is too heavy for debug mode
-      
-      AudioBuffer<float> reverbBuffer (scratchBuffer);
-      
-      getReverbProcessor().process (reverbBuffer);
 
-      for (int ch = 0; ch < numChannels; ch++)
-        scratchBuffer.addFrom (ch, 0, reverbBuffer, ch, 0, numSamples);
+#ifndef DEBUG // NOTE(Ragnar): Reverb processing is too heavy for debug mode
+      bool reverbEnabled = getSources().front()->IsReverbProcessEnabled();
+      if ( reverbEnabled || mReverb.getPower() > 0.f )
+      {
+        AudioBuffer<float> reverbBuffer (scratchBuffer);
+        
+        mReverb.process (reverbBuffer);
+
+        for (int ch = 0; ch < numChannels; ch++)
+          scratchBuffer.addFrom (ch, 0, reverbBuffer, ch, 0, numSamples);
+      }
 #endif
       outFifo.addToFifo(scratchBuffer);
     }
