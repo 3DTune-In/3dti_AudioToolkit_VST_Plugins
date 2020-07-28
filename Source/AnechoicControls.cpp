@@ -133,7 +133,7 @@ void AnechoicControls::updateBypass() {
 void AnechoicControls::hrtfMenuChanged() {
   auto text = hrtfMenu.getText();
   // Note(Ragnar): Windows FileChooser will only accept
-  // one filetype at at time se we provide separate options
+  // one filetype at a time so we provide separate options
   if ( text == "Load 3DTI" ) {
     loadCustomHrtf("*.3dti-hrtf");
   } else if ( text == "Load SOFA" ) {

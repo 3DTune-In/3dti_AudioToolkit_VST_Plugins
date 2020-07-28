@@ -1,5 +1,5 @@
 /**
-* \class Toolkit3dtiProcessor
+* \class ReverbProcessor
 *
 * \brief Declaration of Toolkit3dtiProcessor interface.
 * \date  June 2019
