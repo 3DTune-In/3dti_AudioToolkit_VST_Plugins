@@ -1,5 +1,5 @@
 /**
-* \class Toolkit3dtiProcessor
+* \class AnechoicProcessor
 *
 * \brief Declaration of Toolkit3dtiProcessor interface.
 * \date  June 2019
@@ -30,7 +30,7 @@ using CListenerRef = shared_ptr<Binaural::CListener>;
 using CSingleSourceRef = shared_ptr<Binaural::CSingleSourceDSP>;
 using CMonoBufferPairf = Common::CEarPair<CMonoBuffer<float>>;
 
-class Toolkit3dtiProcessor {
+class AnechoicProcessor {
 public:
     
   struct Impl {
@@ -47,7 +47,7 @@ public:
   };
   
   //============================================================================
-  Toolkit3dtiProcessor(Binaural::CCore& core);
+  AnechoicProcessor(Binaural::CCore& core);
   
   //============================================================================
   void setup(double sampleRate, int frameSize);

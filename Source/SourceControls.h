@@ -159,7 +159,7 @@ public:
   }
   
 private:
-  Toolkit3dtiProcessor& mCore;
+  AnechoicProcessor& mCore;
   
   Label  azimuthLabel;
   Label  distanceLabel;

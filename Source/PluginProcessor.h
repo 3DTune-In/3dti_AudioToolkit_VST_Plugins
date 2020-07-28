@@ -22,7 +22,7 @@
 
 #include <JuceHeader.h>
 #include <ff_buffers/ff_buffers_AudioBufferFIFO.h>
-#include "Toolkit3dtiProcessor.h"
+#include "AnechoicProcessor.h"
 #include "ReverbProcessor.h"
 
 //==============================================================================
@@ -74,8 +74,8 @@ public:
   void setStateInformation (const void* data, int sizeInBytes) override;
   
   //============================================================================
-  Toolkit3dtiProcessor& getCore()       { return mSpatializer; }
-  ReverbProcessor& getReverbProcessor() { return mReverb; }
+  AnechoicProcessor& getCore()            { return mSpatializer; }
+  ReverbProcessor&   getReverbProcessor() { return mReverb; }
     
   const std::vector<CSingleSourceRef>& getSources() {
       return getCore().getSources();
@@ -95,7 +95,7 @@ private:
   AudioBufferFIFO<float> inFifo, outFifo;
     
   Binaural::CCore mCore;
-  Toolkit3dtiProcessor mSpatializer {mCore};
+  AnechoicProcessor mSpatializer {mCore};
   ReverbProcessor mReverb {mCore};
   
   //==============================================================================

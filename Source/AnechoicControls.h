@@ -71,7 +71,7 @@ private:
   void updateDistanceAttenuation();
   
   Toolkit3dtiPluginAudioProcessor& mProcessor;
-  Toolkit3dtiProcessor& mCore;
+  AnechoicProcessor& mCore;
   
   ComboBox hrtfMenu;
   ToggleButton headCircumferenceToggle;

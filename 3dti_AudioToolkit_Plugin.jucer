@@ -409,10 +409,10 @@
             file="Source/ReverbProcessor.cpp"/>
       <FILE id="aTFbXM" name="ReverbProcessor.h" compile="0" resource="0"
             file="Source/ReverbProcessor.h"/>
-      <FILE id="Lm9Ui7" name="Toolkit3dtiProcessor.cpp" compile="1" resource="0"
-            file="Source/Toolkit3dtiProcessor.cpp"/>
-      <FILE id="alLkyK" name="Toolkit3dtiProcessor.h" compile="0" resource="0"
-            file="Source/Toolkit3dtiProcessor.h"/>
+      <FILE id="Lm9Ui7" name="AnechoicProcessor.cpp" compile="1" resource="0"
+            file="Source/AnechoicProcessor.cpp"/>
+      <FILE id="alLkyK" name="AnechoicProcessor.h" compile="0" resource="0"
+            file="Source/AnechoicProcessor.h"/>
       <FILE id="HCAHTd" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
     </GROUP>
   </MAINGROUP>

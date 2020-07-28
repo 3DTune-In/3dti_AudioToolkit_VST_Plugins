@@ -32,7 +32,7 @@ static const float RANGE_METERS = 40.f;
 
 class SpatializerWidget : public Component, public Slider::Listener {
 public:
-  SpatializerWidget(Toolkit3dtiProcessor& core) : mCore(core) {
+  SpatializerWidget(AnechoicProcessor& core) : mCore(core) {
     elevationDial.setSliderStyle( Slider::Rotary );
     elevationDial.setRange( -89, 89, 1 );
     elevationDial.setValue(0, dontSendNotification);
@@ -193,7 +193,7 @@ public:
   }
   
 private:
-  Toolkit3dtiProcessor& mCore;
+  AnechoicProcessor& mCore;
   
   void applyElevationRotation() {                                              // Elevation slider range is swapped because
     auto degrees = mapSliderValueToElevation(elevationDial.getValue()) * -1.f; // it plays better with the rotary style

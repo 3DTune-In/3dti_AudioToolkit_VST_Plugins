@@ -1,5 +1,5 @@
 /**
-* \class Toolkit3dtiProcessor
+* \class AnechoicProcessor
 *
 * \brief Declaration of Toolkit3dtiProcessor interface.
 * \date  June 2019
@@ -19,12 +19,12 @@
 */
 
 #include "Utils.h"
-#include "Toolkit3dtiProcessor.h"
+#include "AnechoicProcessor.h"
 
 void copySourceSettings(CSingleSourceRef oldSource, CSingleSourceRef newSource);
 
-Toolkit3dtiProcessor::Impl::Ptr CreateImpl(Binaural::CCore& core) {
-  Toolkit3dtiProcessor::Impl::Ptr impl (new Toolkit3dtiProcessor::Impl (core));
+AnechoicProcessor::Impl::Ptr CreateImpl(Binaural::CCore& core) {
+  AnechoicProcessor::Impl::Ptr impl (new AnechoicProcessor::Impl (core));
   
   auto blockSize  = core.GetAudioState().bufferSize;
     
@@ -38,7 +38,7 @@ Toolkit3dtiProcessor::Impl::Ptr CreateImpl(Binaural::CCore& core) {
   return impl;
 }
 
-Toolkit3dtiProcessor::Toolkit3dtiProcessor(Binaural::CCore& core)
+AnechoicProcessor::AnechoicProcessor(Binaural::CCore& core)
   : mCore (core),
     enableCustomizedITD("0", "Custom Head Circumference", false),
     headCircumference("1", "Head Circumference", 450, 620, 550),
@@ -55,7 +55,7 @@ Toolkit3dtiProcessor::Toolkit3dtiProcessor(Binaural::CCore& core)
   mTransform.SetPosition( Common::CVector3(1,0,0) );
 }
 
-void Toolkit3dtiProcessor::setup(double sampleRate, int samplesPerBlock) {
+void AnechoicProcessor::setup(double sampleRate, int samplesPerBlock) {
   if ( pimpl != nullptr ) {
     auto audioState = pimpl->mCore.GetAudioState();
     double currentSampleRate = audioState.sampleRate;
@@ -79,7 +79,7 @@ void Toolkit3dtiProcessor::setup(double sampleRate, int samplesPerBlock) {
   reset(std::move(impl), hrtf);
 }
 
-void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf) {
+void AnechoicProcessor::reset(Impl::Ptr impl, const File& hrtf) {
   if ( !hrtf.existsAsFile() ) {
     DBG("HRTF file doesn't exist");
   }
@@ -122,7 +122,7 @@ void Toolkit3dtiProcessor::reset(Impl::Ptr impl, const File& hrtf) {
   pimpl = std::move(impl);
 }
 
-void Toolkit3dtiProcessor::processAnechoic (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
+void AnechoicProcessor::processAnechoic (AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
   if ( pimpl == nullptr) {
     buffer.clear();
     return;
@@ -175,7 +175,7 @@ void Toolkit3dtiProcessor::processAnechoic (AudioBuffer<float>& buffer, MidiBuff
   }
 }
 
-void Toolkit3dtiProcessor::updateParameters(Impl& impl) {
+void AnechoicProcessor::updateParameters(Impl& impl) {
   if ( enableCustomizedITD ) {
     impl.mListener->EnableCustomizedITD();
   } else {
@@ -208,18 +208,18 @@ void Toolkit3dtiProcessor::updateParameters(Impl& impl) {
   impl.mCore.SetMagnitudes(magnitudes);
 }
 
-bool Toolkit3dtiProcessor::loadHRTF(int bundledIndex) {
+bool AnechoicProcessor::loadHRTF(int bundledIndex) {
   auto sampleRate = pimpl->mCore.GetAudioState().sampleRate;
   return loadHRTF (getBundledHRTF(bundledIndex, sampleRate));
 }
 
-bool Toolkit3dtiProcessor::loadHRTF(const File& file) {
+bool AnechoicProcessor::loadHRTF(const File& file) {
   reset (CreateImpl (mCore), file);
   return true;
 }
 
 // TODO: Move to private implmentation
-bool Toolkit3dtiProcessor::loadHRTF(Impl& impl, const File& file) {
+bool AnechoicProcessor::loadHRTF(Impl& impl, const File& file) {
   DBG("Loading HRTF: " << file.getFullPathName());
   bool success = false;
   success = loadResourceFile(impl, file, true);
@@ -228,11 +228,11 @@ bool Toolkit3dtiProcessor::loadHRTF(Impl& impl, const File& file) {
   return success;
 }
 
-bool Toolkit3dtiProcessor::loadHRTF_ILD(const File& file) {
+bool AnechoicProcessor::loadHRTF_ILD(const File& file) {
   return loadHRTF_ILD(*pimpl, file);
 }
 
-bool Toolkit3dtiProcessor::loadHRTF_ILD(Impl& impl, const File& file) {
+bool AnechoicProcessor::loadHRTF_ILD(Impl& impl, const File& file) {
   auto path = file.getFullPathName().toStdString();
   DBG("Loading HRTF ILD: " << path);
   auto fileSampleRate = ILD::GetSampleRateFrom3dti(path);
@@ -250,7 +250,7 @@ bool Toolkit3dtiProcessor::loadHRTF_ILD(Impl& impl, const File& file) {
   return success;
 }
 
-bool Toolkit3dtiProcessor::loadResourceFile(Impl &impl, const File& file, bool isHRTF) {
+bool AnechoicProcessor::loadResourceFile(Impl &impl, const File& file, bool isHRTF) {
   int sampleRate = impl.mCore.GetAudioState().sampleRate;
   int fileSampleRate = checkResourceSampleRate(file, isHRTF);
   // TODO: Throw exception / return error and trigger warning from editor
@@ -269,7 +269,7 @@ bool Toolkit3dtiProcessor::loadResourceFile(Impl &impl, const File& file, bool i
   return false;
 }
 
-void Toolkit3dtiProcessor::addSoundSource(Impl &impl, Common::CVector3& position) {
+void AnechoicProcessor::addSoundSource(Impl &impl, Common::CVector3& position) {
   if ( impl.sources.size() == 1 ) {
     DBG("Only one source allowed at this time.");
     return;
