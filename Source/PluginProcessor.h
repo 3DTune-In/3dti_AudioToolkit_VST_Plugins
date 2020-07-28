@@ -28,7 +28,12 @@
 //==============================================================================
 /**
 */
-class Toolkit3dtiPluginAudioProcessor  : public AudioProcessor, private AudioProcessorValueTreeState::Listener, private Timer
+
+static constexpr int kTOOLKIT_BUFFER_SIZE = 512; // TODO(Ragnar): Make variable
+
+class Toolkit3dtiPluginAudioProcessor : public AudioProcessor,
+                                        private AudioProcessorValueTreeState::Listener,
+                                        private Timer
 {
 public:
   //============================================================================

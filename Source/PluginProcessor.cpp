@@ -176,20 +176,23 @@ void Toolkit3dtiPluginAudioProcessor::changeProgramName (int index, const String
 
 //==============================================================================
 void Toolkit3dtiPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
+  const int blockSizeInternal = kTOOLKIT_BUFFER_SIZE;
+    
   inFifo.clear();
-  inFifo.setSize (getTotalNumOutputChannels(), samplesPerBlock * 2);
+  inFifo.setSize (getTotalNumOutputChannels(), blockSizeInternal + 1);
+  
   outFifo.clear();
-  outFifo.setSize(getTotalNumOutputChannels(), samplesPerBlock * 2);
+  outFifo.setSize(getTotalNumOutputChannels(), std::max(samplesPerBlock, blockSizeInternal) * 2);
    
-  scratchBuffer.setSize(getTotalNumOutputChannels(), samplesPerBlock);
+  scratchBuffer.setSize(getTotalNumOutputChannels(), blockSizeInternal);
     
   Common::TAudioStateStruct audioState;
-  audioState.bufferSize = samplesPerBlock;
+  audioState.bufferSize = blockSizeInternal;
   audioState.sampleRate = sampleRate;
   mCore.SetAudioState (audioState);
     
-  mSpatializer.setup (sampleRate, samplesPerBlock);
-  mReverb.setup (sampleRate, samplesPerBlock);
+  mSpatializer.setup (sampleRate, blockSizeInternal);
+  mReverb.setup (sampleRate, blockSizeInternal);
   
   startTimer(60);
 }
@@ -246,15 +249,18 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
       
     inFifo.addToFifo(temp);
 
-    if (inFifo.getNumReady() >= getBlockSize())
+    if (inFifo.getFreeSpace() == 0)
     {
-      inFifo.readFromFifo(scratchBuffer, getBlockSize());
+      const int blockSizeInternal = kTOOLKIT_BUFFER_SIZE;
+        
+      inFifo.readFromFifo(scratchBuffer, blockSizeInternal);
 
       // Main process
-      getCore().processAnechoic(scratchBuffer, midiMessages);
+      mSpatializer.processAnechoic(scratchBuffer, midiMessages);
 
 #ifndef DEBUG // NOTE(Ragnar): Reverb processing is too heavy for debug mode
       bool reverbEnabled = getSources().front()->IsReverbProcessEnabled();
+      
       if ( reverbEnabled || mReverb.getPower() > 0.f )
       {
         AudioBuffer<float> reverbBuffer (scratchBuffer);
@@ -262,7 +268,7 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
         mReverb.process (reverbBuffer);
 
         for (int ch = 0; ch < numChannels; ch++)
-          scratchBuffer.addFrom (ch, 0, reverbBuffer, ch, 0, numSamples);
+          scratchBuffer.addFrom (ch, 0, reverbBuffer, ch, 0, blockSizeInternal);
       }
 #endif
       outFifo.addToFifo(scratchBuffer);
