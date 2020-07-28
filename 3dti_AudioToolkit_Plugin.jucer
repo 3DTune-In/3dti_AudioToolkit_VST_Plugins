@@ -9,16 +9,7 @@
               bundleIdentifier="eu.3d-tune-in.toolkitplugin" version="1.0.2"
               companyWebsite="http://3d-tune-in.eu">
   <MAINGROUP id="J6xy11" name="3D Tune-In Toolkit">
-    <GROUP id="{7E66D3A7-5BFC-CA2F-8ED8-8DEFC273D8EA}" name="Resources">
-      <GROUP id="{B150DA93-28F3-1CF7-D468-A5A9ECBB8D79}" name="Images">
-        <FILE id="kHIiks" name="3DTI_Logo.png" compile="0" resource="1" file="Resources/Images/3DTI_Logo.png"/>
-        <FILE id="GJeaFt" name="Imperial_Logo.png" compile="0" resource="1"
-              file="Resources/Images/Imperial_Logo.png"/>
-        <FILE id="cUs8R9" name="UMA_Logo.png" compile="0" resource="1" file="Resources/Images/UMA_Logo.png"/>
-      </GROUP>
-      <FILE id="Zrk4nZ" name="About.txt" compile="0" resource="1" file="Resources/About.txt"/>
-    </GROUP>
-    <GROUP id="{0072A14B-EF34-C213-40D0-F89C311CFD79}" name="Source">
+    <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">
       <GROUP id="{5175E996-EC0E-2E5D-71BC-5D15B60AE6C5}" name="3dti_ResourceManager">
         <GROUP id="{B8B95D19-6F3E-24EF-1262-20F7895096B6}" name="BRIR">
           <FILE id="OVM2UX" name="BRIRCereal.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_ResourceManager/BRIR/BRIRCereal.cpp"/>
@@ -383,6 +374,17 @@
           <FILE id="pCCmYv" name="Vector3.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Vector3.h"/>
         </GROUP>
       </GROUP>
+    </GROUP>
+    <GROUP id="{7E66D3A7-5BFC-CA2F-8ED8-8DEFC273D8EA}" name="Resources">
+      <GROUP id="{B150DA93-28F3-1CF7-D468-A5A9ECBB8D79}" name="Images">
+        <FILE id="kHIiks" name="3DTI_Logo.png" compile="0" resource="1" file="Resources/Images/3DTI_Logo.png"/>
+        <FILE id="GJeaFt" name="Imperial_Logo.png" compile="0" resource="1"
+              file="Resources/Images/Imperial_Logo.png"/>
+        <FILE id="cUs8R9" name="UMA_Logo.png" compile="0" resource="1" file="Resources/Images/UMA_Logo.png"/>
+      </GROUP>
+      <FILE id="Zrk4nZ" name="About.txt" compile="0" resource="1" file="Resources/About.txt"/>
+    </GROUP>
+    <GROUP id="{0072A14B-EF34-C213-40D0-F89C311CFD79}" name="Source">
       <GROUP id="{F7B1272C-01A9-79C8-37DC-0602689E89CE}" name="Components">
         <FILE id="W6x9qA" name="AnechoicControls.cpp" compile="1" resource="0"
               file="Source/AnechoicControls.cpp"/>
