@@ -24,28 +24,34 @@
 void copySourceSettings(CSingleSourceRef oldSource, CSingleSourceRef newSource);
 
 AnechoicProcessor::Impl::Ptr CreateImpl(Binaural::CCore& core) {
-  AnechoicProcessor::Impl::Ptr impl (new AnechoicProcessor::Impl (core));
+  auto impl = std::make_unique<AnechoicProcessor::Impl> (core);
   
-  auto blockSize  = core.GetAudioState().bufferSize;
+  auto blockSize = core.GetAudioState().bufferSize;
     
   // Declaration and initialization of stereo buffer
   impl->mOutputBuffer.left .resize(blockSize);
   impl->mOutputBuffer.right.resize(blockSize);
   
-  // Create listener
-  impl->mListener = impl->mCore.CreateListener();
+  // Create listener if necessary
+  // NOTE(Ragnar): There can only be one listener and
+  // CreateListnener() returns nullptr if one exists
+  if (auto listener = core.GetListener())
+      impl->mListener = listener;
+  else
+      impl->mListener = core.CreateListener();
     
   return impl;
 }
 
 AnechoicProcessor::AnechoicProcessor(Binaural::CCore& core)
-  : mCore (core),
-    enableCustomizedITD("0", "Custom Head Circumference", false),
+  : enableCustomizedITD("0", "Custom Head Circumference", false),
     headCircumference("1", "Head Circumference", 450, 620, 550),
     enableNearDistanceEffect("2", "Near Distance Effect", true),
     enableFarDistanceEffect("3", "Far Distance Effect", false),
     spatializationMode("4", "SpatializationMode", 0, 2, 2),
     sourceDistanceAttenuation("5", "Source Distance Attenuation", NormalisableRange<float>(-6.f, 0.f, 0.1f), -6.f)
+  , mCore (core)
+  , pimpl (CreateImpl (core))
 {
 #if DEBUG
   ERRORHANDLER3DTI.SetVerbosityMode(VERBOSITYMODE_ERRORSANDWARNINGS);
@@ -56,17 +62,6 @@ AnechoicProcessor::AnechoicProcessor(Binaural::CCore& core)
 }
 
 void AnechoicProcessor::setup(double sampleRate, int samplesPerBlock) {
-  if ( pimpl != nullptr ) {
-    auto audioState = pimpl->mCore.GetAudioState();
-    double currentSampleRate = audioState.sampleRate;
-    int currentBlockSize = audioState.bufferSize;
-    if ( sampleRate == currentSampleRate
-      && samplesPerBlock == currentBlockSize ) {
-      // Session is already configured. Abort.
-      return;
-    }
-  }
-
   // Create new internal implementation
   auto impl = CreateImpl (mCore);
   
