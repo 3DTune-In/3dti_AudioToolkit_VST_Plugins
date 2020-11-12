@@ -3,11 +3,12 @@
 <JUCERPROJECT id="KqPFID" name="3D Tune-In Toolkit" projectType="audioplug"
               headerPath="../../libs&#10;../../libs/3dti_AudioToolkit/3dti_Toolkit&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include&#10;"
               defines="_3DTI_AXIS_CONVENTION_BINAURAL_TEST_APP&#10;_3DTI_ANGLE_CONVENTION_LISTEN&#10;"
-              pluginVST3Category="Spatial" pluginRTASCategory="512" pluginAAXCategory="512"
-              pluginVSTCategory="kPlugCategSpacializer" pluginAUMainType="'aupn'"
-              pluginFormats="buildVST" pluginManufacturer="3D Tune-In" aaxIdentifier="eu.3d-tune-in.toolkitplugin"
-              bundleIdentifier="eu.3d-tune-in.toolkitplugin" version="1.0.2"
-              companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1">
+              pluginVST3Category="Filter,Fx,Spatial" pluginRTASCategory="512"
+              pluginAAXCategory="512" pluginVSTCategory="kPlugCategSpacializer"
+              pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
+              aaxIdentifier="eu.3d-tune-in.toolkitplugin" bundleIdentifier="eu.3d-tune-in.toolkitplugin"
+              version="1.0.2" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
+              pluginManufacturerCode="Dtun" pluginCode="Plug" pluginAUMainType="'aufx'">
   <MAINGROUP id="J6xy11" name="3D Tune-In Toolkit">
     <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">
       <GROUP id="{5175E996-EC0E-2E5D-71BC-5D15B60AE6C5}" name="3dti_ResourceManager">
