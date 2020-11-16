@@ -7,7 +7,7 @@
               pluginAAXCategory="512" pluginVSTCategory="kPlugCategSpacializer"
               pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
               aaxIdentifier="eu.3d-tune-in.toolkitplugin" bundleIdentifier="eu.3d-tune-in.toolkitplugin"
-              version="1.0.2" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
+              version="1.1.0" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
               pluginManufacturerCode="Dtun" pluginCode="Plug" pluginAUMainType="'aufx'">
   <MAINGROUP id="J6xy11" name="3D Tune-In Toolkit">
     <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">
@@ -386,37 +386,34 @@
       <FILE id="Zrk4nZ" name="About.txt" compile="0" resource="1" file="Resources/About.txt"/>
     </GROUP>
     <GROUP id="{0072A14B-EF34-C213-40D0-F89C311CFD79}" name="Source">
-      <GROUP id="{F7B1272C-01A9-79C8-37DC-0602689E89CE}" name="Components">
-        <FILE id="W6x9qA" name="AnechoicControls.cpp" compile="1" resource="0"
-              file="Source/AnechoicControls.cpp"/>
-        <FILE id="Vt3dd4" name="AnechoicControls.h" compile="0" resource="0"
-              file="Source/AnechoicControls.h"/>
-        <FILE id="veMwhN" name="ElevationDial.h" compile="0" resource="0" file="Source/ElevationDial.h"/>
-        <FILE id="tGUDdi" name="ReverbControls.cpp" compile="1" resource="0"
-              file="Source/ReverbControls.cpp"/>
-        <FILE id="Gxw9c0" name="ReverbControls.h" compile="0" resource="0"
-              file="Source/ReverbControls.h"/>
-        <FILE id="o0ySdv" name="SourceControls.h" compile="0" resource="0"
-              file="Source/SourceControls.h"/>
-        <FILE id="TT1Whj" name="SpatializerWidget.h" compile="0" resource="0"
-              file="Source/SpatializerWidget.h"/>
-      </GROUP>
-      <FILE id="d8knCB" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="WHVvQL" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="sjO86d" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="Source/PluginProcessor.cpp"/>
-      <FILE id="vwCIL3" name="PluginProcessor.h" compile="0" resource="0"
-            file="Source/PluginProcessor.h"/>
-      <FILE id="ha5qio" name="ReverbProcessor.cpp" compile="1" resource="0"
-            file="Source/ReverbProcessor.cpp"/>
-      <FILE id="aTFbXM" name="ReverbProcessor.h" compile="0" resource="0"
-            file="Source/ReverbProcessor.h"/>
-      <FILE id="Lm9Ui7" name="AnechoicProcessor.cpp" compile="1" resource="0"
-            file="Source/AnechoicProcessor.cpp"/>
-      <FILE id="alLkyK" name="AnechoicProcessor.h" compile="0" resource="0"
-            file="Source/AnechoicProcessor.h"/>
-      <FILE id="HCAHTd" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
+      <FILE id="IT1DLt" name="AnechoicControls.cpp" compile="1" resource="0"
+            file="Source/Binaural/AnechoicControls.cpp"/>
+      <FILE id="Ndw3Iy" name="AnechoicControls.h" compile="0" resource="0"
+            file="Source/Binaural/AnechoicControls.h"/>
+      <FILE id="xZXtJR" name="AnechoicProcessor.cpp" compile="1" resource="0"
+            file="Source/Binaural/AnechoicProcessor.cpp"/>
+      <FILE id="QkWQRZ" name="AnechoicProcessor.h" compile="0" resource="0"
+            file="Source/Binaural/AnechoicProcessor.h"/>
+      <FILE id="zthAHu" name="ElevationDial.h" compile="0" resource="0" file="Source/Binaural/ElevationDial.h"/>
+      <FILE id="xXUgMr" name="PluginEditor.cpp" compile="1" resource="0"
+            file="Source/Binaural/PluginEditor.cpp"/>
+      <FILE id="G0lcwu" name="PluginEditor.h" compile="0" resource="0" file="Source/Binaural/PluginEditor.h"/>
+      <FILE id="ettTzB" name="PluginProcessor.cpp" compile="1" resource="0"
+            file="Source/Binaural/PluginProcessor.cpp"/>
+      <FILE id="keP4Da" name="PluginProcessor.h" compile="0" resource="0"
+            file="Source/Binaural/PluginProcessor.h"/>
+      <FILE id="X3JrSB" name="ReverbControls.cpp" compile="1" resource="0"
+            file="Source/Binaural/ReverbControls.cpp"/>
+      <FILE id="VqvgY8" name="ReverbControls.h" compile="0" resource="0"
+            file="Source/Binaural/ReverbControls.h"/>
+      <FILE id="tcCtIH" name="ReverbProcessor.cpp" compile="1" resource="0"
+            file="Source/Binaural/ReverbProcessor.cpp"/>
+      <FILE id="eQMQR7" name="ReverbProcessor.h" compile="0" resource="0"
+            file="Source/Binaural/ReverbProcessor.h"/>
+      <FILE id="OBvWNv" name="SourceControls.h" compile="0" resource="0"
+            file="Source/Binaural/SourceControls.h"/>
+      <FILE id="cjAXxY" name="SpatializerWidget.h" compile="0" resource="0"
+            file="Source/Binaural/SpatializerWidget.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>

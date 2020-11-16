@@ -20,8 +20,7 @@
 
 #pragma once
 
-#include "Utils.h"
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 
 //==============================================================================
 /*

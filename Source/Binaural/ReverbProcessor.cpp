@@ -18,7 +18,7 @@
 * \b Acknowledgement: This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
 */
 
-#include "Utils.h"
+#include "../Utils.h"
 #include "ReverbProcessor.h"
 
 ReverbProcessor::ReverbProcessor (Binaural::CCore& core)

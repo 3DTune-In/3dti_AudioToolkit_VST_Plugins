@@ -18,12 +18,13 @@
 * \b Acknowledgement: This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
 */
 
+#include "../Utils.h"
 #include "AnechoicControls.h"
 
 AnechoicControls::AnechoicControls(Toolkit3dtiPluginAudioProcessor& processor)
   : mProcessor(processor),
-  mCore(processor.getCore()),
-  distanceAttenuationLabel("Distance Label", "dB attenuation per double distance")
+    mCore(processor.getCore()),
+    distanceAttenuationLabel("Distance Label", "dB attenuation per double distance")
 {
   for ( int i = 0; i < BundledHRTFs.size(); i++ ) {
     hrtfMenu.addItem( BundledHRTFs[i], i+1 ); // IDs must be non-zero

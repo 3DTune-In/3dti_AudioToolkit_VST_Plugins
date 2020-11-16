@@ -23,7 +23,7 @@
 #include <JuceHeader.h>
 #include "ReverbProcessor.h"
 #include "PluginProcessor.h"
-#include "Utils.h"
+#include "../Utils.h"
 
 //==============================================================================
 /*
