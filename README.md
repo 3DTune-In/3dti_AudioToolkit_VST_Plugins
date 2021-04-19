@@ -38,8 +38,6 @@ The 3dti_audiotoolkit_vst has been tested on the following DAWs:
 
 The 3D Tune-In Toolkit VST plugin, Copyright (c) 2019 Imperial College London and University of Malaga, is distributed as open source under GPLv3. See [LICENSE](LICENSE) for further information.
 
-Contact: Lorenzo Picinali (l.picinali@imperial.ac.uk) and Arcadio Reyes-Lecuona (areyes@uma.es).
-
 ## Credits
 
 This software was developed by a team coordinated by 
