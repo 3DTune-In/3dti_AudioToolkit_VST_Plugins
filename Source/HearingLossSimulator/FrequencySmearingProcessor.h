@@ -26,16 +26,12 @@
 using namespace HAHLSimulation;
 
 //==============================================================================
-class FrequencySmearingProcessor : public Thread
+class FrequencySmearingProcessor
 {
 public:
     FrequencySmearingProcessor (CHearingLossSim& sim);
     
-    ~FrequencySmearingProcessor() override
-    {
-        // allow the thread 2 seconds to stop cleanly - should be plenty of time.
-        stopThread (2000);
-    }
+    ~FrequencySmearingProcessor() {}
 
     
     //==============================================================================
@@ -43,17 +39,6 @@ public:
     {
         for (auto const& channel : channels)
             channel->prepareToPlay (sampleRate, samplesPerBlock);
-        
-        startThread (1);
-    }
-
-    void run() override
-    {
-        while (! threadShouldExit())
-        {
-            wait (30);
-            updateSettingsIfNeeded();
-        }
     }
 
     //==============================================================================
@@ -88,8 +73,9 @@ public:
     const OwnedArray<Channel>& getChannels() { return channels; }
     
     //==============================================================================
-private:
     void updateSettingsIfNeeded();
+    
+private:
     
     CHearingLossSim& simulator;
     

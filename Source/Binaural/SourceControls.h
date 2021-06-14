@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -21,14 +21,15 @@
 #pragma once
 
 #include <JuceHeader.h>
+#include "Utils.h"
 
 //==============================================================================
 /*
  */
 class SourceControls : public Component, public Slider::Listener {
 public:
-  SourceControls(Toolkit3dtiPluginAudioProcessor& processor)
-   :  mCore(processor.getCore()),
+  SourceControls (AnechoicProcessor& processor)
+   :  mCore (processor),
       azimuthLabel("Azimuth Label", "Azimuth"),
       distanceLabel("Distance Label", "Distance"),
       elevationLabel("Elevation Label", "Elevation"),
@@ -36,6 +37,8 @@ public:
       yLabel("Y Label", "Y"),
       zLabel("Z Label", "Z")
   {
+    setOpaque (true);
+      
     setLabelStyle( azimuthLabel );
     azimuthLabel.setJustificationType( Justification::left );
     addAndMakeVisible( azimuthLabel );
@@ -102,7 +105,7 @@ public:
   }
   
   void updateGui() {
-    auto position = mCore.getSourcePosition();
+    auto position = mCore.getSourcePosition(0);
     distanceSlider.setValue(position.GetDistance(), dontSendNotification);
     azimuthSlider.setValue(position.GetAzimuthDegrees(), dontSendNotification);
     elevationSlider.setValue(mapElevationToSliderValue(position.GetElevationDegrees()), dontSendNotification);
@@ -112,9 +115,7 @@ public:
   }
 
   void paint (Graphics& g) override {
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));
-    g.setColour (Colours::grey);
-    g.drawRect (getLocalBounds(), 1);
+    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));;
   }
   
   void resized() override {
@@ -134,7 +135,9 @@ public:
   }
   
   void sliderValueChanged( Slider* slider ) override {
-    auto position = mCore.getSourcePosition();
+    auto source = mCore.getSources().front();
+      
+    auto position = mCore.getSourcePosition(source);
     
     if ( slider == &azimuthSlider ) {
       position.SetFromAED(slider->getValue(), position.GetElevationDegrees(), position.GetDistance());
@@ -151,7 +154,7 @@ public:
       position.z = slider->getValue();
     }
     
-    mCore.setSourcePosition(position);
+    mCore.setSourcePosition(source, position);
     
     repaint();
     updateGui();

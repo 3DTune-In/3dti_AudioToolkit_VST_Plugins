@@ -1,3 +1,6 @@
 builds/
-/JuceLibraryCode
+JuceLibraryCode/
+Output/
+Scripts/
 .DS_Store
+**/.DS_Store

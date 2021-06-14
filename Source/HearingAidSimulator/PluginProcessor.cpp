@@ -155,8 +155,8 @@ HASPluginAudioProcessor::HASPluginAudioProcessor()
         }
     }
     
-    addParameter (dynamicEQAttack[0] = new AudioParameterInt ("dynamic_eq_attack_left", "Attack Left", 0, 300, 100));
-    addParameter (dynamicEQAttack[1] = new AudioParameterInt ("dynamic_eq_attack_right", "Attack Right", 0, 300, 100));
+    addParameter (dynamicEQAttack[0] = new AudioParameterInt ("dynamic_eq_attack_left", "Attack Left", 1, 300, 100));
+    addParameter (dynamicEQAttack[1] = new AudioParameterInt ("dynamic_eq_attack_right", "Attack Right", 1, 300, 100));
     addParameter (dynamicEQRelease[0] = new AudioParameterInt ("dynamic_eq_release_left", "Release Left", 0, 2000, 1000));
     addParameter (dynamicEQRelease[1] = new AudioParameterInt ("dynamic_eq_release_right", "Release Right", 0, 2000, 1000));
     addParameter (dynamicEQCompressionPct[0] = new AudioParameterInt ("dynamic_eq_compression_pct_left", "Comp Pct Left", 0, 120, 100));

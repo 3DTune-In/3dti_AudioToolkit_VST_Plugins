@@ -20,11 +20,12 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "ChannelSettingsComponent.h"
 #include "DynamicEQComponent.h"
-#include "../Common/AudiogramComponent.h"
+#include "Common/AboutBanner.h"
+#include "Common/AudiogramComponent.h"
 
 //==============================================================================
 /**
@@ -43,7 +44,7 @@ public:
     
     void timerCallback() override;
     
-    void mouseDown(const MouseEvent &e) override {
+    void mouseUp (const MouseEvent &e) override {
         aboutText.setVisible(false);
     };
     
@@ -55,13 +56,7 @@ private:
     HASPluginAudioProcessor& processor;
     
     TextEditor aboutText;
-    TextButton aboutButton;
-    Label pluginVersionLabel;
-    Label toolkitVersionLabel;
-    
-    Image _3dTuneInLogo;
-    Image imperialLogo;
-    Image umaLogo;
+    AboutBanner aboutBanner;
     
     ChannelSettingsComponent channelSettingsComponent;
     std::unique_ptr<AudiogramComponent> audiogramComponent;

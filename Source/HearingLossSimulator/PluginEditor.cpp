@@ -31,29 +31,15 @@ HLSPluginAudioProcessorEditor::HLSPluginAudioProcessorEditor (HLSPluginAudioProc
     temporalDistortionComponent (p),
     frequencySmearingComponent (p)
 {
-    //addAndMakeVisible (aboutText);
-    addAndMakeVisible (aboutButton);
-    addAndMakeVisible (toolkitVersionLabel);
-    
-    _3dTuneInLogo = ImageCache::getFromMemory(BinaryData::_3DTI_Logo_png, BinaryData::_3DTI_Logo_pngSize);
-    imperialLogo = ImageCache::getFromMemory(BinaryData::Imperial_Logo_png, BinaryData::Imperial_Logo_pngSize);
-    umaLogo = ImageCache::getFromMemory(BinaryData::UMA_Logo_png, BinaryData::UMA_Logo_pngSize);
-    
     aboutText.setMultiLine(true);
     aboutText.setFont(Font(16.0f, Font::plain));
-    aboutText.setText(String::fromUTF8(BinaryData::About_txt, BinaryData::About_txtSize));
+    aboutText.setText(String::fromUTF8(BinaryData::About_HLS_txt, BinaryData::About_HLS_txtSize));
     aboutText.setReadOnly(true);
     aboutText.setAlpha(0.9f);
+    aboutText.addMouseListener (this, true);
     aboutText.setVisible (false);
     
-    aboutButton.setButtonText("About");
-    aboutButton.onClick = [this] {
-        aboutText.setVisible(! aboutText.isVisible());
-    };
-    addAndMakeVisible (aboutButton);
-    
-    toolkitVersionLabel.setFont(Font(15.f, Font::plain));
-    toolkitVersionLabel.setText("Version " +  String(JucePlugin_VersionString) + " (3DTI Toolkit v1.4)", dontSendNotification);
+    aboutBanner.button.onClick = [this] { aboutText.setVisible(!aboutText.isVisible()); };
             
     audiogramComponent.reset (new AudiogramComponent (p.getBandFrequencies(), 2));
     audiogramComponent->addListener (this);
@@ -66,6 +52,7 @@ HLSPluginAudioProcessorEditor::HLSPluginAudioProcessorEditor (HLSPluginAudioProc
     addAndMakeVisible (nonLinearAttenuatorComponent);
     addAndMakeVisible (temporalDistortionComponent);
     addAndMakeVisible (frequencySmearingComponent);
+    addAndMakeVisible (aboutBanner);
     addChildComponent (aboutText);
     
     setSize (800, 800);
@@ -109,37 +96,21 @@ void HLSPluginAudioProcessorEditor::timerCallback()
 void HLSPluginAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colour (24, 31, 34));
-    
-    auto bounds = getLocalBounds();
-    
-    auto aboutRect = bounds.removeFromTop (proportionOfHeight (0.06));
-    g.setColour(getLookAndFeel().findColour (ResizableWindow::backgroundColourId).darker());
-    g.fillRect(aboutRect);
-    g.setColour (Colours::grey);
-    g.drawRect(aboutRect);
-    
-    auto aboutRectf = aboutRect.toFloat();
-    int amountToRemove = aboutRectf.proportionOfWidth (0.17);
-    g.drawImage (umaLogo, aboutRectf.removeFromRight (amountToRemove).reduced (4), RectanglePlacement::centred);
-    g.drawImage (imperialLogo, aboutRectf.removeFromRight (amountToRemove).reduced (4), RectanglePlacement::centred);
-    g.drawImage (_3dTuneInLogo, aboutRectf.removeFromRight (amountToRemove).reduced (4), RectanglePlacement::centred);
 }
                                     
 void HLSPluginAudioProcessorEditor::resized()
 {
-    auto bounds = getLocalBounds();
+    auto r = getLocalBounds();
 
-    auto aboutBounds = bounds.removeFromTop (proportionOfHeight (0.06));
-    aboutButton.setBounds (aboutBounds.removeFromLeft (74).reduced (8));
-    toolkitVersionLabel.setBounds (aboutBounds);
+    aboutBanner.setBounds (r.removeFromTop (50));
     
-    aboutText.setBounds (bounds);
+    aboutText.setBounds (r);
 
-    channelSwitchComponent.setBounds (bounds.removeFromTop (proportionOfHeight (0.05)));
-    audiogramComponent->setBounds (bounds.removeFromTop (proportionOfHeight (0.25f)));
-    nonLinearAttenuatorComponent.setBounds (bounds.removeFromTop (proportionOfHeight (0.1)));
-    temporalDistortionComponent.setBounds (bounds.removeFromTop (bounds.proportionOfHeight (0.5)));
-    frequencySmearingComponent.setBounds (bounds);
+    channelSwitchComponent.setBounds (r.removeFromTop (proportionOfHeight (0.05)));
+    audiogramComponent->setBounds (r.removeFromTop (proportionOfHeight (0.25f)));
+    nonLinearAttenuatorComponent.setBounds (r.removeFromTop (proportionOfHeight (0.1)));
+    temporalDistortionComponent.setBounds (r.removeFromTop (r.proportionOfHeight (0.5)));
+    frequencySmearingComponent.setBounds (r);
 }
 
 void HLSPluginAudioProcessorEditor::audiogramPresetSelected (int channel, int index)

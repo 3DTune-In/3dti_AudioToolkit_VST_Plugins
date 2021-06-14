@@ -18,7 +18,7 @@
  * \b Acknowledgement: This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
  */
 
-#include "../Common/Constants.h"
+#include "Common/Constants.h"
 #include "Presets.h"
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
@@ -30,28 +30,16 @@ HASPluginAudioProcessorEditor::HASPluginAudioProcessorEditor (HASPluginAudioProc
     channelSettingsComponent (p),
     dynamicEQComponent (p)
 {
-    addAndMakeVisible (aboutButton);
-    addAndMakeVisible (toolkitVersionLabel);
-    
-    _3dTuneInLogo = ImageCache::getFromMemory(BinaryData::_3DTI_Logo_png, BinaryData::_3DTI_Logo_pngSize);
-    imperialLogo = ImageCache::getFromMemory(BinaryData::Imperial_Logo_png, BinaryData::Imperial_Logo_pngSize);
-    umaLogo = ImageCache::getFromMemory(BinaryData::UMA_Logo_png, BinaryData::UMA_Logo_pngSize);
-    
     aboutText.setMultiLine(true);
     aboutText.setFont(Font(16.0f, Font::plain));
-    aboutText.setText(String::fromUTF8(BinaryData::About_txt, BinaryData::About_txtSize));
+    aboutText.setText(String::fromUTF8(BinaryData::About_HAS_txt, BinaryData::About_HAS_txtSize));
     aboutText.setReadOnly(true);
     aboutText.setAlpha(0.9f);
+    aboutText.setEnabled (false);
+    aboutText.addMouseListener (this, true);
     aboutText.setVisible (false);
     
-    aboutButton.setButtonText("About");
-    aboutButton.onClick = [this] {
-        aboutText.setVisible(! aboutText.isVisible());
-    };
-    addAndMakeVisible (aboutButton);
-    
-    toolkitVersionLabel.setFont(Font(15.f, Font::plain));
-    toolkitVersionLabel.setText("Version " +  String(JucePlugin_VersionString) + " (3DTI Toolkit v1.4)", dontSendNotification);
+    aboutBanner.button.onClick = [this] { aboutText.setVisible(!aboutText.isVisible()); };
     
     audiogramComponent.reset (new AudiogramComponent (p.getBandFrequenciesAudiometry(), 2));
     audiogramComponent->addListener (this);
@@ -62,9 +50,10 @@ HASPluginAudioProcessorEditor::HASPluginAudioProcessorEditor (HASPluginAudioProc
     addAndMakeVisible (channelSettingsComponent);
     addAndMakeVisible (audiogramComponent.get());
     addAndMakeVisible (dynamicEQComponent);
+    addAndMakeVisible (aboutBanner);
     addChildComponent (aboutText);
     
-    setSize (800, 900);
+    setSize (800, 960);
     
     startTimer (30);
 }
@@ -106,30 +95,13 @@ void HASPluginAudioProcessorEditor::timerCallback()
 void HASPluginAudioProcessorEditor::paint (Graphics& g)
 {
     g.fillAll (Colour (24, 31, 34));
-    
-    auto bounds = getLocalBounds();
-    
-    auto aboutRect = bounds.removeFromTop (proportionOfHeight (0.06));
-    g.setColour(getLookAndFeel().findColour (ResizableWindow::backgroundColourId).darker());
-    g.fillRect(aboutRect);
-    g.setColour (Colours::grey);
-    g.drawRect(aboutRect);
-    
-    auto aboutRectf = aboutRect.toFloat();
-    int amountToRemove = aboutRectf.proportionOfWidth (0.17);
-    g.drawImage (umaLogo, aboutRectf.removeFromRight (amountToRemove).reduced (4), RectanglePlacement::centred);
-    g.drawImage (imperialLogo, aboutRectf.removeFromRight (amountToRemove).reduced (4), RectanglePlacement::centred);
-    g.drawImage (_3dTuneInLogo, aboutRectf.removeFromRight (amountToRemove).reduced (4), RectanglePlacement::centred);
 }
                                     
 void HASPluginAudioProcessorEditor::resized()
 {
     auto r = getLocalBounds();
 
-    auto aboutBounds = r.removeFromTop (proportionOfHeight (0.06));
-    aboutButton.setBounds (aboutBounds.removeFromLeft (74).reduced (8));
-    toolkitVersionLabel.setBounds (aboutBounds);
-    
+    aboutBanner.setBounds (r.removeFromTop (50));
     aboutText.setBounds (r);
 
     channelSettingsComponent.setBounds (r.removeFromTop (r.proportionOfHeight (0.14f)));

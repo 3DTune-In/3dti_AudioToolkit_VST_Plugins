@@ -12,7 +12,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{30BAF99F-B01C-4A65-ACCC-C7F997F22D58}
 AppName={#MyAppName}
-AppVersion=1.0.2
+AppVersion=1.1.1
 ;AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
@@ -21,7 +21,7 @@ AppUpdatesURL={#MyAppURL}
 UsePreviousAppDir=no
 DisableDirPage=no
 CreateAppDir=no       
-OutputBaseFilename=3DTI_Toolkit_VST_plugin_WIN_Installer-v1.0.2
+OutputBaseFilename=3DTI_Toolkit_VST_plugins_WIN_Installer_x64-v1.1.1
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64
@@ -35,11 +35,16 @@ Name: "full"; Description: "Full installation"
 ;Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Components]
-Name: "vst2_64"; Description: "64-bit VST2 Plugin (.dll)"; Types: full; Check: Is64BitInstallMode;
+Name: "vst2_64"; Description: "64-bit VST2 Plugins (.dll)"; Types: full; Check: Is64BitInstallMode;
 
 [Files]
-Source: "..\Builds\VisualStudio2017\x64\Release\VST\3D Tune-In Toolkit.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
-Source: "..\libs\3dti_AudioToolkit\resources\*"; DestDir: "{userappdata}\eu.3d-tune-in.toolkitplugin\Resources"; Flags:createallsubdirs recursesubdirs comparetimestamp
+Source: "..\Builds\VisualStudio2017\x64\Release\VST\3DTI Spatialisation.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Anechoic\Builds\VisualStudio2017\x64\Release\VST\3dti_Anechoic.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST\3dti_Reverb.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST\3dti_Hearing_Aid_Simulator.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST\3dti_Hearing_Loss_Simulator.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
+
+Source: "..\libs\3dti_AudioToolkit\resources\*"; DestDir: "{userappdata}\eu.3d-tune-in.toolkitplugin\Resources"; Flags:createallsubdirs recursesubdirs comparetimestamp;
 Source: "..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\x64\*"; DestDir: {sys};
 Source: "..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\lib\libsofa_x64.lib"; DestDir: {sys};
 

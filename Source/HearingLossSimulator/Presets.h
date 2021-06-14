@@ -2,7 +2,7 @@
 #pragma once
 
 #include <vector>
-#include "../Common/Constants.h"
+#include "Common/Constants.h"
 
 // =============================================================================
 static std::vector<std::vector<float>> hearingLossPresetValues = {

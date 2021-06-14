@@ -1,7 +1,7 @@
 /**
-* \class Toolkit3dtiPluginAudioProcessorEditor
+* \class AnechoicPluginProcessorEditor
 *
-* \brief Declaration of Toolkit3dtiPluginAudioProcessorEditor interface.
+* \brief Declaration of AnechoicPluginProcessorEditor interface.
 * \date  June 2019
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
@@ -20,62 +20,58 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
+#include "Common/AboutBanner.h"
 #include "AnechoicControls.h"
-#include "ReverbControls.h"
 #include "SourceControls.h"
+#include "SourceReverbControls.h"
 #include "SpatializerWidget.h"
 #include "ElevationDial.h"
-#include "PluginProcessor.h"
+#include "AnechoicPluginProcessor.h"
 
 //==============================================================================
 /**
 */
-class Toolkit3dtiPluginAudioProcessorEditor : public AudioProcessorEditor, public Timer {
+class AnechoicPluginProcessorEditor : public AudioProcessorEditor, public Timer
+{
 public:
-  Toolkit3dtiPluginAudioProcessorEditor (Toolkit3dtiPluginAudioProcessor&);
-  ~Toolkit3dtiPluginAudioProcessorEditor();
+  AnechoicPluginProcessorEditor (AnechoicPluginProcessor&);
+  ~AnechoicPluginProcessorEditor();
 
   //============================================================================
   void paint (Graphics&) override;
+  void paintOverChildren (Graphics& g) override;
   void resized() override;
   
-  void timerCallback() override {
+  void timerCallback() override
+  {
     anechoicControls.updateGui();
-    reverbControls.updateGui();
     sourceControls.updateGui();
     spatializerWidget.updateGui();
-    
+
     bool anechoicEnabled = anechoicControls.bypassToggle.getToggleState();
     anechoicControls.setAlpha(anechoicEnabled + 0.4f);
     sourceControls.setAlpha(anechoicEnabled + 0.4f);
-    
-    bool reverbEnabled = reverbControls.bypassToggle.getToggleState();
-    reverbControls.setAlpha(reverbEnabled + 0.4f);
   }
   
-  void mouseDown(const MouseEvent &e) override {
-    aboutText.setVisible(false);
+  void mouseDown (const MouseEvent &e) override {
+     aboutText.setVisible (false);
   };
   
 private:
-  // This reference is provided as a quick way for your editor to
-  // access the processor object that created it.
-  Toolkit3dtiPluginAudioProcessor& processor;
+  //============================================================================
+  AnechoicPluginProcessor& processor;
 
-  // Sub components
+  AboutBanner aboutBanner;
+
   SourceControls sourceControls;
-  ReverbControls reverbControls;
   AnechoicControls anechoicControls;
+  ReverbControls reverbControls;
   SpatializerWidget spatializerWidget;
+
   TextEditor aboutText;
-  TextButton aboutButton;
   Label pluginVersionLabel;
   Label toolkitVersionLabel;
-  
-  Image _3dTuneInLogo;
-  Image imperialLogo;
-  Image umaLogo;
 
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Toolkit3dtiPluginAudioProcessorEditor)
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnechoicPluginProcessorEditor)
 };

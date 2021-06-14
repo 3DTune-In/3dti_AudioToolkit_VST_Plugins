@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <JuceHeader.h>
+#include <ff_buffers/ff_buffers_AudioBufferFIFO.h>
 #include <HAHLSimulation/3DTI_HAHLSimulator.h>
 #include "FrequencySmearingProcessor.h"
 
@@ -122,9 +124,15 @@ public:
     // Frequency Smear settings
     FrequencySmearingProcessor frequencySmearProcessor;
 private:
+    void processBlockInternal (AudioBuffer<float>&);
+    
     //==============================================================================
     Common::CEarPair<CMonoBuffer<float>>  bIn;
     Common::CEarPair<CMonoBuffer<float>>  bOut;
+    
+    AudioBuffer<float>     scratchBuffer;
+    AudioBufferFIFO<float> inFifo  {2, 512},
+                           outFifo {2, 512};
     
     juce::Array<shared_ptr<CButterworthMultibandExpander>> butterWorthExpanders;
     juce::Array<shared_ptr<CGammatoneMultibandExpander>>   gammatoneExpanders;

@@ -1,8 +1,8 @@
 /**
- * \class Toolkit3dtiPluginAudioProcessor
+ * \class AnechoicPluginProcessor
  *
- * \brief Declaration of Toolkit3dtiPluginAudioProcessor interface.
- * \date  June 2019
+ * \brief Declaration of AnechoicPluginProcessor interface.
+ * \date  November 2020
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -23,22 +23,23 @@
 #include <JuceHeader.h>
 #include <ff_buffers/ff_buffers_AudioBufferFIFO.h>
 #include "AnechoicProcessor.h"
+#include "AmbisonicEncoder.h"
 #include "ReverbProcessor.h"
 
 //==============================================================================
 /**
 */
 
-static constexpr int kTOOLKIT_BUFFER_SIZE = 512; // TODO(Ragnar): Make variable
+using CSingleSourceRef = std::shared_ptr<Binaural::CSingleSourceDSP>;
 
-class Toolkit3dtiPluginAudioProcessor : public AudioProcessor,
-                                        private AudioProcessorValueTreeState::Listener,
-                                        private Timer
+class AnechoicPluginProcessor  :  public AudioProcessor
+                                , private AudioProcessorValueTreeState::Listener
+                                , private Timer
 {
 public:
   //============================================================================
-  Toolkit3dtiPluginAudioProcessor();
-  ~Toolkit3dtiPluginAudioProcessor();
+  AnechoicPluginProcessor();
+  ~AnechoicPluginProcessor();
 
   //============================================================================
   void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -74,30 +75,37 @@ public:
   void setStateInformation (const void* data, int sizeInBytes) override;
   
   //============================================================================
-  AnechoicProcessor& getCore()            { return mSpatializer; }
-  ReverbProcessor&   getReverbProcessor() { return mReverb; }
-    
   const std::vector<CSingleSourceRef>& getSources() {
       return getCore().getSources();
   }
   
+  AnechoicProcessor& getCore()            { return mSpatializer; }
+  
   AudioProcessorValueTreeState treeState;
+    
+  int pluginInstance{-1};
   
 private:
-  
-  void timerCallback() override { updateHostParameters(); }
+    //==========================================================================
+  void timerCallback() override
+  {
+  }
   
   void updateHostParameters();
   
   void parameterChanged(const String& parameterID, float newValue) override;
     
-  AudioBuffer<float>     scratchBuffer;
-  AudioBufferFIFO<float> inFifo, outFifo;
-    
-  Binaural::CCore mCore;
+  AudioBuffer<float>     scratchBufferMain, scratchBufferBuss;
+  AudioBufferFIFO<float> inFifoMain  {2, 512},
+                         outFifoMain {2, 512},
+                         inFifoBuss  {2, 512},
+                         outFifoBuss {2, 512};
+   
+  //============================================================================
+  Binaural::CCore   mCore;
   AnechoicProcessor mSpatializer {mCore};
-  ReverbProcessor mReverb {mCore};
+  AmbisonicEncoder  mEncoder {mCore};
   
   //==============================================================================
-  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Toolkit3dtiPluginAudioProcessor)
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AnechoicPluginProcessor)
 };

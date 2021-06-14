@@ -241,7 +241,7 @@ private:
             bandLimitSlider->setSliderStyle (Slider::SliderStyle::RotaryVerticalDrag);
             bandLimitSlider->setTextBoxStyle (Slider::TextBoxBelow,
                                               false,
-                                              40,
+                                              60,
                                               20);
             bandLimitSlider->textFromValueFunction = [] (double value) {
                 static std::map<double, String> mappedLabels = {
@@ -253,7 +253,7 @@ private:
                     {5.0, "6k4"},
                     {6.0, "12k8"},
                 };
-                return mappedLabels[value];
+                return mappedLabels[value] + " Hz";
             };
             sliders.add (bandLimitSlider);
             
@@ -265,13 +265,16 @@ private:
             
             Slider* noisePowerSlider;
             addAndMakeVisible (noisePowerSlider = new Slider);
+            noisePowerSlider->textFromValueFunction = [](double value) {
+                return String (value, 1) + " ms^s";
+            };
             noisePowerSlider->setNormalisableRange (NormalisableRange<double> (0.0, 1.0));
-            noisePowerSlider->setNumDecimalPlacesToDisplay (1);
             noisePowerSlider->setSliderStyle (Slider::SliderStyle::RotaryVerticalDrag);
             noisePowerSlider->setTextBoxStyle (Slider::TextBoxBelow,
                                               false,
-                                              40,
+                                              60,
                                               20);
+            noisePowerSlider->setValue (0.0, dontSendNotification);
             sliders.add (noisePowerSlider);
             
             noisePowerLabel.setFont (labelFont);
@@ -285,10 +288,10 @@ private:
             noiseAutocorrelationCutoffSlider->setSliderStyle (Slider::SliderStyle::RotaryVerticalDrag);
             noiseAutocorrelationCutoffSlider->setTextBoxStyle (Slider::TextBoxBelow,
                                                                false,
-                                                               40,
+                                                               60,
                                                                20);
             noiseAutocorrelationCutoffSlider->textFromValueFunction = [] (double value) {
-                return value == 1000.0 ? "1k" : String (value, 0);
+                return value == 1000.0 ? "1k" : String (value, 0) + " Hz";
             };
             sliders.add (noiseAutocorrelationCutoffSlider);
             

@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -22,6 +22,7 @@
 
 #include <JuceHeader.h>
 #include "ReverbProcessor.h"
+#include "SpatialisePluginProcessor.h"
 #include "Utils.h"
 
 //==============================================================================
@@ -30,7 +31,7 @@
 
 class ReverbControls : public Component, public Slider::Listener {
 public:
-  ReverbControls (ReverbProcessor& processor);
+  ReverbControls(Toolkit3dtiPluginAudioProcessor& processor);
   
   ~ReverbControls() {}
   
@@ -50,7 +51,7 @@ public:
     auto area = getLocalBounds();
     bypassToggle.setBounds( 10, 4, 80, 24 );
     brirMenu.setBounds( 12, 40, area.getWidth()-24, 22);
-    gainLabel.setBounds( 10, brirMenu.getBottom() + 16, area.getWidth()-20, 24);
+    gainLabel.setBounds( 10, brirMenu.getBottom() + 8, area.getWidth()-20, 24);
     gainSlider.setBounds( 6, gainLabel.getBottom(), area.getWidth()-18, 24);
     distanceAttenuationToggle.setBounds( 10, gainSlider.getBottom() +2, 80, 24);
     distanceAttenuationLabel.setBounds( 93, distanceAttenuationToggle.getY(), area.getWidth()-100, 24);
@@ -88,6 +89,7 @@ private:
   void updateBrirLabel();
   void updateDistanceAttenuation();
   
+  Toolkit3dtiPluginAudioProcessor& mProcessor;
   ReverbProcessor& mReverb;
   
   ComboBox brirMenu;

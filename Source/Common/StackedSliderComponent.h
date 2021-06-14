@@ -50,6 +50,7 @@ public:
             addAndMakeVisible (slider);
             
             auto* label = new Label ("100", "100");
+            label->setFont (Font (14));
             label->setJustificationType (Justification::centred);
             labels.add (label);
             addAndMakeVisible (label);

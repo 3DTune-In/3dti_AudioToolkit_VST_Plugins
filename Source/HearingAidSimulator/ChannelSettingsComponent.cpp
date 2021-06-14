@@ -23,7 +23,7 @@
 
 ChannelSettingsComponent::SingleChannelComponent::SingleChannelComponent (String heading, bool mirrored)
   : headingLabel (heading, heading),
-    gainLabel ("Gain", "Gain  (dB)"),
+    gainLabel ("Gain", "Gain  [dB]"),
     mirrored (mirrored)
 {
     headingLabel.setFont (Font (20));

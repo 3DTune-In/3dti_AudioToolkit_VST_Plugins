@@ -20,13 +20,14 @@
 
 #pragma once
 
-#include "JuceHeader.h"
+#include <JuceHeader.h>
 #include "PluginProcessor.h"
 #include "ChannelSwitchComponent.h"
 #include "NonLinearAttenuatorComponent.h"
 #include "TemporalDistortionComponent.h"
 #include "FrequencySmearingComponent.h"
-#include "../Common/AudiogramComponent.h"
+#include "Common/AboutBanner.h"
+#include "Common/AudiogramComponent.h"
 
 //==============================================================================
 /**
@@ -42,7 +43,7 @@ public:
     
     void timerCallback() override;
     
-    void mouseDown(const MouseEvent &e) override {
+    void mouseUp (const MouseEvent &e) override {
         aboutText.setVisible(false);
     };
     
@@ -54,13 +55,7 @@ private:
     HLSPluginAudioProcessor& processor;
     
     TextEditor aboutText;
-    TextButton aboutButton;
-    Label pluginVersionLabel;
-    Label toolkitVersionLabel;
-    
-    Image _3dTuneInLogo;
-    Image imperialLogo;
-    Image umaLogo;
+    AboutBanner aboutBanner;
     
     ChannelSwitchComponent channelSwitchComponent;
     std::unique_ptr<AudiogramComponent> audiogramComponent;

@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -20,8 +20,9 @@
 
 #include "ReverbControls.h"
 
-ReverbControls::ReverbControls(ReverbProcessor& p)
-  : mReverb (p),
+ReverbControls::ReverbControls(Toolkit3dtiPluginAudioProcessor& p)
+  : mProcessor(p),
+    mReverb (p.getReverbProcessor()),
     gainLabel("Level Label", "Level [dB]"),
     distanceAttenuationLabel("Distance Label", "dB attenuation per double distance")
 {
@@ -46,11 +47,11 @@ ReverbControls::ReverbControls(ReverbProcessor& p)
   distanceAttenuationToggle.setButtonText("On/Off");
   distanceAttenuationToggle.setToggleState(true, dontSendNotification);
   distanceAttenuationToggle.onClick = [this] { updateDistanceAttenuation(); };
-  // addAndMakeVisible( distanceAttenuationToggle );
+  addAndMakeVisible( distanceAttenuationToggle );
   
   setLabelStyle( distanceAttenuationLabel );
   distanceAttenuationLabel.setJustificationType( Justification::left );
-  // addAndMakeVisible( distanceAttenuationLabel );
+  addAndMakeVisible( distanceAttenuationLabel );
   
   mapParameterToSlider( distanceAttenuationSlider, mReverb.reverbDistanceAttenuation );
   distanceAttenuationSlider.setTextValueSuffix(" dB");
@@ -70,8 +71,17 @@ void ReverbControls::updateGui() {
   gainSlider.setValue(mReverb.reverbLevel.get(), dontSendNotification);
   distanceAttenuationSlider.setValue(mReverb.reverbDistanceAttenuation, dontSendNotification );
   
+  if ( !mProcessor.getSources().empty() ) {
+    auto source = mProcessor.getSources().front();
+    bypassToggle.setToggleState(source->IsReverbProcessEnabled(), dontSendNotification);
+    bool distanceAttenuationEnabled = source->IsDistanceAttenuationEnabledReverb();
+    distanceAttenuationToggle.setToggleState(distanceAttenuationEnabled, dontSendNotification);
+    distanceAttenuationLabel.setEnabled(distanceAttenuationEnabled);
+    distanceAttenuationSlider.setEnabled(distanceAttenuationEnabled);
+  }
+  
   auto brirIndex = mReverb.getBrirIndex();
-  if ( brirIndex != brirMenu.getSelectedItemIndex() && brirIndex < BundledBRIRs.size()-2 ) { // Show filename if custom file is selected
+  if ( brirIndex != brirMenu.getSelectedItemIndex() && brirIndex >= 0 && brirIndex < BundledBRIRs.size()) { // Show filename if custom file is selected
     brirMenu.setSelectedItemIndex(brirIndex, dontSendNotification);
   }
 }
@@ -101,24 +111,24 @@ void ReverbControls::loadCustomBRIR(String fileTypes) {
 
 void ReverbControls::updateBypass() {
   bool enabled = bypassToggle.getToggleState();
-//  if ( enabled  ) {
-//    mProcessor.getSources().front()->EnableReverbProcess();
-//  } else {
-//    mProcessor.getSources().front()->DisableReverbProcess();
-//  }
+  if ( enabled  ) {
+    mProcessor.getSources().front()->EnableReverbProcess();
+  } else {
+    mProcessor.getSources().front()->DisableReverbProcess();
+  }
   setAlpha( enabled + 0.4f );
 }
 
 void ReverbControls::updateBrirLabel() {
-  auto brir = mReverb.getBrirPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);
+  auto brir = mReverb.getBrirPath().getFileNameWithoutExtension();
   brirMenu.setText(brir, dontSendNotification);
 }
 
 void ReverbControls::updateDistanceAttenuation() {
-//  auto source = mProcessor.getSources().front();
-//  if ( distanceAttenuationToggle.getToggleState() ) {
-//    source->EnableDistanceAttenuationReverb();
-//  } else {
-//    source->DisableDistanceAttenuationReverb();
-//  }
+  auto source = mProcessor.getSources().front();
+  if ( distanceAttenuationToggle.getToggleState() ) {
+    source->EnableDistanceAttenuationReverb();
+  } else {
+    source->DisableDistanceAttenuationReverb();
+  }
 }

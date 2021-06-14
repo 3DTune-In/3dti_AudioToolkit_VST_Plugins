@@ -11,15 +11,17 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
 * \b Acknowledgement: This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
 */
 
-#include "PluginProcessor.h"
-#include "PluginEditor.h"
+#include "SpatialisePluginProcessor.h"
+#include "SpatialisePluginEditor.h"
+
+static constexpr int kTOOLKIT_BUFFER_SIZE = 512; // TODO(Ragnar): Make variable
 
 void addBooleanHostParameter(AudioProcessorValueTreeState& treeState, String name, int value) {
   const auto bypassValueToText = [](float value) {
@@ -42,7 +44,7 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::mono(), true)
+                       .withInput  ("Input",  JUCEApplication::isStandaloneApp() ? AudioChannelSet::stereo() : AudioChannelSet::mono(), true)
                       #endif
                        .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
@@ -52,6 +54,8 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
       inFifo (2, 512),
       outFifo(2, 512)
 {
+  mSpatializer.addSoundSource (Common::CVector3(0,1,0));
+    
   auto position = getCore().getSourcePosition();
   
   treeState.createAndAddParameter("Azimuth", "Azimuth", "", NormalisableRange<float>(0.0f, 359.99f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr);
@@ -75,8 +79,8 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
   treeState.createAndAddParameter("Source Attenuation", "Src Attenuation", "", getCore().sourceDistanceAttenuation.range, getCore().sourceDistanceAttenuation.get(), nullptr, nullptr);
   treeState.addParameterListener("Source Attenuation", this);
   
-  treeState.createAndAddParameter("Reverb Gain", "Reverb Gain", "", getReverbProcessor().reverbGain.range, getReverbProcessor().reverbGain.get(), nullptr, nullptr);
-  treeState.addParameterListener("Reverb Gain", this);
+  treeState.createAndAddParameter("Reverb Level", "Reverb Level", "", getReverbProcessor().reverbLevel.range, getReverbProcessor().reverbLevel.get(), nullptr, nullptr);
+  treeState.addParameterListener("Reverb Level", this);
   
   treeState.createAndAddParameter("Reverb Attenuation", "Rev Attenuation", "", getReverbProcessor().reverbDistanceAttenuation.range, getReverbProcessor().reverbDistanceAttenuation.get(), nullptr, nullptr);
   treeState.addParameterListener("Reverb Attenuation", this);
@@ -99,13 +103,19 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
   addBooleanHostParameter(treeState, "Enable Reverb", true);
   treeState.addParameterListener("Enable Reverb", this);
   
-  treeState.createAndAddParameter("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr);
+  using Parameter = AudioProcessorValueTreeState::Parameter;
+  treeState.createAndAddParameter(std::make_unique<Parameter> ("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr));
   treeState.addParameterListener("HRTF", this);
   
-  treeState.createAndAddParameter("BRIR", "BRIR", "", NormalisableRange<float>(0, BundledBRIRs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr);
+  treeState.createAndAddParameter(std::make_unique<Parameter> ("BRIR", "BRIR", "", NormalisableRange<float>(0, BundledBRIRs.size()+1), 0, [](float value) { return String (value, 0); }, nullptr));
   treeState.addParameterListener("BRIR", this);
 
   treeState.state = ValueTree("3D Tune-In Parameters");
+    
+#if DEBUG
+  ERRORHANDLER3DTI.SetVerbosityMode(VERBOSITYMODE_ERRORSANDWARNINGS);
+  ERRORHANDLER3DTI.SetErrorLogStream(&std::cout, true);
+#endif
 }
 
 Toolkit3dtiPluginAudioProcessor::~Toolkit3dtiPluginAudioProcessor()
@@ -179,19 +189,19 @@ void Toolkit3dtiPluginAudioProcessor::prepareToPlay (double sampleRate, int samp
   const int blockSizeInternal = kTOOLKIT_BUFFER_SIZE;
     
   inFifo.clear();
-  inFifo.setSize (getTotalNumOutputChannels(), blockSizeInternal + 1);
+  inFifo.setSize (1, blockSizeInternal + 1);
   
   outFifo.clear();
-  outFifo.setSize(getTotalNumOutputChannels(), std::max(samplesPerBlock, blockSizeInternal) * 2);
+  outFifo.setSize (2, std::max (samplesPerBlock, blockSizeInternal) * 2);
    
-  scratchBuffer.setSize(getTotalNumOutputChannels(), blockSizeInternal);
+  scratchBuffer.setSize (2, blockSizeInternal);
     
   Common::TAudioStateStruct audioState;
   audioState.bufferSize = blockSizeInternal;
   audioState.sampleRate = sampleRate;
   mCore.SetAudioState (audioState);
     
-  mSpatializer.setup (sampleRate, blockSizeInternal);
+  mSpatializer.setup (sampleRate);
   mReverb.setup (sampleRate, blockSizeInternal);
   
   startTimer(60);
@@ -205,24 +215,14 @@ void Toolkit3dtiPluginAudioProcessor::releaseResources() {
 #ifndef JucePlugin_PreferredChannelConfigurations
 bool Toolkit3dtiPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    ignoreUnused (layouts);
-    return true;
-  #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
+    if (layouts.getMainInputChannelSet() != AudioChannelSet::mono()
+     && layouts.getMainInputChannelSet() != AudioChannelSet::stereo())
+        return false;
+    
+    if (layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
-   #if ! JucePlugin_IsSynth
-    if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-        return false;
-   #endif
-
     return true;
-  #endif
 }
 #endif
  
@@ -239,24 +239,30 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
   int numSamples  = buffer.getNumSamples();
   int numChannels = buffer.getNumChannels();
 
-  AudioBuffer<float> temp (numChannels, 1);
+  AudioBuffer<float> temp (1, 1);
   // Some hosts send buffers of varying sizes so we maintain
   // an internal buffer to pass the correct size to the 3dti core
   for (int sample = 0; sample < numSamples; ++sample)
   {
-    temp.setDataToReferTo (buffer.getArrayOfWritePointers(),
-                           numChannels, sample, 1);
+    temp.clear();
       
-    inFifo.addToFifo(temp);
+    // Sum to mono in 'temp'
+    for (int channel = 0; channel < numChannels; ++channel)
+        temp.addSample (0, 0, buffer.getSample (channel, sample));
+    
+    temp.applyGain (1.0f / (float)numChannels);
+      
+    inFifo.addToFifo (temp);
 
     if (inFifo.getFreeSpace() == 0)
     {
       const int blockSizeInternal = kTOOLKIT_BUFFER_SIZE;
         
-      inFifo.readFromFifo(scratchBuffer, blockSizeInternal);
+      AudioBuffer<float> monoIn (1, blockSizeInternal);
+      inFifo.readFromFifo (monoIn, blockSizeInternal);
 
       // Main process
-      mSpatializer.processAnechoic(scratchBuffer, midiMessages);
+      mSpatializer.processBlock (monoIn, scratchBuffer);
 
 #ifndef DEBUG // NOTE(Ragnar): Reverb processing is too heavy for debug mode
       bool reverbEnabled = getSources().front()->IsReverbProcessEnabled();
@@ -325,7 +331,7 @@ void Toolkit3dtiPluginAudioProcessor::updateHostParameters() {
     {"Y", position.y},
     {"Z", position.z},
     {"Source Attenuation", getCore().sourceDistanceAttenuation},
-    {"Reverb Gain", getReverbProcessor().reverbGain},
+    {"Reverb Gain", getReverbProcessor().reverbLevel},
     {"Reverb Attenuation", getReverbProcessor().reverbDistanceAttenuation},
     {"Near Field", getCore().enableNearDistanceEffect},
     {"Far Field", getCore().enableFarDistanceEffect},
@@ -337,12 +343,21 @@ void Toolkit3dtiPluginAudioProcessor::updateHostParameters() {
     {"BRIR", getReverbProcessor().getBrirIndex() },
   };
 
-  for ( auto const & parameter : parameters ) {
-    if ( AudioProcessorParameter* p = treeState.getParameter(parameter.first) ) {
-      const float newValue = treeState.getParameterRange(parameter.first).convertTo0to1(parameter.second);
+  for (auto const & parameter : parameters) {
+    if (auto* p = treeState.getParameter(parameter.first) ) {
+        auto range = treeState.getParameterRange (parameter.first);
+        
+        if (parameter.second < range.start || parameter.second > range.end)
+            continue;
+        
+        auto newValue = range.convertTo0to1 (parameter.second);
       
-      if ( fabs(p->getValue() - newValue) > std::numeric_limits<float>::epsilon() )
-        p->setValueNotifyingHost(newValue);
+        if (fabsf (p->getValue() - newValue) > std::numeric_limits<float>::epsilon())
+        {
+            treeState.removeParameterListener (parameter.first, this);
+            p->setValueNotifyingHost(newValue);
+            treeState.addParameterListener (parameter.first, this);
+        }
     }
   }
 }
@@ -351,7 +366,6 @@ void Toolkit3dtiPluginAudioProcessor::parameterChanged(const String& parameterID
   auto position = getCore().getSourcePosition();
   
   if ( parameterID == "Azimuth" ) {
-    DBG("Azimuth: " + String(newValue));
     position.SetFromAED( newValue, position.GetElevationDegrees(), position.GetDistance() );
   } else if ( parameterID == "Distance" ) {
     position.SetFromAED( position.GetAzimuthDegrees(), position.GetElevationDegrees(), newValue );
@@ -365,8 +379,8 @@ void Toolkit3dtiPluginAudioProcessor::parameterChanged(const String& parameterID
     position.z = newValue;
   } else if ( parameterID == "Source Attenuation" ) {
     getCore().sourceDistanceAttenuation = newValue;
-  } else if ( parameterID == "Reverb Gain" ) {
-    getReverbProcessor().reverbGain = newValue;
+  } else if ( parameterID == "Reverb Level" ) {
+    getReverbProcessor().reverbLevel = newValue;
   } else if ( parameterID == "Reverb Attenuation" ) {
     getReverbProcessor().reverbDistanceAttenuation = newValue;
   } else if ( parameterID == "Near Field" ) {
@@ -398,12 +412,12 @@ void Toolkit3dtiPluginAudioProcessor::parameterChanged(const String& parameterID
       }
     }
   } else if ( parameterID == "HRTF" ) {
-    getCore().loadHRTF((int)newValue);
+      getCore().loadHRTF((int)newValue);
   } else if ( parameterID == "BRIR" ) {
-    getReverbProcessor().loadBRIR((int)newValue);
+      getReverbProcessor().loadBRIR((int)newValue);
   }
 
-  getCore().setSourcePosition(position);
+  getCore().setSourcePosition(getCore().getSources().front(), position);
 }
 
 //==============================================================================

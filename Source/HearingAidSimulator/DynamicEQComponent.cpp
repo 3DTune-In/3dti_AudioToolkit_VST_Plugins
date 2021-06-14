@@ -104,12 +104,12 @@ DynamicEQComponent::DynamicEQComponent (HASPluginAudioProcessor& p)
 DynamicEQComponent::Channel::Channel (bool mirrored)
   : mirrored (mirrored),
     eqComponent (BANDS_NUMBER, Range<double> (0.0, 65.0), 0.0, Slider::SliderStyle::ThreeValueVertical, Slider::TextBoxBelow, 0),
-    thresholdLabel ("Threshold", "Threshold"),
-    attackLabel ("Attack", "Attack"),
-    releaseLabel ("Release", "Release"),
-    compressionPercentLabel ("Compression (%)", "Compression (%)")
+    thresholdLabel ("Threshold", "Threshold\n[dBfs]"),
+    attackLabel ("Attack", "Attack [ms]"),
+    releaseLabel ("Release", "Release [ms]"),
+    compressionPercentLabel ("Compression", "Compression [%]")
 {
-    fig6Button.setButtonText ("Fig6");
+    fig6Button.setButtonText ("Fit HA\nusing\nFig6");
     addAndMakeVisible (fig6Button);
     
     // juce::Array<Colour> slidercolours = {Colours::green, Colours::red, getLookAndFeel().findColour (Slider::thumbColourId)};
@@ -117,6 +117,8 @@ DynamicEQComponent::Channel::Channel (bool mirrored)
     for (auto* s : eqComponent.getSliders())
         s->setPopupDisplayEnabled (true, true, this, -1);
     
+    thresholdLabel.setJustificationType (Justification::centred);
+    thresholdLabel.setFont (Font (14));
     addAndMakeVisible (thresholdLabel);
     
     thresholdSlider.setSliderStyle (Slider::SliderStyle::ThreeValueVertical);
@@ -147,8 +149,8 @@ DynamicEQComponent::Channel::Channel (bool mirrored)
     addAndMakeVisible (releaseLabel);
     addAndMakeVisible (compressionPercentLabel);
     
-    attackSlider.setRange (0.0f, 300.0f);
-    attackSlider.setValue (0.0f);
+    attackSlider.setRange (1.0f, 300.0f);
+    attackSlider.setValue (1.0f);
     attackSlider.setNumDecimalPlacesToDisplay (0);
     attackSlider.setSliderStyle (Slider::SliderStyle::LinearHorizontal);
     attackSlider.setTextBoxStyle (mirrored ? Slider::TextBoxLeft : Slider::TextBoxRight,
@@ -186,11 +188,11 @@ void DynamicEQComponent::Channel::resized()
         Rectangle<int> thresholdBounds;
         
         if (mirrored)
-            thresholdBounds = eqBounds.removeFromLeft (eqBounds.proportionOfWidth (0.2f));
+            thresholdBounds = eqBounds.removeFromLeft (eqBounds.proportionOfWidth (0.22f));
         else
-            thresholdBounds = eqBounds.removeFromRight (eqBounds.proportionOfWidth (0.2f));
+            thresholdBounds = eqBounds.removeFromRight (eqBounds.proportionOfWidth (0.22f));
 
-        thresholdLabel.setBounds (thresholdBounds.removeFromTop (30));
+        thresholdLabel.setBounds (thresholdBounds.removeFromTop (28));
         thresholdSlider.setBounds (thresholdBounds);
         
         eqComponent.setBounds (eqBounds);
@@ -200,7 +202,7 @@ void DynamicEQComponent::Channel::resized()
         auto sectionHeight = r.proportionOfHeight (0.33f);
         if (mirrored)
         {
-            fig6Button.setBounds (r.removeFromLeft (r.proportionOfWidth (0.2f)).reduced (8).withHeight (36));
+            fig6Button.setBounds (r.removeFromLeft (r.proportionOfWidth (0.2f)).reduced (8, 24));
             auto attackBounds = r.removeFromTop (sectionHeight);
             attackLabel.setBounds (attackBounds.removeFromLeft (attackBounds.proportionOfWidth (0.25f)));
             attackSlider.setBounds (attackBounds);
@@ -212,7 +214,7 @@ void DynamicEQComponent::Channel::resized()
         }
         else
         {
-            fig6Button.setBounds (r.removeFromRight (r.proportionOfWidth (0.2f)).reduced (8).withHeight (36));
+            fig6Button.setBounds (r.removeFromRight (r.proportionOfWidth (0.2f)).reduced (8, 24));
             auto attackBounds = r.removeFromTop (sectionHeight);
             attackLabel.setBounds (attackBounds.removeFromRight (attackBounds.proportionOfWidth (0.25f)));
             attackSlider.setBounds (attackBounds);

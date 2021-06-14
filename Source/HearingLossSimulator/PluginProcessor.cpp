@@ -20,11 +20,12 @@
 
 #include <HAHLSimulation/ButterworthMultibandExpander.h>
 #include <HAHLSimulation/GammatoneMultibandExpander.h>
-#include "../Common/Constants.h"
+#include "Common/Constants.h"
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
 #define NUM_BANDS Constants::NUM_BANDS
+static constexpr int kINTERNAL_BLOCK_SIZE = 512;
 
 static Common::T_ear ears[2] = {Common::T_ear::LEFT, Common::T_ear::RIGHT};
 
@@ -49,8 +50,8 @@ HLSPluginAudioProcessor::HLSPluginAudioProcessor()
     
     // addParameter (channelsLink = new AudioParameterBool ("channels_link", "Channel Link", false));
     
-    addParameter (enableSimulation[0] = new AudioParameterBool ("enable_simulation_left", "Enable Left", false));
-    addParameter (enableSimulation[1] = new AudioParameterBool ("enable_simulation_right", "Enable Right", false));
+    addParameter (enableSimulation[0] = new AudioParameterBool ("enable_simulation_left", "Enable Left", true));
+    addParameter (enableSimulation[1] = new AudioParameterBool ("enable_simulation_right", "Enable Right", true));
     
     for (int i = 0; i < NUM_BANDS; i++)
     {
@@ -96,10 +97,10 @@ HLSPluginAudioProcessor::HLSPluginAudioProcessor()
     addParameter (temporalDistortionLink = new AudioParameterBool ("temporal_distortion_link", "Temp Dist Link", false));
     addParameter (jitterBandLimit[0] = new AudioParameterInt ("jitter_band_limit_left",
                                                               "Jitter Band Limit Left",
-                                                              0, 6, 0));
+                                                              0, 6, 3));
     addParameter (jitterBandLimit[1] = new AudioParameterInt ("jitter_band_limit_right",
                                                               "Jitter Band Limit Right",
-                                                              0, 6, 0));
+                                                              0, 6, 3));
     addParameter (jitterNoisePower[0] = new AudioParameterFloat ("jitter_noise_power_left",
                                                                  "Jitter Noise L",
                                                                  NormalisableRange<float> (0.0f, 1.0f),
@@ -118,10 +119,10 @@ HLSPluginAudioProcessor::HLSPluginAudioProcessor()
                                                                  [] (const String& text) { return text.getFloatValue(); }));
     addParameter (jitterNoiseAutocorrelationCutoff[0] = new AudioParameterInt ("jitter_autocorrelation_cutoff_left",
                                                                                "Jitter Autocorrelation Cutoff Left",
-                                                                               0, 1000, 0));
+                                                                               0, 1000, 500));
     addParameter (jitterNoiseAutocorrelationCutoff[1] = new AudioParameterInt ("jitter_autocorrelation_cutoff_right",
                                                                                "Jitter Autocorrelation Cutoff Right",
-                                                                               0, 1000, 0));
+                                                                               0, 1000, 500));
     addParameter (jitterLeftRightSynchronicity = new AudioParameterFloat ("jitter_left_right_synchronicity",
                                                                           "Jitter L/R Sync",
                                                                           NormalisableRange<float> (0.0f, 1.0f),
@@ -218,7 +219,18 @@ void HLSPluginAudioProcessor::changeProgramName (int index, const String& newNam
 //==============================================================================
 void HLSPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
 {
-    simulator.Setup ((int)sampleRate, 100, NUM_BANDS, samplesPerBlock);
+    auto const maxChannels = std::max (getTotalNumInputChannels(), getTotalNumOutputChannels());
+    
+    auto const blockSizeInternal = kINTERNAL_BLOCK_SIZE;
+    inFifo.clear();
+    inFifo.setSize (maxChannels, std::max (blockSizeInternal, samplesPerBlock) + 1);
+    
+    outFifo.clear();
+    outFifo.setSize (maxChannels, std::max (samplesPerBlock, blockSizeInternal) * 2);
+    
+    scratchBuffer.setSize (maxChannels, blockSizeInternal);
+    
+    simulator.Setup ((int)sampleRate, 100, NUM_BANDS, blockSizeInternal);
 
     // Set up multiband expanders
     for (int i = 0; i < getTotalNumOutputChannels(); i++)
@@ -242,14 +254,14 @@ void HLSPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBl
         gammatoneExpanders.add (gammatoneExpander);
     }
     
-    frequencySmearProcessor.prepareToPlay (sampleRate, samplesPerBlock);
+    frequencySmearProcessor.prepareToPlay (sampleRate, blockSizeInternal);
 
     // Set up buffers
-    bIn.left .assign (samplesPerBlock, 0.0f);
-    bIn.right.assign (samplesPerBlock, 0.0f);
+    bIn.left .assign (blockSizeInternal, 0.0f);
+    bIn.right.assign (blockSizeInternal, 0.0f);
     
-    bOut.left .assign (samplesPerBlock, 0.0f);
-    bOut.right.assign (samplesPerBlock, 0.0f);
+    bOut.left .assign (blockSizeInternal, 0.0f);
+    bOut.right.assign (blockSizeInternal, 0.0f);
 }
 
 void HLSPluginAudioProcessor::releaseResources()
@@ -289,18 +301,54 @@ void HLSPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
     auto inChannels  = getTotalNumInputChannels();
     auto outChannels = getTotalNumOutputChannels();
     
-    for (auto i = inChannels; i < outChannels; ++i) {
-        buffer.clear(i, 0, buffer.getNumSamples());
+    for (auto i = inChannels; i < outChannels; ++i)
+        buffer.clear (i, 0, buffer.getNumSamples());
+    
+    inFifo.addToFifo (buffer);
+    
+    const int numSamples = buffer.getNumSamples();
+    const int blockSizeInternal = kINTERNAL_BLOCK_SIZE;
+
+    while (inFifo.getNumReady() >= blockSizeInternal)
+    {
+        scratchBuffer.clear();
+        
+        inFifo.readFromFifo (scratchBuffer);
+        
+        processBlockInternal (scratchBuffer);
+        
+        outFifo.addToFifo (scratchBuffer);
+    }
+
+    int numReady = outFifo.getNumReady();
+    if (numReady < numSamples)
+    {
+        int diff = numSamples - numReady;
+        outFifo.addSilenceToFifo (diff);
+
+        // Update the host latency
+        int latency = getLatencySamples() + diff;
+        setLatencySamples (latency);
     }
     
+    outFifo.readFromFifo (buffer);
+}
+
+void HLSPluginAudioProcessor::processBlockInternal (AudioBuffer<float>& buffer)
+{
     // We currently assume working in stereo
     jassert (buffer.getNumChannels() == 2);
+    jassert (bIn.left.size()  >= buffer.getNumSamples());
+    jassert (bOut.left.size() >= buffer.getNumSamples());
     
     int numSamples = buffer.getNumSamples();
     
     /*
      /// Update parameters
      */
+    
+    frequencySmearProcessor.updateSettingsIfNeeded();
+    
     for (int ch = 0; ch < getTotalNumOutputChannels(); ch++)
     {
         if (enableSimulation[ch]->get())
@@ -343,13 +391,11 @@ void HLSPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuff
         temporalDistortionSimulator->SetNoiseAutocorrelationFilterCutoffFrequency (ears[i], jitterNoiseAutocorrelationCutoff[channel]->get());
     }
     temporalDistortionSimulator->SetLeftRightNoiseSynchronicity (jitterLeftRightSynchronicity->get());
-
-    // frequencySmearProcessor.processBlock (buffer);
     
     // Fill input buffer and clear output
     for (int i = 0; i < numSamples; i++)
     {
-        bIn.left[i]  = buffer.getReadPointer (0)[i];
+        bIn.left [i] = buffer.getReadPointer (0)[i];
         bIn.right[i] = buffer.getReadPointer (1)[i];
     }
     

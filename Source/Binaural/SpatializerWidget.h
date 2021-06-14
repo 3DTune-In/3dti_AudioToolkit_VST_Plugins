@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 #include "ElevationDial.h"
 
 //==============================================================================
@@ -29,10 +29,12 @@
 
 // The distance in meters at the edge of screen coordinates
 static const float RANGE_METERS = 40.f;
+static const int kMargins = 20;
 
 class SpatializerWidget : public Component, public Slider::Listener {
 public:
   SpatializerWidget(AnechoicProcessor& core) : mCore(core) {
+    setOpaque (true);
     elevationDial.setSliderStyle( Slider::Rotary );
     elevationDial.setRange( -89, 89, 1 );
     elevationDial.setValue(0, dontSendNotification);
@@ -50,9 +52,7 @@ public:
     
     g.setColour(Colours::grey);
     
-    auto localBounds = getLocalBounds();
-    g.drawRect(localBounds, 1);   // draw an outline around the component
-    
+    auto localBounds = getLocalBounds().reduced (kMargins);
     auto centrePoint = localBounds.getCentre().toFloat();
     
     // Draw listener head and distance radii
@@ -100,9 +100,9 @@ public:
       g.drawLine(rect.getX(), rect.getBottom(), rect.getRight(), rect.getY());
     }
     
-    auto position = mCore.getSourcePosition();
+    auto position = mCore.getSourcePosition(0);
     
-    auto drawPosition = mCore.getSourcePosition();
+    auto drawPosition = position;
     drawPosition.SetFromAED(position.GetAzimuthDegrees(), 0, position.GetDistance());
     auto distance = scaledRange.convertFrom0to1(position.GetDistance() / RANGE_METERS);
     auto angle = drawPosition.GetAzimuthDegrees();
@@ -136,7 +136,8 @@ public:
   }
   
   void resized() override {
-    scaledRange = NormalisableRange<float>(0, getHeight() * 0.5f, 1.f, 3.5f);
+    auto height = getLocalBounds().reduced (kMargins).getHeight();
+    scaledRange = NormalisableRange<float>(0, height * 0.5f, 1.f, 3.5f);
   }
   
   void mouseDown(const MouseEvent&) override {
@@ -169,9 +170,10 @@ public:
     auto value = scaledRange.convertTo0to1(distance) * maxValue;
     auto distanceScaled = jlimit<float>(minValue, maxValue, value);
     
-    auto position = mCore.getSourcePosition();
+    auto source = mCore.getSources().front();
+    auto position = mCore.getSourcePosition(source);
     position.SetFromAED(azimuth, position.GetElevationDegrees(), distanceScaled);
-    mCore.setSourcePosition(position);
+    mCore.setSourcePosition(source, position);
     
     applyElevationRotation();
     updateGui();
@@ -179,7 +181,7 @@ public:
   
   void updateGui() {
     if ( !mouseIsDown ) {
-      auto elevation = mCore.getSourcePosition().GetElevationDegrees();
+      auto elevation = mCore.getSourcePosition(0).GetElevationDegrees();
       elevationDial.setValue(mapElevationToSliderValue(elevation) * -1.f, // Elevation slider range is swapped because
                              dontSendNotification);                       // it plays better with the rotary style
     }
@@ -195,11 +197,13 @@ public:
 private:
   AnechoicProcessor& mCore;
   
-  void applyElevationRotation() {                                              // Elevation slider range is swapped because
+  void applyElevationRotation() {                                              // Elevation slider range is swapped becauses
     auto degrees = mapSliderValueToElevation(elevationDial.getValue()) * -1.f; // it plays better with the rotary style
-    auto position = mCore.getSourcePosition();
+    auto position = mCore.getSourcePosition (mCore.getSources().front());
     position.SetFromAED(position.GetAzimuthDegrees(), degrees, position.GetDistance());
-    mCore.setSourcePosition( position );
+    
+    auto source = mCore.getSources().front();
+    mCore.setSourcePosition (source, position);
   }
   
   bool mouseIsDown;

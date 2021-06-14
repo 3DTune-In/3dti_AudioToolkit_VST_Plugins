@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="KqPFID" name="3DTI Anechoic Spatialisation" projectType="audioplug"
+              headerPath="../../../libs&#10;../../../libs/3dti_AudioToolkit/3dti_Toolkit&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include&#10;../../../Source"
+              defines="_3DTI_AXIS_CONVENTION_BINAURAL_TEST_APP&#10;_3DTI_ANGLE_CONVENTION_LISTEN"
+              pluginVST3Category="Spatial" pluginRTASCategory="512" pluginAAXCategory="512"
+              pluginVSTCategory="kPlugCategSpacializer" pluginAUMainType="'aupn'"
+              pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
+              aaxIdentifier="eu.3d-tune-in.anechoic" bundleIdentifier="eu.3d-tune-in.anechoic"
+              version="1.1.1" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
+              pluginManufacturerCode="Tdti" pluginCode="Tspa" displaySplashScreen="1">
+  <MAINGROUP id="J6xy11" name="3DTI Anechoic Spatialisation">
+    <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">
+      <GROUP id="{5175E996-EC0E-2E5D-71BC-5D15B60AE6C5}" name="3dti_ResourceManager">
+        <GROUP id="{B8B95D19-6F3E-24EF-1262-20F7895096B6}" name="BRIR">
+          <FILE id="OVM2UX" name="BRIRCereal.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/BRIR/BRIRCereal.cpp"/>
+          <FILE id="i31cKx" name="BRIRCereal.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/BRIR/BRIRCereal.h"/>
+          <FILE id="Y8ezc6" name="BRIRFactory.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/BRIR/BRIRFactory.cpp"/>
+          <FILE id="dyC9LI" name="BRIRFactory.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/BRIR/BRIRFactory.h"/>
+        </GROUP>
+        <GROUP id="{4E96A8A9-B313-DA98-7A8A-FA47C5D8B8F8}" name="HRTF">
+          <FILE id="taCREq" name="HRTFCereal.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/HRTF/HRTFCereal.cpp"/>
+          <FILE id="XJHdcK" name="HRTFCereal.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/HRTF/HRTFCereal.h"/>
+          <FILE id="GBEcAq" name="HRTFFactory.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/HRTF/HRTFFactory.cpp"/>
+          <FILE id="SnqUWs" name="HRTFFactory.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/HRTF/HRTFFactory.h"/>
+        </GROUP>
+        <GROUP id="{7E895443-0D7E-1E42-750A-4E5B346DBF3D}" name="ILD">
+          <FILE id="Gx0ESL" name="ILDCereal.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/ILD/ILDCereal.cpp"/>
+          <FILE id="nYX92F" name="ILDCereal.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/ILD/ILDCereal.h"/>
+        </GROUP>
+        <GROUP id="{295018E1-1CEB-92A5-F517-293E6D85C79F}" name="third_party_libraries">
+          <GROUP id="{B613D541-9273-C85B-81F4-36F227C3705E}" name="cereal">
+            <GROUP id="{52022845-DA17-5CBF-C50D-299BBC808DC6}" name="include">
+              <GROUP id="{926C155C-EAE4-A445-35FF-2981DBAE0876}" name="cereal">
+                <GROUP id="{34DE43B9-F959-555F-1389-F6F598E6D438}" name="external">
+                  <GROUP id="{184846A1-0D17-68D5-833A-15A0342384D5}" name="rapidjson">
+                    <GROUP id="{6D3009F7-52DB-8ED3-E2B3-2FC325CCB903}" name="error">
+                      <FILE id="wFwd3D" name="en.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/error/en.h"/>
+                      <FILE id="iaeXo6" name="error.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/error/error.h"/>
+                    </GROUP>
+                    <GROUP id="{5A5C4E40-5512-5FC3-EB7D-8315C9647A9F}" name="internal">
+                      <FILE id="E5DD4d" name="biginteger.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/biginteger.h"/>
+                      <FILE id="qJNFzB" name="diyfp.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/diyfp.h"/>
+                      <FILE id="p7wXUO" name="dtoa.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/dtoa.h"/>
+                      <FILE id="C3vqBZ" name="ieee754.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/ieee754.h"/>
+                      <FILE id="WW1amB" name="itoa.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/itoa.h"/>
+                      <FILE id="vRWPZD" name="meta.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/meta.h"/>
+                      <FILE id="AKzQqf" name="pow10.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/pow10.h"/>
+                      <FILE id="z8dSwA" name="regex.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/regex.h"/>
+                      <FILE id="E9deEN" name="stack.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/stack.h"/>
+                      <FILE id="u82qVz" name="strfunc.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/strfunc.h"/>
+                      <FILE id="RV0IK0" name="strtod.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/strtod.h"/>
+                      <FILE id="RTAXHQ" name="swap.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/internal/swap.h"/>
+                    </GROUP>
+                    <GROUP id="{D476BEF8-AB99-1B1A-CE5A-EDB539971FD5}" name="msinttypes">
+                      <FILE id="nonv59" name="inttypes.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/msinttypes/inttypes.h"/>
+                      <FILE id="UZfDUN" name="stdint.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/msinttypes/stdint.h"/>
+                    </GROUP>
+                    <FILE id="E4yIYd" name="allocators.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/allocators.h"/>
+                    <FILE id="uzWPiJ" name="document.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/document.h"/>
+                    <FILE id="kCLqXW" name="encodedstream.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/encodedstream.h"/>
+                    <FILE id="AoIUZP" name="encodings.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/encodings.h"/>
+                    <FILE id="XDeHWb" name="filereadstream.h" compile="0" resource="0"
+                          file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/filereadstream.h"/>
+                    <FILE id="v2Ob3a" name="filewritestream.h" compile="0" resource="0"
+                          file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/filewritestream.h"/>
+                    <FILE id="at5kfj" name="fwd.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/fwd.h"/>
+                    <FILE id="tLQQEg" name="istreamwrapper.h" compile="0" resource="0"
+                          file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/istreamwrapper.h"/>
+                    <FILE id="ZO36N1" name="memorybuffer.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/memorybuffer.h"/>
+                    <FILE id="nlkL6B" name="memorystream.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/memorystream.h"/>
+                    <FILE id="DEtHrE" name="ostreamwrapper.h" compile="0" resource="0"
+                          file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/ostreamwrapper.h"/>
+                    <FILE id="KrNp4F" name="pointer.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/pointer.h"/>
+                    <FILE id="Zjfinp" name="prettywriter.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/prettywriter.h"/>
+                    <FILE id="nTaTKS" name="rapidjson.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/rapidjson.h"/>
+                    <FILE id="PW8pIq" name="reader.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/reader.h"/>
+                    <FILE id="Fwas5Q" name="schema.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/schema.h"/>
+                    <FILE id="igCCxA" name="stream.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/stream.h"/>
+                    <FILE id="yQq4wU" name="stringbuffer.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/stringbuffer.h"/>
+                    <FILE id="YySZSq" name="writer.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidjson/writer.h"/>
+                  </GROUP>
+                  <GROUP id="{713CC009-1CD9-920C-EA5A-32F6B2451C78}" name="rapidxml">
+                    <FILE id="BWGI67" name="rapidxml.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidxml/rapidxml.hpp"/>
+                    <FILE id="tRNxCx" name="rapidxml_iterators.hpp" compile="0" resource="0"
+                          file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidxml/rapidxml_iterators.hpp"/>
+                    <FILE id="jVlTJt" name="rapidxml_print.hpp" compile="0" resource="0"
+                          file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidxml/rapidxml_print.hpp"/>
+                    <FILE id="ypklX4" name="rapidxml_utils.hpp" compile="0" resource="0"
+                          file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/rapidxml/rapidxml_utils.hpp"/>
+                  </GROUP>
+                  <FILE id="bhMv1n" name="base64.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/external/base64.hpp"/>
+                </GROUP>
+                <GROUP id="{B25F31FD-5C0D-6C2D-AE56-38CC819EBC90}" name="types">
+                  <GROUP id="{4ECD75B7-4B82-9DCA-E07F-A8F24F7F09BC}" name="concepts">
+                    <FILE id="GBTj56" name="pair_associative_container.hpp" compile="0"
+                          resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/concepts/pair_associative_container.hpp"/>
+                  </GROUP>
+                  <FILE id="KKBSgG" name="array.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/array.hpp"/>
+                  <FILE id="f9r86C" name="base_class.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/base_class.hpp"/>
+                  <FILE id="gsTUw7" name="bitset.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/bitset.hpp"/>
+                  <FILE id="ezAj8E" name="boost_variant.hpp" compile="0" resource="0"
+                        file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/boost_variant.hpp"/>
+                  <FILE id="iXDvCa" name="chrono.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/chrono.hpp"/>
+                  <FILE id="Go0hbT" name="common.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/common.hpp"/>
+                  <FILE id="dDGPfR" name="complex.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/complex.hpp"/>
+                  <FILE id="cIjW7B" name="deque.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/deque.hpp"/>
+                  <FILE id="RUaudT" name="forward_list.hpp" compile="0" resource="0"
+                        file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/forward_list.hpp"/>
+                  <FILE id="ixHxXk" name="functional.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/functional.hpp"/>
+                  <FILE id="KxSEIO" name="list.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/list.hpp"/>
+                  <FILE id="cDkxVd" name="map.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/map.hpp"/>
+                  <FILE id="BjVrmE" name="memory.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/memory.hpp"/>
+                  <FILE id="fIIKu5" name="polymorphic.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/polymorphic.hpp"/>
+                  <FILE id="pbBIiK" name="queue.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/queue.hpp"/>
+                  <FILE id="DSXNQU" name="set.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/set.hpp"/>
+                  <FILE id="qQ5nFu" name="stack.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/stack.hpp"/>
+                  <FILE id="dLc8yy" name="string.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/string.hpp"/>
+                  <FILE id="txkCi5" name="tuple.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/tuple.hpp"/>
+                  <FILE id="tdgGpv" name="unordered_map.hpp" compile="0" resource="0"
+                        file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/unordered_map.hpp"/>
+                  <FILE id="S3l3WY" name="unordered_set.hpp" compile="0" resource="0"
+                        file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/unordered_set.hpp"/>
+                  <FILE id="kygf4r" name="utility.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/utility.hpp"/>
+                  <FILE id="ktXjZN" name="valarray.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/valarray.hpp"/>
+                  <FILE id="iZAK24" name="vector.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/types/vector.hpp"/>
+                </GROUP>
+                <FILE id="X4RdBP" name="access.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/access.hpp"/>
+                <FILE id="df2ypR" name="cereal.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/cereal.hpp"/>
+                <FILE id="QPFRkI" name="macros.hpp" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include/cereal/macros.hpp"/>
+              </GROUP>
+            </GROUP>
+          </GROUP>
+          <GROUP id="{2296B7A4-3F84-442B-57A3-F703B010C78A}" name="sofacoustics">
+            <GROUP id="{7BC66B0D-9601-648C-6AC1-8E969380354C}" name="libsofa">
+              <GROUP id="{F244B261-3FBA-23C2-7A3E-B4923FBC2CBB}" name="dependencies">
+                <GROUP id="{77DA6916-9C92-AC81-D924-C7ECC46A5827}" name="include">
+                  <FILE id="jZyJq6" name="ncAtt.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncAtt.cpp"/>
+                  <FILE id="FNCBnd" name="ncAtt.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncAtt.h"/>
+                  <FILE id="IcsJrL" name="ncByte.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncByte.cpp"/>
+                  <FILE id="QE6Ccz" name="ncByte.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncByte.h"/>
+                  <FILE id="nxKLkE" name="ncChar.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncChar.cpp"/>
+                  <FILE id="GC4fGx" name="ncChar.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncChar.h"/>
+                  <FILE id="iOenY6" name="ncCheck.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncCheck.cpp"/>
+                  <FILE id="FJHkxj" name="ncCheck.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncCheck.h"/>
+                  <FILE id="DIK8Qi" name="ncCompoundType.cpp" compile="1" resource="0"
+                        file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncCompoundType.cpp"/>
+                  <FILE id="oSQBmG" name="ncCompoundType.h" compile="0" resource="0"
+                        file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncCompoundType.h"/>
+                  <FILE id="FbANMh" name="ncDim.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncDim.cpp"/>
+                  <FILE id="NYwCXa" name="ncDim.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncDim.h"/>
+                  <FILE id="yBgfiU" name="ncDouble.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncDouble.cpp"/>
+                  <FILE id="SLqcc0" name="ncDouble.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncDouble.h"/>
+                  <FILE id="SWU6KW" name="ncEnumType.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncEnumType.cpp"/>
+                  <FILE id="mNuldp" name="ncEnumType.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncEnumType.h"/>
+                  <FILE id="cbFEhk" name="ncException.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncException.cpp"/>
+                  <FILE id="eJyUyY" name="ncException.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncException.h"/>
+                  <FILE id="qcbz0o" name="ncFile.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncFile.cpp"/>
+                  <FILE id="HHFokn" name="ncFile.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncFile.h"/>
+                  <FILE id="Ykcrly" name="ncFloat.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncFloat.cpp"/>
+                  <FILE id="jnFH67" name="ncFloat.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncFloat.h"/>
+                  <FILE id="zW3GXM" name="ncGroup.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncGroup.cpp"/>
+                  <FILE id="YwI0ND" name="ncGroup.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncGroup.h"/>
+                  <FILE id="ZWCp3C" name="ncGroupAtt.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncGroupAtt.cpp"/>
+                  <FILE id="MtTBAV" name="ncGroupAtt.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncGroupAtt.h"/>
+                  <FILE id="I5ZxMV" name="ncInt.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncInt.cpp"/>
+                  <FILE id="gmlxns" name="ncInt.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncInt.h"/>
+                  <FILE id="SpS38d" name="ncInt64.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncInt64.cpp"/>
+                  <FILE id="Yb5wD4" name="ncInt64.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncInt64.h"/>
+                  <FILE id="DC5PB5" name="ncOpaqueType.cpp" compile="1" resource="0"
+                        file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncOpaqueType.cpp"/>
+                  <FILE id="otcptj" name="ncOpaqueType.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncOpaqueType.h"/>
+                  <FILE id="mGdexh" name="ncShort.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncShort.cpp"/>
+                  <FILE id="slWJ3l" name="ncShort.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncShort.h"/>
+                  <FILE id="Iy8H9U" name="ncString.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncString.cpp"/>
+                  <FILE id="U7EP33" name="ncString.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncString.h"/>
+                  <FILE id="kyL26p" name="ncType.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncType.cpp"/>
+                  <FILE id="DH9Gyv" name="ncType.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncType.h"/>
+                  <FILE id="ZCUTgY" name="ncUbyte.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncUbyte.cpp"/>
+                  <FILE id="S0RWeO" name="ncUbyte.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncUbyte.h"/>
+                  <FILE id="br4DlE" name="ncUint.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncUint.cpp"/>
+                  <FILE id="fti8Xn" name="ncUint.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncUint.h"/>
+                  <FILE id="GHMPgS" name="ncUint64.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncUint64.cpp"/>
+                  <FILE id="Wcmlr0" name="ncUint64.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncUint64.h"/>
+                  <FILE id="PkIjO8" name="ncUshort.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncUshort.cpp"/>
+                  <FILE id="CTBMWF" name="ncUshort.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncUshort.h"/>
+                  <FILE id="F4dod6" name="ncVar.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncVar.cpp"/>
+                  <FILE id="icHJUY" name="ncVar.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncVar.h"/>
+                  <FILE id="FF7KjJ" name="ncVarAtt.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncVarAtt.cpp"/>
+                  <FILE id="r16H0M" name="ncVarAtt.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncVarAtt.h"/>
+                  <FILE id="zyXpTw" name="ncVlenType.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncVlenType.cpp"/>
+                  <FILE id="HyIASS" name="ncVlenType.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/ncVlenType.h"/>
+                  <FILE id="VgOi1H" name="netcdf.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/netcdf.h"/>
+                  <FILE id="holzZY" name="netcdf_mem.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/netcdf_mem.h"/>
+                  <FILE id="f5wX60" name="netcdf_meta.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include/netcdf_meta.h"/>
+                </GROUP>
+              </GROUP>
+              <GROUP id="{62FD1A7B-8796-79EF-3B5D-E47D4462FFC4}" name="src">
+                <FILE id="c7xbbc" name="SOFA.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFA.h"/>
+                <FILE id="ZQsTHr" name="SOFAAPI.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAAPI.cpp"/>
+                <FILE id="TRvRzT" name="SOFAAPI.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAAPI.h"/>
+                <FILE id="jF7gy1" name="SOFAAttributes.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAAttributes.cpp"/>
+                <FILE id="cobeGF" name="SOFAAttributes.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAAttributes.h"/>
+                <FILE id="dyNtJY" name="SOFACoordinates.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFACoordinates.cpp"/>
+                <FILE id="lZBP8D" name="SOFACoordinates.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFACoordinates.h"/>
+                <FILE id="RBgRxJ" name="SOFADate.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFADate.cpp"/>
+                <FILE id="RbWaSr" name="SOFADate.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFADate.h"/>
+                <FILE id="SAYnd6" name="SOFAEmitter.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAEmitter.cpp"/>
+                <FILE id="eyRaEi" name="SOFAEmitter.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAEmitter.h"/>
+                <FILE id="Ab1RoH" name="sofaexamples.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/sofaexamples.cpp"/>
+                <FILE id="wWf0E6" name="SOFAExceptions.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAExceptions.cpp"/>
+                <FILE id="R7odaT" name="SOFAExceptions.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAExceptions.h"/>
+                <FILE id="Y1DWv4" name="SOFAFile.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAFile.cpp"/>
+                <FILE id="EGsLF6" name="SOFAFile.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAFile.h"/>
+                <FILE id="H58jD1" name="SOFAGeneralFIR.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAGeneralFIR.cpp"/>
+                <FILE id="TS7zSr" name="SOFAGeneralFIR.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAGeneralFIR.h"/>
+                <FILE id="W5ngJM" name="SOFAGeneralFIRE.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAGeneralFIRE.cpp"/>
+                <FILE id="hWcr4F" name="SOFAGeneralFIRE.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAGeneralFIRE.h"/>
+                <FILE id="hZdM3d" name="SOFAGeneralTF.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAGeneralTF.cpp"/>
+                <FILE id="VZTG3E" name="SOFAGeneralTF.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAGeneralTF.h"/>
+                <FILE id="yJ3f59" name="SOFAHelper.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAHelper.cpp"/>
+                <FILE id="LP2t3h" name="SOFAHelper.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAHelper.h"/>
+                <FILE id="MfG371" name="SOFAHostArchitecture.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAHostArchitecture.h"/>
+                <FILE id="YqKIKo" name="SOFAListener.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAListener.cpp"/>
+                <FILE id="M5w8e3" name="SOFAListener.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAListener.h"/>
+                <FILE id="Uys2dS" name="SOFAMultiSpeakerBRIR.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAMultiSpeakerBRIR.cpp"/>
+                <FILE id="kodlXY" name="SOFAMultiSpeakerBRIR.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAMultiSpeakerBRIR.h"/>
+                <FILE id="PlJw50" name="SOFANcFile.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFANcFile.cpp"/>
+                <FILE id="UrIrye" name="SOFANcFile.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFANcFile.h"/>
+                <FILE id="ohYyKd" name="SOFANcUtils.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFANcUtils.h"/>
+                <FILE id="OHttJF" name="SOFAPlatform.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAPlatform.h"/>
+                <FILE id="AHMkVF" name="SOFAPoint3.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAPoint3.cpp"/>
+                <FILE id="TQeQWO" name="SOFAPoint3.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAPoint3.h"/>
+                <FILE id="QXMLER" name="SOFAPosition.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAPosition.cpp"/>
+                <FILE id="YlGhDp" name="SOFAPosition.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAPosition.h"/>
+                <FILE id="se3ZfB" name="SOFAReceiver.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAReceiver.cpp"/>
+                <FILE id="yAJ7eJ" name="SOFAReceiver.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAReceiver.h"/>
+                <FILE id="exTifD" name="SOFASimpleFreeFieldHRIR.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASimpleFreeFieldHRIR.cpp"/>
+                <FILE id="fRGyeG" name="SOFASimpleFreeFieldHRIR.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASimpleFreeFieldHRIR.h"/>
+                <FILE id="SqJuZ3" name="SOFASimpleFreeFieldSOS.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASimpleFreeFieldSOS.cpp"/>
+                <FILE id="tAsfuv" name="SOFASimpleFreeFieldSOS.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASimpleFreeFieldSOS.h"/>
+                <FILE id="pMm3fH" name="SOFASimpleHeadphoneIR.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASimpleHeadphoneIR.cpp"/>
+                <FILE id="YBkUMY" name="SOFASimpleHeadphoneIR.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASimpleHeadphoneIR.h"/>
+                <FILE id="NJKJDh" name="SOFASingleRoomDRIR.cpp" compile="1" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASingleRoomDRIR.cpp"/>
+                <FILE id="VRlMoK" name="SOFASingleRoomDRIR.h" compile="0" resource="0"
+                      file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASingleRoomDRIR.h"/>
+                <FILE id="SnAHbn" name="SOFASource.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASource.cpp"/>
+                <FILE id="Ja0SIV" name="SOFASource.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFASource.h"/>
+                <FILE id="UFLp07" name="SOFAString.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAString.cpp"/>
+                <FILE id="n5WIwL" name="SOFAString.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAString.h"/>
+                <FILE id="sGBHir" name="SOFAUnits.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAUnits.cpp"/>
+                <FILE id="SNtrJc" name="SOFAUnits.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAUnits.h"/>
+                <FILE id="QN8LpD" name="SOFAUtils.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAUtils.h"/>
+                <FILE id="qbjEAd" name="SOFAVersion.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src/SOFAVersion.h"/>
+              </GROUP>
+            </GROUP>
+          </GROUP>
+        </GROUP>
+      </GROUP>
+      <GROUP id="{A7C9C5A1-BD0E-9D0D-8717-EC11B0A0CCBB}" name="3dti_Toolkit">
+        <GROUP id="{9D6F2C80-8D08-5A54-7160-044A695F1DA2}" name="BinauralSpatializer">
+          <FILE id="XTk0Uf" name="3DTI_BinauralSpatializer.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/3DTI_BinauralSpatializer.h"/>
+          <FILE id="s5sVgw" name="BRIR.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/BRIR.cpp"/>
+          <FILE id="DoO2pL" name="BRIR.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/BRIR.h"/>
+          <FILE id="LyNk6y" name="Core.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Core.cpp"/>
+          <FILE id="RGYcma" name="Core.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Core.h"/>
+          <FILE id="TKzzBW" name="Environment.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Environment.cpp"/>
+          <FILE id="k1Rdru" name="Environment.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Environment.h"/>
+          <FILE id="DHO0nN" name="HRTF.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/HRTF.cpp"/>
+          <FILE id="FYUTS9" name="HRTF.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/HRTF.h"/>
+          <FILE id="SqFPQU" name="ILD.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/ILD.cpp"/>
+          <FILE id="UnIABa" name="ILD.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/ILD.h"/>
+          <FILE id="I9fSsJ" name="Listener.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Listener.cpp"/>
+          <FILE id="QIFjjF" name="Listener.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Listener.h"/>
+          <FILE id="Om4ibU" name="SingleSourceDSP.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/SingleSourceDSP.cpp"/>
+          <FILE id="e3Ghx6" name="SingleSourceDSP.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/SingleSourceDSP.h"/>
+          <FILE id="LHs6oZ" name="UPCAnechoic.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/UPCAnechoic.cpp"/>
+          <FILE id="NOZVTu" name="UPCAnechoic.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/UPCAnechoic.h"/>
+        </GROUP>
+        <GROUP id="{777FEDC4-4BA2-7F26-5FEC-87D53742B6B8}" name="Common">
+          <FILE id="c2OdAC" name="AIR.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/AIR.h"/>
+          <FILE id="Cw9VzL" name="AudioState.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/AudioState.h"/>
+          <FILE id="T5Lk2y" name="BiquadFilter.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/BiquadFilter.cpp"/>
+          <FILE id="eE59gV" name="BiquadFilter.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/BiquadFilter.h"/>
+          <FILE id="QSwzW3" name="Buffer.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Buffer.h"/>
+          <FILE id="N4q31z" name="CommonDefinitions.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/CommonDefinitions.h"/>
+          <FILE id="zqfmfv" name="Conventions.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Conventions.h"/>
+          <FILE id="N7fU8b" name="Delay.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Delay.cpp"/>
+          <FILE id="vjVsom" name="Delay.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Delay.h"/>
+          <FILE id="ZfTGCk" name="DistanceAttenuator.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DistanceAttenuator.cpp"/>
+          <FILE id="YhTbl3" name="DistanceAttenuator.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DistanceAttenuator.h"/>
+          <FILE id="fzfscA" name="DynamicCompressorMono.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorMono.cpp"/>
+          <FILE id="u9dCbQ" name="DynamicCompressorMono.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorMono.h"/>
+          <FILE id="bU0g4q" name="DynamicCompressorStereo.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorStereo.cpp"/>
+          <FILE id="CaA0c2" name="DynamicCompressorStereo.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorStereo.h"/>
+          <FILE id="wZnCzX" name="DynamicExpanderMono.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicExpanderMono.cpp"/>
+          <FILE id="waQspa" name="DynamicExpanderMono.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicExpanderMono.h"/>
+          <FILE id="WqR2aH" name="DynamicProcessor.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicProcessor.h"/>
+          <FILE id="S362a9" name="EnvelopeDetector.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/EnvelopeDetector.cpp"/>
+          <FILE id="dnFUgC" name="EnvelopeDetector.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/EnvelopeDetector.h"/>
+          <FILE id="iVehEJ" name="ErrorHandler.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/ErrorHandler.cpp"/>
+          <FILE id="QbCVYc" name="ErrorHandler.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/ErrorHandler.h"/>
+          <FILE id="sT0apa" name="FarDistanceEffects.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/FarDistanceEffects.cpp"/>
+          <FILE id="BKnUUz" name="FarDistanceEffects.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/FarDistanceEffects.h"/>
+          <FILE id="LCfbTx" name="fftsg.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/fftsg.cpp"/>
+          <FILE id="nhPSl2" name="fftsg.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/fftsg.h"/>
+          <FILE id="gVbtj9" name="FiltersBank.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersBank.cpp"/>
+          <FILE id="Jd00uk" name="FiltersBank.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersBank.h"/>
+          <FILE id="TPirGJ" name="FiltersChain.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersChain.cpp"/>
+          <FILE id="TzdVxv" name="FiltersChain.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersChain.h"/>
+          <FILE id="aXS5TL" name="Fprocessor.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Fprocessor.cpp"/>
+          <FILE id="tuGI1w" name="Fprocessor.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Fprocessor.h"/>
+          <FILE id="NDyJXq" name="Magnitudes.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Magnitudes.cpp"/>
+          <FILE id="rBs8nN" name="Magnitudes.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Magnitudes.h"/>
+          <FILE id="olBTeA" name="NoiseGenerator.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/NoiseGenerator.cpp"/>
+          <FILE id="ccG4d1" name="NoiseGenerator.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/NoiseGenerator.h"/>
+          <FILE id="CI4MhR" name="Profiler.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Profiler.cpp"/>
+          <FILE id="SEO2K9" name="Profiler.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Profiler.h"/>
+          <FILE id="VfJaJd" name="Quaternion.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Quaternion.cpp"/>
+          <FILE id="ZYsqrQ" name="Quaternion.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Quaternion.h"/>
+          <FILE id="oT0rE3" name="Transform.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Transform.cpp"/>
+          <FILE id="PfE1BF" name="Transform.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Transform.h"/>
+          <FILE id="oSoCjw" name="UPCEnvironment.cpp" compile="1" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/UPCEnvironment.cpp"/>
+          <FILE id="srKHbB" name="UPCEnvironment.h" compile="0" resource="0"
+                file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/UPCEnvironment.h"/>
+          <FILE id="ROtfiy" name="Vector3.cpp" compile="1" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Vector3.cpp"/>
+          <FILE id="pCCmYv" name="Vector3.h" compile="0" resource="0" file="../libs/3dti_AudioToolkit/3dti_Toolkit/Common/Vector3.h"/>
+        </GROUP>
+      </GROUP>
+    </GROUP>
+    <GROUP id="{7E66D3A7-5BFC-CA2F-8ED8-8DEFC273D8EA}" name="Resources">
+      <GROUP id="{B150DA93-28F3-1CF7-D468-A5A9ECBB8D79}" name="Images">
+        <FILE id="kHIiks" name="3DTI_Logo.png" compile="0" resource="1" file="../Resources/Images/3DTI_Logo.png"/>
+        <FILE id="GJeaFt" name="Imperial_Logo.png" compile="0" resource="1"
+              file="../Resources/Images/Imperial_Logo.png"/>
+        <FILE id="cUs8R9" name="UMA_Logo.png" compile="0" resource="1" file="../Resources/Images/UMA_Logo.png"/>
+      </GROUP>
+      <FILE id="tflAM9" name="About_Anechoic.txt" compile="0" resource="1"
+            file="../Resources/About_Anechoic.txt"/>
+    </GROUP>
+    <GROUP id="{0072A14B-EF34-C213-40D0-F89C311CFD79}" name="Source">
+      <FILE id="GGX3K7" name="SourceReverbControls.cpp" compile="1" resource="0"
+            file="../Source/Binaural/SourceReverbControls.cpp"/>
+      <FILE id="Vj1XUv" name="SourceReverbControls.h" compile="0" resource="0"
+            file="../Source/Binaural/SourceReverbControls.h"/>
+      <FILE id="Iavofa" name="AboutBanner.h" compile="0" resource="0" file="../Source/Common/AboutBanner.h"/>
+      <FILE id="AYLmFL" name="AmbisonicEncoder.cpp" compile="1" resource="0"
+            file="../Source/Binaural/AmbisonicEncoder.cpp"/>
+      <FILE id="PKGxw5" name="AmbisonicEncoder.h" compile="0" resource="0"
+            file="../Source/Binaural/AmbisonicEncoder.h"/>
+      <FILE id="X7olY3" name="AnechoicControls.cpp" compile="1" resource="0"
+            file="../Source/Binaural/AnechoicControls.cpp"/>
+      <FILE id="x900lV" name="AnechoicControls.h" compile="0" resource="0"
+            file="../Source/Binaural/AnechoicControls.h"/>
+      <FILE id="OeIIQ1" name="AnechoicProcessor.cpp" compile="1" resource="0"
+            file="../Source/Binaural/AnechoicProcessor.cpp"/>
+      <FILE id="zYM3s8" name="AnechoicProcessor.h" compile="0" resource="0"
+            file="../Source/Binaural/AnechoicProcessor.h"/>
+      <FILE id="ue7ZED" name="ElevationDial.h" compile="0" resource="0" file="../Source/Binaural/ElevationDial.h"/>
+      <FILE id="u4SbzB" name="AnechoicPluginEditor.cpp" compile="1" resource="0"
+            file="../Source/Binaural/AnechoicPluginEditor.cpp"/>
+      <FILE id="ciAaNP" name="AnechoicPluginEditor.h" compile="0" resource="0"
+            file="../Source/Binaural/AnechoicPluginEditor.h"/>
+      <FILE id="lX14LL" name="AnechoicPluginProcessor.cpp" compile="1" resource="0"
+            file="../Source/Binaural/AnechoicPluginProcessor.cpp"/>
+      <FILE id="SptnDG" name="AnechoicPluginProcessor.h" compile="0" resource="0"
+            file="../Source/Binaural/AnechoicPluginProcessor.h"/>
+      <FILE id="NFM7Rm" name="SourceControls.h" compile="0" resource="0"
+            file="../Source/Binaural/SourceControls.h"/>
+      <FILE id="FSlxwn" name="SpatializerWidget.h" compile="0" resource="0"
+            file="../Source/Binaural/SpatializerWidget.h"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <XCODE_MAC targetFolder="Builds/MacOSX" extraLinkerFlags="../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libcurl.a&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libhdf5_hl.a&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libhdf5.a&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libnetcdf.a&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libz.a&#10;"
+               vstLegacyFolder="~/SDKs/VST_SDK/VST2_SDK" microphonePermissionNeeded="0"
+               xcodeValidArchs="i386,x86_64">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" libraryPath="../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos"
+                       targetName="3dti_Anechoic"/>
+        <CONFIGURATION isDebug="0" name="Release" libraryPath="../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos"
+                       targetName="3dti_Anechoic"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_core" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_events" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_graphics" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_data_structures" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_basics" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_gui_extra" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_cryptography" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_video" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_opengl" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_basics" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_devices" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_formats" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_processors" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="../libs/JUCE/modules"/>
+        <MODULEPATH id="juce_audio_utils" path="../libs/JUCE/modules"/>
+      </MODULEPATHS>
+    </XCODE_MAC>
+    <VS2017 targetFolder="Builds/VisualStudio2017" extraLinkerFlags="..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\lib\libsofa_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libcurl_imp_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libhdf5_hl_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libhdf5_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\netcdf_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\zlib_x64.lib"
+            vstLegacyFolder="C:\SDKs\VST_SDK\VST2_SDK">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="3dti_Anechoic"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="3dti_Anechoic"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_video" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_opengl" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_extra" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_gui_basics" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_graphics" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_events" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_data_structures" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_cryptography" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_core" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_utils" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_processors" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_plugin_client" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_formats" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_devices" path="..\libs\JUCE\modules"/>
+        <MODULEPATH id="juce_audio_basics" path="..\libs\JUCE\modules"/>
+      </MODULEPATHS>
+    </VS2017>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_plugin_client" showAllCode="1" useLocalCopy="0"
+            useGlobalPath="0"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_audio_utils" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+    <MODULE id="juce_video" showAllCode="1" useLocalCopy="0" useGlobalPath="0"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <OSX/>
+    <WINDOWS/>
+  </LIVE_SETTINGS>
+  <JUCEOPTIONS/>
+</JUCERPROJECT>

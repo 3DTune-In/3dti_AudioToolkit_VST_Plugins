@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -21,7 +21,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "PluginProcessor.h"
+#include "SpatialisePluginProcessor.h"
 
 //==============================================================================
 /*
@@ -29,7 +29,7 @@
 class AnechoicControls  : public Component, public Slider::Listener
 {
 public:
-  AnechoicControls(Toolkit3dtiPluginAudioProcessor& processor);
+  AnechoicControls (AnechoicProcessor& processor);
   
   ~AnechoicControls() {}
   
@@ -37,8 +37,6 @@ public:
   
   void paint (Graphics& g) override {
     g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
-    g.setColour (Colours::grey);
-    g.drawRect (getLocalBounds(), 1);
     g.setColour(Colours::white);
     g.setFont(18.0f);
     g.drawText("Anechoic Path", getLocalBounds().withTrimmedBottom( getLocalBounds().getHeight() - 32 ),
@@ -69,7 +67,6 @@ private:
   void updateQualitySetting();
   void updateDistanceAttenuation();
   
-  Toolkit3dtiPluginAudioProcessor& mProcessor;
   AnechoicProcessor& mCore;
   
   ComboBox hrtfMenu;

@@ -23,15 +23,15 @@
 static Common::T_ear ears[2] = {Common::T_ear::LEFT, Common::T_ear::RIGHT};
 
 //==============================================================================
-static bool compareFloat (float one, float two)
+template <typename Type>
+static bool compare (Type one, Type two)
 {
-    return (std::abs (one - two) > std::numeric_limits<float>::epsilon());
+    return (std::abs (one - two) > std::numeric_limits<Type>::epsilon());
 }
 
 //==============================================================================
 FrequencySmearingProcessor::FrequencySmearingProcessor (HAHLSimulation::CHearingLossSim& sim)
-    : Thread ("FrequencySmearThread"),
-      simulator (sim)
+  :  simulator (sim)
 {
     StringArray longSuffix = {"left", "right"};
     StringArray shortSuffix = {"L", "R"};
@@ -110,21 +110,23 @@ void FrequencySmearingProcessor::updateSettingsIfNeeded()
         
         if (freqSmearType[channel]->get() == FrequencySmearType::BaerMoore)
         {
-            auto frequencySmearing = dynamic_pointer_cast<CFrequencySmearing> (channels[ch]->baerMooreSmearing);
-            simulator.SetFrequencySmearer (ears[ch], frequencySmearing);
+            auto baerMooreSmearing = dynamic_pointer_cast<CBaerMooreFrequencySmearing> (simulator.GetFrequencySmearingSimulator (ears[ch]));
             
-            // Cast back to Baer & Moore
-            auto baerMooreSmearing = static_pointer_cast<CBaerMooreFrequencySmearing> (simulator.GetFrequencySmearingSimulator (ears[ch]));
+            if (! baerMooreSmearing)
+            {
+                simulator.SetFrequencySmearer (ears[ch], channels[ch]->baerMooreSmearing);
+                baerMooreSmearing = dynamic_pointer_cast<CBaerMooreFrequencySmearing> (simulator.GetFrequencySmearingSimulator (ears[ch]));
+            }
     
             float value = freqSmearSpectralBroadFactorUp[channel]->get();
-            if (compareFloat (value, previousSpectralBroadFactorUp[ch]))
+            if (compare (value, previousSpectralBroadFactorUp[ch]))
             {
                 baerMooreSmearing->SetUpwardBroadeningFactor (value);
                 previousSpectralBroadFactorUp[ch] = value;
             }
     
             value = freqSmearSpectralBroadFactorDown[channel]->get();
-            if (compareFloat (value, previousSpectralBroadFactorDown[ch]))
+            if (compare (value, previousSpectralBroadFactorDown[ch]))
             {
                 baerMooreSmearing->SetDownwardBroadeningFactor (value);
                 previousSpectralBroadFactorDown[ch] = freqSmearSpectralBroadFactorDown[channel]->get();
@@ -132,36 +134,42 @@ void FrequencySmearingProcessor::updateSettingsIfNeeded()
         }
         else
         {
+            // Graf & 3dti
+            auto graf3dtiSmearing = dynamic_pointer_cast<HAHLSimulation::CGraf3DTIFrequencySmearing> (simulator.GetFrequencySmearingSimulator (ears[ch]));
+            
+            if (! graf3dtiSmearing)
+            {
+                simulator.SetFrequencySmearer (ears[ch], channels[ch]->graf3dtiSmearing);
+                graf3dtiSmearing = dynamic_pointer_cast<CGraf3DTIFrequencySmearing> (simulator.GetFrequencySmearingSimulator (ears[ch]));
+            }
+            
             simulator.SetFrequencySmearer (ears[ch], dynamic_pointer_cast<CFrequencySmearing> (channels[ch]->graf3dtiSmearing));
             
-            // Graf & 3dti
-            auto frequencySmearer = static_pointer_cast<HAHLSimulation::CGraf3DTIFrequencySmearing> (simulator.GetFrequencySmearingSimulator (ears[ch]));
-            
             float value = freqSmearSpectralFrequencyDown[channel]->get();
-            if (compareFloat (previousSpectralFrequencyDown[ch], value))
+            if (compare (previousSpectralFrequencyDown[ch], value))
             {
-                frequencySmearer->SetDownwardSmearing_Hz (value);
+                graf3dtiSmearing->SetDownwardSmearing_Hz (value);
                 previousSpectralFrequencyDown[ch] = value;
             }
             
             value = freqSmearSpectralFrequencyUp[channel]->get();
-            if (compareFloat (previousSpectralFrequencyUp[ch], value))
+            if (compare (previousSpectralFrequencyUp[ch], value))
             {
-                frequencySmearer->SetUpwardSmearing_Hz (value);
+                graf3dtiSmearing->SetUpwardSmearing_Hz (value);
                 previousSpectralFrequencyUp[ch] = value;
             }
             
             value = freqSmearSpectralBufferSizeDown[channel]->get();
-            if (compareFloat (previousSpectralBufferSizeDown[ch], value))
+            if (compare (previousSpectralBufferSizeDown[ch], value))
             {
-                frequencySmearer->SetDownwardSmearingBufferSize ((int)value);
+                graf3dtiSmearing->SetDownwardSmearingBufferSize ((int)value);
                 previousSpectralBufferSizeDown[ch] = value;
             }
             
             value = freqSmearSpectralBufferSizeUp[channel]->get();
-            if (compareFloat (previousSpectralBufferSizeUp[ch], value))
+            if (compare (previousSpectralBufferSizeUp[ch], value))
             {
-                frequencySmearer->SetUpwardSmearingBufferSize ((int)value);
+                graf3dtiSmearing->SetUpwardSmearingBufferSize ((int)value);
                 previousSpectralBufferSizeUp[ch] = value;
             }
         }
@@ -177,7 +185,7 @@ void FrequencySmearingProcessor::updateSettingsIfNeeded()
 FrequencySmearingProcessor::Channel::Channel()
 {
     baerMooreSmearing = make_shared<HAHLSimulation::CBaerMooreFrequencySmearing>();
-    graf3dtiSmearing = make_shared<HAHLSimulation::CGraf3DTIFrequencySmearing>();
+    graf3dtiSmearing  = make_shared<HAHLSimulation::CGraf3DTIFrequencySmearing>();
 }
 
 void FrequencySmearingProcessor::Channel::prepareToPlay (double sampleRate, int samplesPerBlock)
