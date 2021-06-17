@@ -1,7 +1,7 @@
 # 3D Tune-In Toolkit VST plugin
 
-This repository includes a VST interface for the 3D Tune-In (3DTI) Toolkit, so that its functionalities can be integrated into a DAW application. The current version of this VST plugins includes three different plugins, Binaural spatialization (Anechoic and Reverb paths), Hearing Aid and Hearing Loss Simulator. 
-For technical details, please refer to:
+This repository includes a series of VST interfaces for the 3D Tune-In (3DTI) Toolkit, so that its functionalities can be integrated into a DAW application. The current version of this VST plugins includes five different plugins, full binaural spatialisation (anechoic + reverb in the same plugin), anechoic binaural spatialization, binaural reverb, hearing loss and hearing aid simulators.
+For technical details on the spatialisation features, please refer to:
 
 * Picinali, L., Hrafnkelsson, R., & Reyes-Lecuona, A. (2019, March). The 3D Tune-In Toolkit VST Binaural Audio Plugin. In Audio Engineering Society Conference: 2019 AES International Conference on Immersive and Interactive Audio. Audio Engineering Society. 
 
