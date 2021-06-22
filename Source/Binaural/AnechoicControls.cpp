@@ -11,20 +11,22 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
 * \b Acknowledgement: This project has received funding from the European Union's Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
 */
 
+#include "Utils.h"
 #include "AnechoicControls.h"
 
-AnechoicControls::AnechoicControls(Toolkit3dtiPluginAudioProcessor& processor)
-  : mProcessor(processor),
-  mCore(processor.getCore()),
-  distanceAttenuationLabel("Distance Label", "dB attenuation per double distance")
+AnechoicControls::AnechoicControls (AnechoicProcessor& processor)
+  : mCore (processor),
+    distanceAttenuationLabel("Distance Label", "dB attenuation per double distance")
 {
+  setOpaque (true);
+    
   for ( int i = 0; i < BundledHRTFs.size(); i++ ) {
     hrtfMenu.addItem( BundledHRTFs[i], i+1 ); // IDs must be non-zero
   }
@@ -68,7 +70,8 @@ AnechoicControls::AnechoicControls(Toolkit3dtiPluginAudioProcessor& processor)
   // addAndMakeVisible( qualityToggle );
   
   setLabelStyle( distanceAttenuationLabel );
-  distanceAttenuationLabel.setJustificationType( Justification::left );
+  distanceAttenuationLabel.setFont (Font (13.0f, Font::plain));
+  distanceAttenuationLabel.setJustificationType (Justification::right);
   addAndMakeVisible( distanceAttenuationLabel );
   
   mapParameterToSlider( distanceAttenuationSlider, mCore.sourceDistanceAttenuation );
@@ -133,7 +136,7 @@ void AnechoicControls::updateBypass() {
 void AnechoicControls::hrtfMenuChanged() {
   auto text = hrtfMenu.getText();
   // Note(Ragnar): Windows FileChooser will only accept
-  // one filetype at at time se we provide separate options
+  // one filetype at a time so we provide separate options
   if ( text == "Load 3DTI" ) {
     loadCustomHrtf("*.3dti-hrtf");
   } else if ( text == "Load SOFA" ) {

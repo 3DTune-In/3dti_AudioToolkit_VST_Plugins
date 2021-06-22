@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -20,9 +20,9 @@
 
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
-#include "Toolkit3dtiProcessor.h"
-#include "PluginProcessor.h"
+#include <JuceHeader.h>
+#include "ReverbProcessor.h"
+#include "SpatialisePluginProcessor.h"
 #include "Utils.h"
 
 //==============================================================================
@@ -62,9 +62,9 @@ public:
   
   void sliderValueChanged (Slider* slider) override {
     if ( slider == &gainSlider ) {
-      mCore.reverbGain = (float)slider->getValue();
+      mReverb.reverbLevel = (float)slider->getValue();
     } else {
-      mCore.reverbDistanceAttenuation = (float)slider->getValue();
+      mReverb.reverbDistanceAttenuation = (float)slider->getValue();
     }
   }
   
@@ -75,7 +75,7 @@ public:
     } else if ( text == "Load SOFA" ) {
       loadCustomBRIR("*.sofa");
     } else {
-      mCore.loadBRIR(brirMenu.getSelectedItemIndex());
+      mReverb.loadBRIR(brirMenu.getSelectedItemIndex());
     }
   }
   
@@ -90,7 +90,7 @@ private:
   void updateDistanceAttenuation();
   
   Toolkit3dtiPluginAudioProcessor& mProcessor;
-  Toolkit3dtiProcessor& mCore;
+  ReverbProcessor& mReverb;
   
   ComboBox brirMenu;
   Label gainLabel;

@@ -28,7 +28,7 @@
 #include <HRTF/HRTFCereal.h>
 #include <BRIR/BRIRFactory.h>
 #include <BRIR/BRIRCereal.h>
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 
 static StringArray BundledHRTFs = {
   "3DTI_HRTF_IRC1008_256s",
@@ -46,8 +46,8 @@ static StringArray BundledBRIRs = {
   "3DTI_BRIR_small",
   "3DTI_BRIR_medium",
   "3DTI_BRIR_large",
-  "Load 3DTI",
-  "Load SOFA",
+  "BRIR_Library",
+  "BRIR_Trapezoid",
 };
 
 static const std::unordered_map<int, String> SampleRateToDefaultHRTF_ILD {
@@ -76,10 +76,6 @@ static inline int hrtfPathToBundledIndex(const File& path) {
 static inline int brirPathToBundledIndex(const File& path) {
   String fileName = path.getFileNameWithoutExtension();
   auto index = BundledBRIRs.indexOf(fileName.upToLastOccurrenceOf("_", false, false), false);
-  if ( index == -1 ) {
-    bool isSofa = path.getFileExtension() == "sofa";
-    return isSofa ? BundledHRTFs.size()-1 : BundledHRTFs.size()-2;
-  }
   return index;
 }
 
@@ -128,14 +124,6 @@ static inline float mapSliderValueToElevation(float s) {
   return (s < 0.f) ? jmap<float>(s, -89.f, 0.f, 271.f, 360.f) : jmap<float>(s, 0.f, 89.f, 0.0f, 89.f);
 }
 
-static inline float mapAzimuthToSliderValue(float a) {
-  return (a < 180.f) ? jmap<float>(a, 0.1f, 179.9f, 0.f, 180.f) : jmap<float>(a, 359.9f, 180.1f, 0.f, -180.f);
-}
-
-static inline float mapSliderValueToAzimuth(float s) {
-  return (s < 0.f) ? jmap<float>(s, -180.f, 0.f, 180.1f, 359.9f) : jmap<float>(s, 0.f, 180.f, 0.1f, 179.9f);
-}
-
 static inline void mapParameterToSlider( Slider& slider, const AudioParameterInt& parameter, int interval = 1 ) {
   slider.setRange( (double)parameter.getRange().getStart(), (double)parameter.getRange().getEnd(), (double)interval );
   slider.setValue( parameter );
@@ -157,6 +145,14 @@ static inline Point<float> getCentref(Component& component) {
 //
 // Audio Utils
 //
+
+inline CMonoBuffer<float> juceTo3dti (AudioBuffer<float>& buffer)
+{
+    int numSamples = buffer.getNumSamples();
+    CMonoBuffer<float> copy (numSamples);
+    std::memcpy (copy.data(), buffer.getReadPointer (0), numSamples*sizeof(float));
+    return copy;
+}
 
 static inline void _3dti_clear(Common::CEarPair<CMonoBuffer<float>>& buffer) {
   CMonoBuffer<float>& l = buffer.left;
@@ -182,7 +178,7 @@ static inline juce::File resourceDirectory() {
   if ( isWindows() ) {
     return File::getSpecialLocation(File::userApplicationDataDirectory).getChildFile("eu.3d-tune-in.toolkitplugin");
   }
-  return File::getSpecialLocation(File::currentExecutableFile).getParentDirectory().getParentDirectory();
+  return File::getSpecialLocation(File::commonApplicationDataDirectory).getChildFile("Application Support").getChildFile("eu.3d-tune-in.plugins");
 }
 
 static inline juce::File HRTFDirectory() {
@@ -204,7 +200,6 @@ static inline File getBundledHRTF(int index, double sampleRate) {
 }
 
 static inline File getBundledBRIR(int index, double sampleRate) {
-  index = jlimit(0, BundledBRIRs.size()-3, index);
-  auto brirName = "3DTI/" + BundledBRIRs[index] + "_" + String(sampleRate) + "Hz.3dti-brir";
+  auto brirName = "SOFA/" + BundledBRIRs[index] + "_" + String(sampleRate) + "Hz.sofa";
   return BRIRDirectory().getChildFile( brirName );
 }

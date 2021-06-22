@@ -1,0 +1,37 @@
+3DTI HEARING LOSS SIMULATOR v1.1.0
+
+The 3DTI Hearing Loss Simulator plugin was developed by Ragnar Hrafnkelsson, under the supervision of Lorenzo Picinali and Arcadio Reyes-Lecuona, as a VST interface for the hearing loss simulation within the 3D Tune-In Toolkit. 
+
+More information about the 3D Tune-In Toolkit can be found in the open-source GitHub repository at https://github.com/3DTune-In/3dti_AudioToolkit/. Technical details about the 3D Tune-In Toolkit spatialiser are described in:
+
+    Cuevas-Rodríguez M, Picinali L, González-Toledo D, Garre C, de la Rubia-Cuestas E, Molina-Tanco L and 
+    Reyes-Lecuona A. (2019) 3D Tune-In Toolkit: An open-source library for real-time binaural spatialisation. 
+    PLOS ONE 14(3): e0211899. https://doi.org/10.1371/journal.pone.0211899
+
+More information about the 3D Tune-In project can be found at http://3d-tune-in.eu/.
+
+More information about the two options implemented for the frequency smearing can be found here:
+
+    (Baer&Moore). Baer, T., & Moore, B. C. (1993). Effects of spectral smearing on the intelligibility of sentences in 
+    noise. The Journal of the Acoustical Society of America, 94(3), 1229-1241.
+
+    (Graf+3DTI) is a re-elaboration of the implementation presented in Badri, R., Siegel, J. H., & Wright, B. A. (2011). 
+    Auditory filter shapes and high-frequency hearing in adults who have impaired speech in noise performance 
+    despite clinically normal audiograms. The Journal of the Acoustical Society of America, 129(2), 852-863.
+
+
+COPYRIGHT AND LICENSE
+
+The 3D Tune-In Toolkit VST plugins, Copyright (c) 2020 Imperial College London and University of Malaga, are distributed as open source under GPLv3. 
+
+You may use this program to generate 3D sounds without additional restrictions to those imposed by the license of the original audio. You are not compelled to make any mention to this software or the 3D Tune-In project when using or distributing these audio files, but we would highly appreciate if you could kindly acknowledge the use of the 3D Tune-In Toolkit.
+
+
+ACKNOWLEDGEMENTS
+
+This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
+
+
+CONTACT
+
+Lorenzo Picinali (l.picinali@imperial.ac.uk) and Arcadio Reyes-Lecuona (areyes@uma.es).

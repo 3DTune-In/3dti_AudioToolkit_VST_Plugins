@@ -1,24 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="KqPFID" name="3D Tune-In Toolkit" projectType="audioplug"
-              jucerVersion="5.4.5" headerPath="../../libs/3dti_AudioToolkit/3dti_Toolkit&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include&#10;"
+<JUCERPROJECT id="KqPFID" name="3DTI Spatialisation" projectType="audioplug"
+              headerPath="../../libs&#10;../../libs/3dti_AudioToolkit/3dti_Toolkit&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include&#10;../../Source&#10;../../Source/Binaural"
               defines="_3DTI_AXIS_CONVENTION_BINAURAL_TEST_APP&#10;_3DTI_ANGLE_CONVENTION_LISTEN&#10;"
-              pluginVST3Category="Spatial" pluginRTASCategory="512" pluginAAXCategory="512"
-              pluginVSTCategory="kPlugCategSpacializer" pluginAUMainType="'aupn'"
-              pluginFormats="buildVST" pluginManufacturer="3D Tune-In" aaxIdentifier="eu.3d-tune-in.toolkitplugin"
-              bundleIdentifier="eu.3d-tune-in.toolkitplugin" version="1.0.1"
-              companyWebsite="http://3d-tune-in.eu">
-  <MAINGROUP id="J6xy11" name="3D Tune-In Toolkit">
-    <GROUP id="{7E66D3A7-5BFC-CA2F-8ED8-8DEFC273D8EA}" name="Resources">
-      <GROUP id="{B150DA93-28F3-1CF7-D468-A5A9ECBB8D79}" name="Images">
-        <FILE id="kHIiks" name="3DTI_Logo.png" compile="0" resource="1" file="Resources/Images/3DTI_Logo.png"/>
-        <FILE id="GJeaFt" name="Imperial_Logo.png" compile="0" resource="1"
-              file="Resources/Images/Imperial_Logo.png"/>
-        <FILE id="cUs8R9" name="UMA_Logo.png" compile="0" resource="1" file="Resources/Images/UMA_Logo.png"/>
-      </GROUP>
-      <FILE id="Zrk4nZ" name="About.txt" compile="0" resource="1" file="Resources/About.txt"/>
-    </GROUP>
-    <GROUP id="{0072A14B-EF34-C213-40D0-F89C311CFD79}" name="Source">
+              pluginVST3Category="Filter,Fx,Spatial" pluginRTASCategory="512"
+              pluginAAXCategory="512" pluginVSTCategory="kPlugCategSpacializer"
+              pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
+              aaxIdentifier="eu.3d-tune-in.toolkitplugin" bundleIdentifier="eu.3d-tune-in.toolkitplugin"
+              version="1.1.1" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
+              pluginManufacturerCode="Dtun" pluginCode="Plug" pluginAUMainType="'aufx'"
+              displaySplashScreen="1">
+  <MAINGROUP id="J6xy11" name="3DTI Spatialisation">
+    <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">
       <GROUP id="{5175E996-EC0E-2E5D-71BC-5D15B60AE6C5}" name="3dti_ResourceManager">
         <GROUP id="{B8B95D19-6F3E-24EF-1262-20F7895096B6}" name="BRIR">
           <FILE id="OVM2UX" name="BRIRCereal.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_ResourceManager/BRIR/BRIRCereal.cpp"/>
@@ -383,42 +376,57 @@
           <FILE id="pCCmYv" name="Vector3.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Vector3.h"/>
         </GROUP>
       </GROUP>
-      <GROUP id="{F7B1272C-01A9-79C8-37DC-0602689E89CE}" name="Components">
-        <FILE id="W6x9qA" name="AnechoicControls.cpp" compile="1" resource="0"
-              file="Source/AnechoicControls.cpp"/>
-        <FILE id="Vt3dd4" name="AnechoicControls.h" compile="0" resource="0"
-              file="Source/AnechoicControls.h"/>
-        <FILE id="veMwhN" name="ElevationDial.h" compile="0" resource="0" file="Source/ElevationDial.h"/>
-        <FILE id="tGUDdi" name="ReverbControls.cpp" compile="1" resource="0"
-              file="Source/ReverbControls.cpp"/>
-        <FILE id="Gxw9c0" name="ReverbControls.h" compile="0" resource="0"
-              file="Source/ReverbControls.h"/>
-        <FILE id="o0ySdv" name="SourceControls.h" compile="0" resource="0"
-              file="Source/SourceControls.h"/>
-        <FILE id="TT1Whj" name="SpatializerWidget.h" compile="0" resource="0"
-              file="Source/SpatializerWidget.h"/>
+    </GROUP>
+    <GROUP id="{7E66D3A7-5BFC-CA2F-8ED8-8DEFC273D8EA}" name="Resources">
+      <GROUP id="{B150DA93-28F3-1CF7-D468-A5A9ECBB8D79}" name="Images">
+        <FILE id="kHIiks" name="3DTI_Logo.png" compile="0" resource="1" file="Resources/Images/3DTI_Logo.png"/>
+        <FILE id="GJeaFt" name="Imperial_Logo.png" compile="0" resource="1"
+              file="Resources/Images/Imperial_Logo.png"/>
+        <FILE id="cUs8R9" name="UMA_Logo.png" compile="0" resource="1" file="Resources/Images/UMA_Logo.png"/>
       </GROUP>
-      <FILE id="d8knCB" name="PluginEditor.cpp" compile="1" resource="0"
-            file="Source/PluginEditor.cpp"/>
-      <FILE id="WHVvQL" name="PluginEditor.h" compile="0" resource="0" file="Source/PluginEditor.h"/>
-      <FILE id="sjO86d" name="PluginProcessor.cpp" compile="1" resource="0"
-            file="Source/PluginProcessor.cpp"/>
-      <FILE id="vwCIL3" name="PluginProcessor.h" compile="0" resource="0"
-            file="Source/PluginProcessor.h"/>
-      <FILE id="Lm9Ui7" name="Toolkit3dtiProcessor.cpp" compile="1" resource="0"
-            file="Source/Toolkit3dtiProcessor.cpp"/>
-      <FILE id="alLkyK" name="Toolkit3dtiProcessor.h" compile="0" resource="0"
-            file="Source/Toolkit3dtiProcessor.h"/>
-      <FILE id="HCAHTd" name="Utils.h" compile="0" resource="0" file="Source/Utils.h"/>
+      <FILE id="Zrk4nZ" name="About.txt" compile="0" resource="1" file="Resources/About.txt"/>
+    </GROUP>
+    <GROUP id="{0072A14B-EF34-C213-40D0-F89C311CFD79}" name="Source">
+      <FILE id="IT1DLt" name="AnechoicControls.cpp" compile="1" resource="0"
+            file="Source/Binaural/AnechoicControls.cpp"/>
+      <FILE id="Ndw3Iy" name="AnechoicControls.h" compile="0" resource="0"
+            file="Source/Binaural/AnechoicControls.h"/>
+      <FILE id="xZXtJR" name="AnechoicProcessor.cpp" compile="1" resource="0"
+            file="Source/Binaural/AnechoicProcessor.cpp"/>
+      <FILE id="QkWQRZ" name="AnechoicProcessor.h" compile="0" resource="0"
+            file="Source/Binaural/AnechoicProcessor.h"/>
+      <FILE id="zthAHu" name="ElevationDial.h" compile="0" resource="0" file="Source/Binaural/ElevationDial.h"/>
+      <FILE id="Ofku92" name="ReverbControls.cpp" compile="1" resource="0"
+            file="Source/Binaural/v1/ReverbControls.cpp"/>
+      <FILE id="aQ8RfZ" name="ReverbControls.h" compile="0" resource="0"
+            file="Source/Binaural/v1/ReverbControls.h"/>
+      <FILE id="tcCtIH" name="ReverbProcessor.cpp" compile="1" resource="0"
+            file="Source/Binaural/ReverbProcessor.cpp"/>
+      <FILE id="eQMQR7" name="ReverbProcessor.h" compile="0" resource="0"
+            file="Source/Binaural/ReverbProcessor.h"/>
+      <FILE id="OBvWNv" name="SourceControls.h" compile="0" resource="0"
+            file="Source/Binaural/SourceControls.h"/>
+      <FILE id="gO1b5Z" name="SpatialisePluginEditor.cpp" compile="1" resource="0"
+            file="Source/Binaural/SpatialisePluginEditor.cpp"/>
+      <FILE id="JC1Kui" name="SpatialisePluginEditor.h" compile="0" resource="0"
+            file="Source/Binaural/SpatialisePluginEditor.h"/>
+      <FILE id="IoBUOt" name="SpatialisePluginProcessor.cpp" compile="1"
+            resource="0" file="Source/Binaural/SpatialisePluginProcessor.cpp"/>
+      <FILE id="ZnuLAz" name="SpatialisePluginProcessor.h" compile="0" resource="0"
+            file="Source/Binaural/SpatialisePluginProcessor.h"/>
+      <FILE id="cjAXxY" name="SpatializerWidget.h" compile="0" resource="0"
+            file="Source/Binaural/SpatializerWidget.h"/>
     </GROUP>
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" extraLinkerFlags="../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libcurl.a&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libhdf5_hl.a&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libhdf5.a&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libnetcdf.a&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libz.a&#10;"
-               customXcodeResourceFolders="libs/3dti_AudioToolkit/resources/BRIR&#10;libs/3dti_AudioToolkit/resources/HRTF&#10;libs/3dti_AudioToolkit/resources/ILD"
-               vstLegacyFolder="~/SDKs/VST_SDK/VST2_SDK">
+               vstLegacyFolder="~/SDKs/VST_SDK/VST2_SDK" microphonePermissionNeeded="0"
+               xcodeValidArchs="i386,x86_64">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" libraryPath="../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos"/>
-        <CONFIGURATION isDebug="0" name="Release" libraryPath="../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos"/>
+        <CONFIGURATION isDebug="1" name="Debug" libraryPath="../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos"
+                       targetName="3dti_Spatialisation"/>
+        <CONFIGURATION isDebug="0" name="Release" libraryPath="../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos"
+                       targetName="3dti_Spatialisation"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="libs/JUCE/modules"/>
