@@ -42,6 +42,8 @@ public:
     bool loadBRIR (int bundledIndex);  // A number between 0-6 for bundled HRTFs
     bool loadBRIR (const File& file);
     
+    std::function<void()> didReloadBRIR;
+    
     int         getBrirIndex() const { return mBRIRIndex; }
     const File& getBrirPath()  const { return mBRIRPath;  }
     

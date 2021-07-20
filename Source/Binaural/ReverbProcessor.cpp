@@ -203,6 +203,9 @@ bool ReverbProcessor::__loadBRIR (const File& file)
     
     isLoading.store (false);
     
+    if (didReloadBRIR != nullptr)
+        didReloadBRIR();
+    
     return success;
 }
 

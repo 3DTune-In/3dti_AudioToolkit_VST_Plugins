@@ -70,7 +70,6 @@ AnechoicControls::AnechoicControls (AnechoicProcessor& processor)
   // addAndMakeVisible( qualityToggle );
   
   setLabelStyle( distanceAttenuationLabel );
-  distanceAttenuationLabel.setFont (Font (13.0f, Font::plain));
   distanceAttenuationLabel.setJustificationType (Justification::right);
   addAndMakeVisible( distanceAttenuationLabel );
   
@@ -81,6 +80,10 @@ AnechoicControls::AnechoicControls (AnechoicProcessor& processor)
   addAndMakeVisible( distanceAttenuationSlider );
   
   updateGui();
+    
+  mCore.didReloadHRTF = [this] {
+    updateHrtfLabelText();
+  };
 }
 
 void AnechoicControls::updateGui() {
@@ -102,11 +105,6 @@ void AnechoicControls::updateGui() {
   nearFieldToggle.setToggleState( mCore.enableNearDistanceEffect, dontSendNotification);
   farFieldToggle.setToggleState( mCore.enableFarDistanceEffect, dontSendNotification);
   qualityToggle.setToggleState( mCore.spatializationMode, dontSendNotification);
-  
-  auto hrtfIndex = mCore.getHrtfIndex();
-  if ( hrtfIndex != hrtfMenu.getSelectedItemIndex() && hrtfIndex < BundledHRTFs.size()-2 ) { // Show filename if custom file is selected
-    hrtfMenu.setSelectedItemIndex(hrtfIndex, dontSendNotification);
-  }
 }
 
 void AnechoicControls::resized() {
@@ -147,26 +145,30 @@ void AnechoicControls::hrtfMenuChanged() {
 }
 
 void AnechoicControls::loadCustomHrtf(String fileTypes) {
-  fc.reset (new FileChooser ("Choose a file to open...",
-                             HRTFDirectory(),
-                             fileTypes,
-                             true));
+    fc.reset (new FileChooser ("Choose a file to open...",
+                               HRTFDirectory(),
+                               fileTypes,
+                               true));
   
-  fc->launchAsync(FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles,
-                  [this] (const FileChooser& chooser)
-                  {
-                    String chosen;
-                    auto results = chooser.getURLResults();
-                    
-                    auto result = results.getFirst();
-                    
-                    chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
-                               : result.toString (false));
-                    
-                    if ( mCore.loadHRTF(File(chosen.removeCharacters("\n"))) ) {
-                      updateHrtfLabelText();
-                    };
-                  });
+    fc->showDialog (FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles, nullptr);
+    
+    auto results = fc->getURLResults();
+    if (results.isEmpty())
+    {
+        updateHrtfLabelText();
+        return;
+    }
+    
+    auto result = results.getFirst();
+    
+    String chosen;
+    chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+             : result.toString (false));
+
+    hrtfMenu.setText ("Loading...");
+    
+    if (! mCore.loadHRTF(File(chosen.removeCharacters("\n"))))
+        updateHrtfLabelText();
 }
 
 void AnechoicControls::updateHeadCircumference() {
@@ -180,8 +182,14 @@ void AnechoicControls::updateHeadCircumference() {
 }
 
 void AnechoicControls::updateHrtfLabelText() {
-  auto hrtf = mCore.getHrtfPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);;
-  hrtfMenu.setText(hrtf, dontSendNotification);
+    auto hrtfIndex = mCore.getHrtfIndex();
+    if (hrtfIndex >= 0 && hrtfIndex < BundledHRTFs.size()-2) {
+        hrtfMenu.setSelectedItemIndex(hrtfIndex, dontSendNotification);
+    } else {
+        // Show filename if custom file is selected
+        auto hrtf = mCore.getHrtfPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);;
+        hrtfMenu.setText(hrtf, dontSendNotification);
+    }
 }
 
 void AnechoicControls::updateNearFieldCorrection() {

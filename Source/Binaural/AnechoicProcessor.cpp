@@ -126,6 +126,9 @@ void AnechoicProcessor::reset (const File& hrtf)
     
     // Re-enable processing
     isLoading.store (false);
+    
+    if (didReloadHRTF != nullptr)
+        didReloadHRTF();
 }
 
 void AnechoicProcessor::processBlock (AudioBuffer<float>& monoIn, AudioBuffer<float>& stereoOut)

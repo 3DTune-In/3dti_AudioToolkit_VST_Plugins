@@ -50,21 +50,16 @@ public:
     bypassToggle.setBounds( 10, 4, 80, 24 );
       
     auto area = getLocalBounds();
-    //gainLabel.setBounds( 10, brirMenu.getBottom() + 8, area.getWidth()-20, 24);
-    //gainSlider.setBounds( 6, gainLabel.getBottom(), area.getWidth()-18, 24);
-    distanceAttenuationToggle.setBounds( 10, 40, 80, 24);
-    distanceAttenuationLabel.setBounds( 93, distanceAttenuationToggle.getY(), area.getWidth()-100, 24);
+      
+    distanceAttenuationToggle.setBounds( 10, 40, 70, 24);
+    distanceAttenuationLabel.setBounds (distanceAttenuationToggle.getRight(), distanceAttenuationToggle.getY(), area.getWidth()-80, 24);
     distanceAttenuationSlider.setBounds( 6, distanceAttenuationToggle.getBottom() + 4, area.getWidth()-18, 24);
   }
   
   void updateGui();
   
   void sliderValueChanged (Slider* slider) override {
-      //    if ( slider == &gainSlider ) {
-      //      mReverb.reverbLevel = (float)slider->getValue();
-      //    } else {
       mCore.reverbDistanceAttenuation = (float)slider->getValue();
-      //    }
   }
 
   void loadCustomBRIR(String fileTypes);

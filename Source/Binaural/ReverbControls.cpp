@@ -46,11 +46,9 @@ ReverbControls::ReverbControls(ReverbProcessor& p)
   distanceAttenuationToggle.setButtonText("On/Off");
   distanceAttenuationToggle.setToggleState(true, dontSendNotification);
   distanceAttenuationToggle.onClick = [this] { updateDistanceAttenuation(); };
-  // addAndMakeVisible( distanceAttenuationToggle );
   
   setLabelStyle( distanceAttenuationLabel );
   distanceAttenuationLabel.setJustificationType( Justification::left );
-  // addAndMakeVisible( distanceAttenuationLabel );
   
   mapParameterToSlider( distanceAttenuationSlider, mReverb.reverbDistanceAttenuation );
   distanceAttenuationSlider.setTextValueSuffix(" dB");
@@ -64,61 +62,58 @@ ReverbControls::ReverbControls(ReverbProcessor& p)
   addAndMakeVisible( bypassToggle );
   
   updateGui();
+    
+  mReverb.didReloadBRIR = [this] {
+    updateBrirLabel();
+  };
 }
 
 void ReverbControls::updateGui() {
   gainSlider.setValue(mReverb.reverbLevel.get(), dontSendNotification);
   distanceAttenuationSlider.setValue(mReverb.reverbDistanceAttenuation, dontSendNotification );
-  
-  auto brirIndex = mReverb.getBrirIndex();
-  if ( brirIndex != brirMenu.getSelectedItemIndex() && brirIndex < BundledBRIRs.size()-2 ) { // Show filename if custom file is selected
-    brirMenu.setSelectedItemIndex(brirIndex, dontSendNotification);
-  }
 }
 
 void ReverbControls::loadCustomBRIR(String fileTypes) {
-  fc.reset (new FileChooser ("Choose a file to open...",
-                             BRIRDirectory(),
-                             fileTypes,
-                             true));
+    fc.reset (new FileChooser ("Choose a file to open...",
+                               BRIRDirectory(),
+                               fileTypes,
+                               true));
   
-  fc->launchAsync(FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles,
-                  [this] (const FileChooser& chooser)
-                  {
-                    String chosen;
-                    auto results = chooser.getURLResults();
-                    
-                    auto result = results.getFirst();
-                    
-                    chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
-                               : result.toString (false));
-                    
-                    mReverb.loadBRIR(File(chosen.removeCharacters("\n")));
-                    
-                    updateBrirLabel();
-                  });
+    fc->showDialog (FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles, nullptr);
+    
+    auto results = fc->getURLResults();
+    if (results.isEmpty())
+    {
+        updateBrirLabel();
+        return;
+    }
+    
+    auto result = results.getFirst();
+    
+    String chosen;
+    chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+               : result.toString (false));
+    
+    brirMenu.setText ("Loading...");
+    
+    if (! mReverb.loadBRIR (File (chosen.removeCharacters("\n"))))
+        updateBrirLabel();
 }
 
 void ReverbControls::updateBypass() {
   bool enabled = bypassToggle.getToggleState();
-//  if ( enabled  ) {
-//    mProcessor.getSources().front()->EnableReverbProcess();
-//  } else {
-//    mProcessor.getSources().front()->DisableReverbProcess();
-//  }
   setAlpha( enabled + 0.4f );
 }
 
 void ReverbControls::updateBrirLabel() {
-  auto brir = mReverb.getBrirPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);
-  brirMenu.setText(brir, dontSendNotification);
+    auto brirIndex = mReverb.getBrirIndex();
+    if (brirIndex >= 0 && brirIndex < BundledBRIRs.size()-2) {
+        brirMenu.setSelectedItemIndex(brirIndex, dontSendNotification);
+    } else {
+        // Show filename if custom file is selected
+        auto brir = mReverb.getBrirPath().getFileNameWithoutExtension();
+        brirMenu.setText(brir, dontSendNotification);
+    }
 }
 
-void ReverbControls::updateDistanceAttenuation() {
-//  auto source = mProcessor.getSources().front();
-//  if ( distanceAttenuationToggle.getToggleState() ) {
-//    source->EnableDistanceAttenuationReverb();
-//  } else {
-//    source->DisableDistanceAttenuationReverb();
-//  }
-}
+void ReverbControls::updateDistanceAttenuation() {}

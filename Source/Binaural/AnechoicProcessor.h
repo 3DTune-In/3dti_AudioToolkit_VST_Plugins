@@ -47,13 +47,15 @@ public:
     
     const std::vector<CSingleSourceRef>& getSources() { return mSources; }
     
-    //============================================================================
+    //==========================================================================
     bool loadHRTF (int bundledIndex); // A number between 0-6 for bundled HRTFs
     bool loadHRTF (const File& file);
     
     int getHrtfIndex() const { return hrtfIndex; };
     
     const File& getHrtfPath() const { return hrtfPath; }
+    
+    std::function<void()> didReloadHRTF;
     
     //==========================================================================
     inline float getHeadRadius() const {

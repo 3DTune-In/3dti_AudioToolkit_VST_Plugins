@@ -23,26 +23,14 @@
 ReverbControls::ReverbControls (AnechoicPluginProcessor& p)
   :  mProcessor(p)
   ,  mCore (p.getCore())
-  // ,  gainLabel("Gain Label", "Reverb Gain (dB)")
   ,  distanceAttenuationLabel("Distance Label", "Reverb dB attenuation per double distance")
 {
-//  setLabelStyle( gainLabel );
-//  gainLabel.setJustificationType( Justification::left );
-//  addAndMakeVisible( gainLabel );
-//
-//  mapParameterToSlider( gainSlider, mReverb.reverbLevel );
-//  gainSlider.setTextValueSuffix(" dB");
-//  gainSlider.setTextBoxStyle( Slider::TextBoxRight, false, 65, 24 );
-//  gainSlider.addListener( this );
-//  addAndMakeVisible( gainSlider );
-  
     distanceAttenuationToggle.setButtonText ("On/Off");
     distanceAttenuationToggle.setToggleState (true, dontSendNotification);
     distanceAttenuationToggle.onClick = [this] { updateDistanceAttenuation(); };
     addAndMakeVisible (distanceAttenuationToggle);
 
     setLabelStyle (distanceAttenuationLabel);
-    distanceAttenuationLabel.setFont (Font (13.0f, Font::plain));
     distanceAttenuationLabel.setJustificationType (Justification::right);
     addAndMakeVisible (distanceAttenuationLabel);
 
@@ -59,11 +47,10 @@ ReverbControls::ReverbControls (AnechoicPluginProcessor& p)
     bypassToggle.onClick = [this] { updateBypass(); };
     addAndMakeVisible( bypassToggle );
   
-  updateGui();
+    updateGui();
 }
 
 void ReverbControls::updateGui() {
-    // gainSlider.setValue(mReverb.reverbLevel.get(), dontSendNotification);
     distanceAttenuationSlider.setValue (mCore.reverbDistanceAttenuation, dontSendNotification);
 }
 
@@ -76,11 +63,6 @@ void ReverbControls::updateBypass() {
   }
   setAlpha( enabled + 0.4f );
 }
-
-//void ReverbControls::updateBrirLabel() {
-//  auto brir = mReverb.getBrirPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);
-//  brirMenu.setText(brir, dontSendNotification);
-//}
 
 void ReverbControls::updateDistanceAttenuation() {
   auto source = mProcessor.getSources().front();

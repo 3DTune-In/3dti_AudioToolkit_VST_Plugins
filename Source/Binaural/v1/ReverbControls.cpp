@@ -65,6 +65,10 @@ ReverbControls::ReverbControls(Toolkit3dtiPluginAudioProcessor& p)
   addAndMakeVisible( bypassToggle );
   
   updateGui();
+    
+  mReverb.didReloadBRIR = [this] {
+    updateBrirLabel();
+  };
 }
 
 void ReverbControls::updateGui() {
@@ -79,34 +83,33 @@ void ReverbControls::updateGui() {
     distanceAttenuationLabel.setEnabled(distanceAttenuationEnabled);
     distanceAttenuationSlider.setEnabled(distanceAttenuationEnabled);
   }
-  
-  auto brirIndex = mReverb.getBrirIndex();
-  if ( brirIndex != brirMenu.getSelectedItemIndex() && brirIndex >= 0 && brirIndex < BundledBRIRs.size()) { // Show filename if custom file is selected
-    brirMenu.setSelectedItemIndex(brirIndex, dontSendNotification);
-  }
 }
 
 void ReverbControls::loadCustomBRIR(String fileTypes) {
-  fc.reset (new FileChooser ("Choose a file to open...",
-                             BRIRDirectory(),
-                             fileTypes,
-                             true));
+    fc.reset (new FileChooser ("Choose a file to open...",
+                               BRIRDirectory(),
+                               fileTypes,
+                               true));
   
-  fc->launchAsync(FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles,
-                  [this] (const FileChooser& chooser)
-                  {
-                    String chosen;
-                    auto results = chooser.getURLResults();
-                    
-                    auto result = results.getFirst();
-                    
-                    chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
-                               : result.toString (false));
-                    
-                    mReverb.loadBRIR(File(chosen.removeCharacters("\n")));
-                    
-                    updateBrirLabel();
-                  });
+    fc->showDialog (FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles, nullptr);
+    
+    auto results = fc->getURLResults();
+    if (results.isEmpty())
+    {
+        updateBrirLabel();
+        return;
+    }
+    
+    auto result = results.getFirst();
+    
+    String chosen;
+    chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+               : result.toString (false));
+    
+    brirMenu.setText ("Loading...");
+    
+    if (! mReverb.loadBRIR (File (chosen.removeCharacters("\n"))))
+        updateBrirLabel();
 }
 
 void ReverbControls::updateBypass() {
@@ -120,8 +123,14 @@ void ReverbControls::updateBypass() {
 }
 
 void ReverbControls::updateBrirLabel() {
-  auto brir = mReverb.getBrirPath().getFileNameWithoutExtension();
-  brirMenu.setText(brir, dontSendNotification);
+    auto brirIndex = mReverb.getBrirIndex();
+    if (brirIndex >= 0 && brirIndex < BundledBRIRs.size()-2) {
+        brirMenu.setSelectedItemIndex(brirIndex, dontSendNotification);
+    } else {
+        // Show filename if custom file is selected
+        auto brir = mReverb.getBrirPath().getFileNameWithoutExtension();
+        brirMenu.setText(brir, dontSendNotification);
+    }
 }
 
 void ReverbControls::updateDistanceAttenuation() {
