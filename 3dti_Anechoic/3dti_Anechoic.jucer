@@ -7,7 +7,7 @@
               pluginVSTCategory="kPlugCategSpacializer" pluginAUMainType="'aupn'"
               pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
               aaxIdentifier="eu.3d-tune-in.anechoic" bundleIdentifier="eu.3d-tune-in.anechoic"
-              version="1.1.1" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
+              version="1.1.2" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
               pluginManufacturerCode="Tdti" pluginCode="Tspa" displaySplashScreen="1">
   <MAINGROUP id="J6xy11" name="3DTI Anechoic Spatialisation">
     <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">

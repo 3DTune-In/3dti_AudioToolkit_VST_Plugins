@@ -6,7 +6,7 @@
               pluginAAXCategory="512" pluginVSTCategory="kPlugCategEffect"
               pluginAUMainType="'aufx'" pluginFormats="buildAU,buildVST,buildVST3"
               pluginManufacturer="3D Tune-In" aaxIdentifier="eu.3d-tune-in.hlsplugin"
-              bundleIdentifier="eu.3d-tune-in.hlsplugin" version="1.1.1" companyWebsite="http://3d-tune-in.eu"
+              bundleIdentifier="eu.3d-tune-in.hlsplugin" version="1.1.2" companyWebsite="http://3d-tune-in.eu"
               jucerFormatVersion="1" pluginManufacturerCode="Dtun" pluginCode="Hlsm"
               displaySplashScreen="1">
   <MAINGROUP id="J6xy11" name="3DTI Hearing Loss Simulator">

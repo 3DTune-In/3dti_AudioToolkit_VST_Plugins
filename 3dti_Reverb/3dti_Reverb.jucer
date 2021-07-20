@@ -6,7 +6,7 @@
               pluginVSTCategory="kPlugCategSpacializer" pluginAUMainType="'aufx'"
               pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
               aaxIdentifier="eu.3d-tune-in.reverbplugin" bundleIdentifier="eu.3d-tune-in.reverbplugin"
-              version="1.1.1" companyWebsite="http://3d-tune-in.eu" pluginCode="Trev"
+              version="1.1.2" companyWebsite="http://3d-tune-in.eu" pluginCode="Trev"
               pluginManufacturerCode="Tdti" jucerFormatVersion="1" displaySplashScreen="1">
   <MAINGROUP id="J6xy11" name="3DTI 3D Reverb">
     <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">
