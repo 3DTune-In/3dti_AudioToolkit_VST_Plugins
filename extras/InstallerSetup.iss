@@ -44,7 +44,7 @@ Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST\3dti_Reverb.dll"
 Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST\3dti_Hearing_Aid_Simulator.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
 Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST\3dti_Hearing_Loss_Simulator.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
 
-Source: "..\libs\3dti_AudioToolkit\resources\*"; DestDir: "{userappdata}\eu.3d-tune-in.toolkitplugin\Resources"; Flags:createallsubdirs recursesubdirs comparetimestamp;
+Source: "..\libs\3dti_AudioToolkit\resources\*"; DestDir: "{userappdata}\eu.3d-tune-in.plugins\Resources"; Flags:createallsubdirs recursesubdirs comparetimestamp;
 Source: "..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\x64\*"; DestDir: {sys};
 Source: "..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\lib\libsofa_x64.lib"; DestDir: {sys};
 

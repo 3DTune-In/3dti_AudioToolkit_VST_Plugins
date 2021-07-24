@@ -176,7 +176,7 @@ static inline bool isWindows() {
 
 static inline juce::File resourceDirectory() {
   if ( isWindows() ) {
-    return File::getSpecialLocation(File::userApplicationDataDirectory).getChildFile("eu.3d-tune-in.toolkitplugin");
+    return File::getSpecialLocation(File::userApplicationDataDirectory).getChildFile("eu.3d-tune-in.plugins");
   }
   return File::getSpecialLocation(File::commonApplicationDataDirectory).getChildFile("Application Support").getChildFile("eu.3d-tune-in.plugins");
 }
