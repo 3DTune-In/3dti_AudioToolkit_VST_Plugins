@@ -124,7 +124,7 @@ void ReverbControls::updateBypass() {
 
 void ReverbControls::updateBrirLabel() {
     auto brirIndex = mReverb.getBrirIndex();
-    if (brirIndex >= 0 && brirIndex < BundledBRIRs.size()-2) {
+    if (brirIndex >= 0 && brirIndex < BundledBRIRs.size()) {
         brirMenu.setSelectedItemIndex(brirIndex, dontSendNotification);
     } else {
         // Show filename if custom file is selected
