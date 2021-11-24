@@ -15,24 +15,32 @@ More information about the 3D Tune-In Toolkit can be found in the open-source Gi
 **The structure of the repository is as follows:**
 ```
 3dti_AudioToolkit_VST_Plugins
+├── 3dti_Anechoic
+├── 3dti_Hearing_Aid_Simulator
+├── 3dti_Hearing_Loss_Simulator
+├── 3dti_Reverb
 ├── Resources
 ├── Source
 ├── docs/images
 ├── extras
-└── libs
+├── libs
+├── scripts
+└── 3dti_Spatialisation.jucer
 ```
 
 ## How to build
-_section to be filled in_
+Start by running the setup script for your platform `scripts/setup_win.bat` or `scripts\setup_mac.sh`. This will initialise the submodules, build the dependencies and copy the required resources into the right place. Note that you'll need to have `MSBuild (Win)` or `Xcode (Mac)` and in your path. Once this is complete, you can use the provided build scripts in the same directory to make a release build of all the plugins. Alternatively, you can open the provided Projucer projects and generate a project for Xcode or Visual Studio. The 3DTI Plugins are built with JUCE, which is included as a submodule in `libs/JUCE`. The Projucer is JUCE's project generator and can be built from source in that directory, or downloaded separately from [juce.com](https://www.juce.com/).
 
 ## How to install
-_section to be filled in_
+Build from source (see section above) or download prebuilt binaries from the [Releases](https://github.com/3DTune-In/3dti_AudioToolkit_VST_Plugins/releases) section, available in AU / VST2 / VST3 formats for Windows and MacOS.
 
 ## DAWs
 The 3dti_audiotoolkit_vst has been tested on the following DAWs:
 - Audacity (Win/Mac)
-- _list to be completed_
-- ...
+- Reaper (Win/Mac)
+- Ableton Live 11 (Mac)
+- Logic Pro (Mac)
+- Max 8 (Win/Mac)
 
 ## Copyright and License
 
@@ -45,11 +53,10 @@ This software was developed by a team coordinated by
 -	Arcadio Reyes-Lecuona ([University of Malaga](https://www.uma.es/)). Contact: areyes@uma.es  
 
 The 3D Tune-In Toolkit VST plugin was developed by: 
-- [Ragnar Hrafnkelsson](https://github.com/orgs/3DTune-In/people/ragnaringi)
+- [Ragnar Hrafnkelsson](https://github.com/ragnaringi)
 
 ## Acknowledgements
 
 ![European Union](docs/images/EU_flag.png "European Union") This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreements No 644051 and 726765.
 
 We would also like to acknowledge Angel Rodríguez-Rivero for his help in testing the first release of this software. 
-
