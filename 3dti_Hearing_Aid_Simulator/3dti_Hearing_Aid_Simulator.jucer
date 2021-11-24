@@ -4,11 +4,10 @@
               headerPath="../../../libs/3dti_AudioToolkit/3dti_Toolkit&#10;../../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/eigen&#10;../../../Source&#10;"
               pluginVST3Category="EQ,Filter,Fx,Spatial" pluginRTASCategory="512"
               pluginAAXCategory="512" pluginVSTCategory="kPlugCategEffect"
-              pluginAUMainType="'aufx'" pluginFormats="buildAU,buildVST,buildVST3"
-              pluginManufacturer="3D Tune-In" aaxIdentifier="eu.3d-tune-in.hasplugin"
-              bundleIdentifier="eu.3d-tune-in.hasplugin" version="1.1.3" companyWebsite="http://3d-tune-in.eu"
-              jucerFormatVersion="1" pluginManufacturerCode="Dtun" pluginCode="Hasm"
-              displaySplashScreen="1">
+              pluginAUMainType="'aufx'" pluginFormats="buildAU,buildVST3" pluginManufacturer="3D Tune-In"
+              aaxIdentifier="eu.3d-tune-in.hasplugin" bundleIdentifier="eu.3d-tune-in.hasplugin"
+              version="1.1.3" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
+              pluginManufacturerCode="Dtun" pluginCode="Hasm" displaySplashScreen="1">
   <MAINGROUP id="J6xy11" name="3DTI Hearing Aid Simulator">
     <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">
       <GROUP id="{5175E996-EC0E-2E5D-71BC-5D15B60AE6C5}" name="3dti_ResourceManager">

@@ -5,7 +5,7 @@
               defines="_3DTI_AXIS_CONVENTION_BINAURAL_TEST_APP&#10;_3DTI_ANGLE_CONVENTION_LISTEN"
               pluginVST3Category="Filter,Fx,Spatial" pluginRTASCategory="512"
               pluginAAXCategory="512" pluginVSTCategory="kPlugCategSpacializer"
-              pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
+              pluginFormats="buildAU,buildVST3" pluginManufacturer="3D Tune-In"
               aaxIdentifier="eu.3d-tune-in.toolkitplugin" bundleIdentifier="eu.3d-tune-in.toolkitplugin"
               version="1.1.3" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
               pluginManufacturerCode="Dtun" pluginCode="Plug" pluginAUMainType="'aufx'"

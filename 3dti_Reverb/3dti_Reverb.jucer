@@ -4,7 +4,7 @@
               defines="_3DTI_AXIS_CONVENTION_BINAURAL_TEST_APP&#10;_3DTI_ANGLE_CONVENTION_LISTEN&#10;"
               pluginVST3Category="Fx,Spatial" pluginRTASCategory="512" pluginAAXCategory="512"
               pluginVSTCategory="kPlugCategSpacializer" pluginAUMainType="'aufx'"
-              pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
+              pluginFormats="buildAU,buildVST3" pluginManufacturer="3D Tune-In"
               aaxIdentifier="eu.3d-tune-in.reverbplugin" bundleIdentifier="eu.3d-tune-in.reverbplugin"
               version="1.1.3" companyWebsite="http://3d-tune-in.eu" pluginCode="Trev"
               pluginManufacturerCode="Tdti" jucerFormatVersion="1" displaySplashScreen="1"
