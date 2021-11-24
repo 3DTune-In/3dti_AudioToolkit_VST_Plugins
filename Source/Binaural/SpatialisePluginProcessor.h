@@ -2,7 +2,7 @@
  * \class Toolkit3dtiPluginAudioProcessor
  *
  * \brief Declaration of Toolkit3dtiPluginAudioProcessor interface.
- * \date  June 2019
+ * \date  November 2021
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||

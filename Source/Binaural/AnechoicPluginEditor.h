@@ -2,7 +2,7 @@
 * \class AnechoicPluginProcessorEditor
 *
 * \brief Declaration of AnechoicPluginProcessorEditor interface.
-* \date  June 2019
+* \date  November 2021
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -48,6 +48,7 @@ public:
     anechoicControls.updateGui();
     sourceControls.updateGui();
     spatializerWidget.updateGui();
+    reverbControls.updateGui();
 
     bool anechoicEnabled = anechoicControls.bypassToggle.getToggleState();
     anechoicControls.setAlpha(anechoicEnabled + 0.4f);

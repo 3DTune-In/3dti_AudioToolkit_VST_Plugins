@@ -105,12 +105,7 @@ public:
     auto drawPosition = position;
     drawPosition.SetFromAED(position.GetAzimuthDegrees(), 0, position.GetDistance());
     auto distance = scaledRange.convertFrom0to1(position.GetDistance() / RANGE_METERS);
-    auto angle = drawPosition.GetAzimuthDegrees();
-    if ( angle < 180.f ) { // Convert from -180-180 to 0-360
-      angle *= -1.f;
-    } else {
-      angle = 360.f - angle;
-    }
+    auto angle = 360.f - drawPosition.GetAzimuthDegrees();
     auto point = Point<float>().getPointOnCircumference(distance, degreesToRadians(angle));
     
     // Draw source
@@ -151,12 +146,7 @@ public:
   void mouseDrag(const MouseEvent& event) override {
     auto point = event.position-getCentref(*this);
     auto angle = Point<float>().getAngleToPoint(point);
-    auto azimuth = radiansToDegrees(angle);
-    if ( azimuth < 0.f ) { // Convert from -180-180 to 0-360
-      azimuth *= -1.f;
-    } else {
-      azimuth = 360.f - azimuth;
-    }
+    auto azimuth = 360.f - radiansToDegrees(angle);
     auto distance = point.getDistanceFromOrigin();
 #if DEBUG
     if ( distance > scaledRange.end ) {
@@ -165,14 +155,14 @@ public:
     }
 #endif
     
-    auto minValue = mCore.getHeadRadius()+0.01f;
+    static constexpr auto minValue = 0.001f;
     auto maxValue = RANGE_METERS;
     auto value = scaledRange.convertTo0to1(distance) * maxValue;
     auto distanceScaled = jlimit<float>(minValue, maxValue, value);
     
     auto source = mCore.getSources().front();
     auto position = mCore.getSourcePosition(source);
-    position.SetFromAED(azimuth, position.GetElevationDegrees(), distanceScaled);
+    position.SetFromAED (azimuth, position.GetElevationDegrees(), distanceScaled);
     mCore.setSourcePosition(source, position);
     
     applyElevationRotation();

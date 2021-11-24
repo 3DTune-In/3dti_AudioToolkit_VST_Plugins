@@ -63,7 +63,7 @@ public:
     zLabel.setJustificationType( Justification::left );
     addAndMakeVisible( zLabel );
     
-    azimuthSlider.setRange( 0.0f, 359.99f, 2 );
+    azimuthSlider.setRange (-179.99f, 179.99f, 2);
     azimuthSlider.setTextValueSuffix(" deg");
     azimuthSlider.setTextBoxStyle( Slider::TextBoxRight, false, 65, 24 );
     azimuthSlider.addListener( this );
@@ -75,7 +75,7 @@ public:
     elevationSlider.addListener( this );
     addAndMakeVisible( elevationSlider );
     
-    distanceSlider.setRange( mCore.getHeadRadius()+0.01f, 40.f, 0.01 );
+    distanceSlider.setRange (0.001f, 40.f, 0.01);
     distanceSlider.setTextValueSuffix(" m");
     distanceSlider.setTextBoxStyle( Slider::TextBoxRight, false, 65, 24 );
     distanceSlider.addListener( this );
@@ -103,11 +103,11 @@ public:
   ~SourceControls()
   {
   }
-  
+    
   void updateGui() {
     auto position = mCore.getSourcePosition(0);
     distanceSlider.setValue(position.GetDistance(), dontSendNotification);
-    azimuthSlider.setValue(position.GetAzimuthDegrees(), dontSendNotification);
+    azimuthSlider.setValue (AzimuthMapper::fromToolkit (position.GetAzimuthDegrees()), dontSendNotification);
     elevationSlider.setValue(mapElevationToSliderValue(position.GetElevationDegrees()), dontSendNotification);
     xSlider.setValue( position.x, dontSendNotification );
     ySlider.setValue( position.y, dontSendNotification );
@@ -139,8 +139,10 @@ public:
       
     auto position = mCore.getSourcePosition(source);
     
-    if ( slider == &azimuthSlider ) {
-      position.SetFromAED(slider->getValue(), position.GetElevationDegrees(), position.GetDistance());
+    if (slider == &azimuthSlider)
+    {
+      auto azimuth = AzimuthMapper::toToolkit (slider->getValue());
+      position.SetFromAED (azimuth, position.GetElevationDegrees(), position.GetDistance());
     } else if ( slider == &elevationSlider ) {
       auto value = slider->getValue();
       position.SetFromAED(position.GetAzimuthDegrees(), mapSliderValueToElevation(value), position.GetDistance());

@@ -2,7 +2,7 @@
  * \class AnechoicProcessor
  *
  * \brief Declaration of AnechoicProcessor interface.
- * \date  November 2020
+ * \date  November 2021
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -11,7 +11,7 @@
  * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
  * \b Website: http://3d-tune-in.eu/
  *
- * \b Copyright: University of Malaga and Imperial College London - 2020
+ * \b Copyright: University of Malaga and Imperial College London - 2021
  *
  * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
  *
@@ -47,13 +47,15 @@ public:
     
     const std::vector<CSingleSourceRef>& getSources() { return mSources; }
     
-    //============================================================================
+    //==========================================================================
     bool loadHRTF (int bundledIndex); // A number between 0-6 for bundled HRTFs
     bool loadHRTF (const File& file);
     
     int getHrtfIndex() const { return hrtfIndex; };
     
     const File& getHrtfPath() const { return hrtfPath; }
+    
+    std::function<void()> didReloadHRTF;
     
     //==========================================================================
     inline float getHeadRadius() const {
@@ -105,6 +107,7 @@ public:
     AudioParameterInt  spatializationMode;
     // AudioParameterFloat sourceGain; // ranges from -12 to + 12 dB
     AudioParameterFloat sourceDistanceAttenuation; // ranges from -6 to 0 dB
+    AudioParameterBool  enableReverbDistanceAttenuation;
     AudioParameterFloat reverbDistanceAttenuation;
     
     std::atomic<bool> isLoading {false};

@@ -2,7 +2,7 @@
 * \class ReverbPluginProcessor
 *
 * \brief Declaration of ReverbPluginProcessor interface.
-* \date  December 2020
+* \date  November 2021
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -33,9 +33,10 @@ void addBooleanHostParameter(AudioProcessorValueTreeState& treeState, String nam
     return 0.0f;
   };
   
-  treeState.createAndAddParameter(name, name, "", NormalisableRange<float>(0.f, 1.f, 1.f),
-                                  value, bypassValueToText, bypassTextToValue, false, true,
-                                  true, AudioProcessorParameter::genericParameter, true);
+  using Parameter = AudioProcessorValueTreeState::Parameter;
+  treeState.createAndAddParameter (std::make_unique<Parameter> (name, name, "", NormalisableRange<float>(0.f, 1.f, 1.f),
+                                                                value, bypassValueToText, bypassTextToValue, false, true,
+                                                                true, AudioProcessorParameter::genericParameter, true));
 }
 
 //==============================================================================
@@ -58,9 +59,6 @@ ReverbPluginProcessor::ReverbPluginProcessor()
     
     treeState.createAndAddParameter (std::make_unique<Parameter> ("Reverb Level", "Reverb Level", "", getReverbProcessor().reverbLevel.range, getReverbProcessor().reverbLevel.get(), nullptr, nullptr));
     treeState.addParameterListener ("Reverb Level", this);
-    
-    treeState.createAndAddParameter (std::make_unique<Parameter> ("Reverb Attenuation", "Rev Attenuation", "", getReverbProcessor().reverbDistanceAttenuation.range, getReverbProcessor().reverbDistanceAttenuation.get(), nullptr, nullptr));
-    treeState.addParameterListener ("Reverb Attenuation", this);
   
     treeState.createAndAddParameter (std::make_unique<Parameter> ("BRIR", "BRIR", "", NormalisableRange<float>(0, BundledBRIRs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr));
     treeState.addParameterListener ("BRIR", this);
@@ -259,8 +257,7 @@ void ReverbPluginProcessor::updateHostParameters()
     std::unordered_map<String, float> parameters = {
       {"Reverb Enabled", getReverbProcessor().reverbEnabled},
       {"Reverb Level", getReverbProcessor().reverbLevel},
-      {"Reverb Attenuation", getReverbProcessor().reverbDistanceAttenuation},
-      {"BRIR", getReverbProcessor().getBrirIndex() },
+      {"BRIR", getReverbProcessor().reverbBRIR.get() },
     };
 
     for ( auto const & parameter : parameters )
@@ -282,10 +279,8 @@ void ReverbPluginProcessor::parameterChanged(const String& parameterID, float ne
         mReverb.reverbEnabled = (bool)newValue;
     } else if ( parameterID == "Reverb Level" ) {
         mReverb.reverbLevel = newValue;
-    } else if ( parameterID == "Reverb Attenuation" ) {
-        mReverb.reverbDistanceAttenuation = newValue;
     } else if ( parameterID == "BRIR" ) {
-        mReverb.loadBRIR((int)newValue);
+        mReverb.reverbBRIR = roundToInt (newValue);
     }
 }
 

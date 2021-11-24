@@ -2,7 +2,7 @@
 * \class AnechoicPluginProcessor
 *
 * \brief Declaration of AnechoicPluginProcessor interface.
-* \date  June 2019
+* \date  November 2021
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2019
+* \b Copyright: University of Malaga and Imperial College London - 2021
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -23,7 +23,8 @@
 
 static constexpr int kTOOLKIT_BUFFER_SIZE = 512; // TODO(Ragnar): Make variable
 
-void addBooleanHostParameter(AudioProcessorValueTreeState& treeState, String name, int value) {
+void addBooleanHostParameter(AudioProcessorValueTreeState& treeState, String name, int value)
+{
   const auto bypassValueToText = [](float value) {
     return value < 0.5f ? "Off" : "On";
   };
@@ -33,9 +34,10 @@ void addBooleanHostParameter(AudioProcessorValueTreeState& treeState, String nam
     return 0.0f;
   };
   
-  treeState.createAndAddParameter(name, name, "", NormalisableRange<float>(0.f, 1.f, 1.f),
-                                  value, bypassValueToText, bypassTextToValue, false, true,
-                                  true, AudioProcessorParameter::genericParameter, true);
+  using Parameter = AudioProcessorValueTreeState::Parameter;
+  treeState.createAndAddParameter (std::make_unique<Parameter> (name, name, "", NormalisableRange<float>(0.f, 1.f, 1.f),
+                                                                         value, bypassValueToText, bypassTextToValue, false, true,
+                                                                         true, AudioProcessorParameter::genericParameter, true));
 }
 
 //==============================================================================
@@ -53,52 +55,55 @@ AnechoicPluginProcessor::AnechoicPluginProcessor()
     
     auto position = getCore().getSourcePosition(0);
   
-    treeState.createAndAddParameter("Azimuth", "Azimuth", "", NormalisableRange<float>(0.0f, 359.99f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr);
-    treeState.addParameterListener("Azimuth", this);
-  
-    treeState.createAndAddParameter("Elevation", "Elevation", "", NormalisableRange<float>(-89.f, 89.f), position.GetElevationDegrees(), [](float value) { return String (value, 0); }, nullptr);
-    treeState.addParameterListener("Elevation", this);
-
-    treeState.createAndAddParameter("Distance", "Distance", "", NormalisableRange<float>(0.f, 40.f), position.GetDistance(), [](float value) { return String (value, 2); }, nullptr);
-    treeState.addParameterListener("Distance", this);
-  
-    treeState.createAndAddParameter("X", "X", "", NormalisableRange<float>(-40.f, 40.f), position.x, [](float value) { return String (value, 2); }, nullptr);
-    treeState.addParameterListener("X", this);
-  
-    treeState.createAndAddParameter("Y", "Y", "", NormalisableRange<float>(-40.f, 40.f), position.y, [](float value) { return String (value, 2); }, nullptr);
-    treeState.addParameterListener("Y", this);
-  
-    treeState.createAndAddParameter("Z", "Z", "", NormalisableRange<float>(-40.f, 40.f), position.z, [](float value) { return String (value, 2); }, nullptr);
-    treeState.addParameterListener("Z", this);
-  
-    treeState.createAndAddParameter("Source Attenuation", "Src Attenuation", "", getCore().sourceDistanceAttenuation.range, getCore().sourceDistanceAttenuation.get(), nullptr, nullptr);
-    treeState.addParameterListener("Source Attenuation", this);
+    using Parameter = AudioProcessorValueTreeState::Parameter;
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("Azimuth", "Azimuth", "", NormalisableRange<float> (-180.f, 180.f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr));
+    treeState.addParameterListener ("Azimuth", this);
     
-    treeState.createAndAddParameter("Reverb Attenuation", "Rev Attenuation", "", getCore().reverbDistanceAttenuation.range, getCore().reverbDistanceAttenuation.get(), nullptr, nullptr);
-    treeState.addParameterListener("Reverb Attenuation", this);
-  
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("Elevation", "Elevation", "", NormalisableRange<float>(-89.f, 89.f), position.GetElevationDegrees(), [](float value) { return String (value, 0); }, nullptr));
+    treeState.addParameterListener ("Elevation", this);
+
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("Distance", "Distance", "", NormalisableRange<float>(0.001f, 40.f), position.GetDistance(), [](float value) { return String (value, 2); }, nullptr));
+    treeState.addParameterListener ("Distance", this);
+    
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("X", "X", "", NormalisableRange<float>(-40.f, 40.f), position.x, [](float value) { return String (value, 2); }, nullptr));
+    treeState.addParameterListener ("X", this);
+    
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("Y", "Y", "", NormalisableRange<float>(-40.f, 40.f), position.y, [](float value) { return String (value, 2); }, nullptr));
+    treeState.addParameterListener ("Y", this);
+    
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("Z", "Z", "", NormalisableRange<float>(-40.f, 40.f), position.z, [](float value) { return String (value, 2); }, nullptr));
+    treeState.addParameterListener ("Z", this);
+    
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("Source Attenuation", "Src Attenuation", "", getCore().sourceDistanceAttenuation.range, getCore().sourceDistanceAttenuation.get(), nullptr, nullptr));
+    treeState.addParameterListener ("Source Attenuation", this);
+    
+    addBooleanHostParameter (treeState, "Enable Rev Dist Attenuation", getCore().enableReverbDistanceAttenuation.get());
+    treeState.addParameterListener ("Enable Rev Dist Attenuation", this);
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("Reverb Attenuation", "Rev Attenuation", "", getCore().reverbDistanceAttenuation.range, getCore().reverbDistanceAttenuation.get(), nullptr, nullptr));
+    treeState.addParameterListener ("Reverb Attenuation", this);
+    
     addBooleanHostParameter(treeState, "Near Field", getCore().enableNearDistanceEffect);
-    treeState.addParameterListener("Near Field", this);
-  
+    treeState.addParameterListener ("Near Field", this);
+    
     addBooleanHostParameter(treeState, "Far Field", getCore().enableFarDistanceEffect);
-    treeState.addParameterListener("Far Field", this);
-  
+    treeState.addParameterListener ("Far Field", this);
+    
     addBooleanHostParameter(treeState, "Custom Head", getCore().enableCustomizedITD);
-    treeState.addParameterListener("Custom Head", this);
+    treeState.addParameterListener ("Custom Head", this);
+    
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("Head Circumference", "Head Circumference", "", NormalisableRange<float>(getCore().headCircumference.getRange().getStart(), getCore().headCircumference.getRange().getEnd()), getCore().headCircumference.get(), [](float value) { return String (value, 0); }, nullptr));
+    treeState.addParameterListener ("Head Circumference", this);
+    
+    addBooleanHostParameter (treeState, "Enable Anechoic", true);
+    treeState.addParameterListener ("Enable Anechoic", this);
+    
+    addBooleanHostParameter (treeState, "Enable Reverb", true);
+    treeState.addParameterListener ("Enable Reverb", this);
+    
+    treeState.createAndAddParameter (std::make_unique<Parameter> ("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr));
+    treeState.addParameterListener ("HRTF", this);
   
-    treeState.createAndAddParameter("Head Circumference", "Head Circumference", "", NormalisableRange<float>(getCore().headCircumference.getRange().getStart(), getCore().headCircumference.getRange().getEnd()), getCore().headCircumference.get(), [](float value) { return String (value, 0); }, nullptr);
-    treeState.addParameterListener("Head Circumference", this);
-  
-    addBooleanHostParameter(treeState, "Enable Anechoic", true);
-    treeState.addParameterListener("Enable Anechoic", this);
-  
-    addBooleanHostParameter(treeState, "Enable Reverb", true);
-    treeState.addParameterListener("Enable Reverb", this);
-  
-    treeState.createAndAddParameter("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr);
-    treeState.addParameterListener("HRTF", this);
-  
-    treeState.state = ValueTree("3DTI Anechoic Parameters");
+    treeState.state = ValueTree("3DTI Anechoic Spatialisation Parameters");
     
 #if DEBUG
     ERRORHANDLER3DTI.SetVerbosityMode(VERBOSITYMODE_ERRORSANDWARNINGS);
@@ -334,13 +339,14 @@ void AnechoicPluginProcessor::updateHostParameters()
   auto sources = getCore().getSources();
     
   std::unordered_map<String, float> parameters = {
-    {"Azimuth", position.GetAzimuthDegrees()},
+    {"Azimuth", AzimuthMapper::fromToolkit (position.GetAzimuthDegrees())},
     {"Distance", position.GetDistance()},
     {"Elevation", mapElevationToSliderValue(position.GetElevationDegrees())},
     {"X", position.x},
     {"Y", position.y},
     {"Z", position.z},
     {"Source Attenuation", getCore().sourceDistanceAttenuation},
+    {"Enable Rev Dist Attenuation", getCore().enableReverbDistanceAttenuation},
     {"Reverb Attenuation", getCore().reverbDistanceAttenuation},
     {"Near Field", getCore().enableNearDistanceEffect},
     {"Far Field", getCore().enableFarDistanceEffect},
@@ -349,17 +355,13 @@ void AnechoicPluginProcessor::updateHostParameters()
     {"HRFT", getCore().getHrtfIndex() },
   };
 
-    if (sources.size() > 0)
+  for (auto const & parameter : parameters)
+  {
+    if (AudioProcessorParameter* p = treeState.getParameter(parameter.first))
     {
-        parameters["Enable Anechoic"] = sources.front()->IsAnechoicProcessEnabled();
-        parameters["Enable Reverb"] = sources.front()->IsReverbProcessEnabled();
-    }
-
-  for ( auto const & parameter : parameters ) {
-    if ( AudioProcessorParameter* p = treeState.getParameter(parameter.first) ) {
       const float newValue = treeState.getParameterRange(parameter.first).convertTo0to1(parameter.second);
       
-      if ( fabs(p->getValue() - newValue) > std::numeric_limits<float>::epsilon() )
+      if (fabs(p->getValue() - newValue) > std::numeric_limits<float>::epsilon())
         p->setValueNotifyingHost(newValue);
     }
   }
@@ -371,9 +373,10 @@ void AnechoicPluginProcessor::parameterChanged (const String& parameterID, float
     
   auto position = getCore().getSourcePosition(0);
   
-  if ( parameterID == "Azimuth" ) {
-    DBG("Azimuth: " + String(newValue));
-    position.SetFromAED( newValue, position.GetElevationDegrees(), position.GetDistance() );
+  if ( parameterID == "Azimuth" )
+  {
+    auto azimuth = AzimuthMapper::toToolkit (newValue);
+    position.SetFromAED (azimuth, position.GetElevationDegrees(), position.GetDistance());
   } else if ( parameterID == "Distance" ) {
     position.SetFromAED( position.GetAzimuthDegrees(), position.GetElevationDegrees(), newValue );
   } else if ( parameterID == "Elevation" ) {
@@ -386,6 +389,8 @@ void AnechoicPluginProcessor::parameterChanged (const String& parameterID, float
     position.z = newValue;
   } else if ( parameterID == "Source Attenuation" ) {
     getCore().sourceDistanceAttenuation = newValue;
+  } else if ( parameterID == "Enable Rev Dist Attenuation" ) {
+    getCore().enableReverbDistanceAttenuation = (bool)newValue;
   } else if ( parameterID == "Reverb Attenuation" ) {
     getCore().reverbDistanceAttenuation = newValue;
   } else if ( parameterID == "Near Field" ) {

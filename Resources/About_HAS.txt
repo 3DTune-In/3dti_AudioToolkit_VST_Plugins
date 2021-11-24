@@ -1,4 +1,4 @@
-3DTI HEARING AID SIMULATOR v1.1.0
+3DTI HEARING AID SIMULATOR v1.1.3
 
 The 3DTI Hearing Aid Simulator plugin was developed by Ragnar Hrafnkelsson, under the supervision of Lorenzo Picinali and Arcadio Reyes-Lecuona, as a VST interface for the hearing aid simulation within the 3D Tune-In Toolkit. 
 

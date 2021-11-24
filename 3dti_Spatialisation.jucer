@@ -2,14 +2,14 @@
 
 <JUCERPROJECT id="KqPFID" name="3DTI Spatialisation" projectType="audioplug"
               headerPath="../../libs&#10;../../libs/3dti_AudioToolkit/3dti_Toolkit&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/cereal/include&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/src&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/include&#10;../../Source&#10;../../Source/Binaural"
-              defines="_3DTI_AXIS_CONVENTION_BINAURAL_TEST_APP&#10;_3DTI_ANGLE_CONVENTION_LISTEN&#10;"
+              defines="_3DTI_AXIS_CONVENTION_BINAURAL_TEST_APP&#10;_3DTI_ANGLE_CONVENTION_LISTEN"
               pluginVST3Category="Filter,Fx,Spatial" pluginRTASCategory="512"
               pluginAAXCategory="512" pluginVSTCategory="kPlugCategSpacializer"
               pluginFormats="buildAU,buildVST,buildVST3" pluginManufacturer="3D Tune-In"
               aaxIdentifier="eu.3d-tune-in.toolkitplugin" bundleIdentifier="eu.3d-tune-in.toolkitplugin"
-              version="1.1.1" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
+              version="1.1.3" companyWebsite="http://3d-tune-in.eu" jucerFormatVersion="1"
               pluginManufacturerCode="Dtun" pluginCode="Plug" pluginAUMainType="'aufx'"
-              displaySplashScreen="1">
+              displaySplashScreen="1" compilerFlagSchemes="NoDebug">
   <MAINGROUP id="J6xy11" name="3DTI Spatialisation">
     <GROUP id="{59D5466E-D9A3-AE3E-55D8-0744C13FA3E0}" name="Libs">
       <GROUP id="{5175E996-EC0E-2E5D-71BC-5D15B60AE6C5}" name="3dti_ResourceManager">
@@ -287,92 +287,120 @@
         <GROUP id="{9D6F2C80-8D08-5A54-7160-044A695F1DA2}" name="BinauralSpatializer">
           <FILE id="XTk0Uf" name="3DTI_BinauralSpatializer.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/3DTI_BinauralSpatializer.h"/>
-          <FILE id="s5sVgw" name="BRIR.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/BRIR.cpp"/>
+          <FILE id="s5sVgw" name="BRIR.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/BRIR.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="DoO2pL" name="BRIR.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/BRIR.h"/>
-          <FILE id="LyNk6y" name="Core.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Core.cpp"/>
+          <FILE id="LyNk6y" name="Core.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Core.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="RGYcma" name="Core.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Core.h"/>
-          <FILE id="TKzzBW" name="Environment.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Environment.cpp"/>
+          <FILE id="TKzzBW" name="Environment.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Environment.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="k1Rdru" name="Environment.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Environment.h"/>
-          <FILE id="DHO0nN" name="HRTF.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/HRTF.cpp"/>
+          <FILE id="DHO0nN" name="HRTF.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/HRTF.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="FYUTS9" name="HRTF.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/HRTF.h"/>
-          <FILE id="SqFPQU" name="ILD.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/ILD.cpp"/>
+          <FILE id="SqFPQU" name="ILD.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/ILD.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="UnIABa" name="ILD.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/ILD.h"/>
-          <FILE id="I9fSsJ" name="Listener.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Listener.cpp"/>
+          <FILE id="I9fSsJ" name="Listener.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Listener.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="QIFjjF" name="Listener.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/Listener.h"/>
           <FILE id="Om4ibU" name="SingleSourceDSP.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/SingleSourceDSP.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/SingleSourceDSP.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="e3Ghx6" name="SingleSourceDSP.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/SingleSourceDSP.h"/>
-          <FILE id="LHs6oZ" name="UPCAnechoic.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/UPCAnechoic.cpp"/>
+          <FILE id="LHs6oZ" name="UPCAnechoic.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/UPCAnechoic.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="NOZVTu" name="UPCAnechoic.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/BinauralSpatializer/UPCAnechoic.h"/>
         </GROUP>
         <GROUP id="{777FEDC4-4BA2-7F26-5FEC-87D53742B6B8}" name="Common">
           <FILE id="c2OdAC" name="AIR.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/AIR.h"/>
           <FILE id="Cw9VzL" name="AudioState.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/AudioState.h"/>
           <FILE id="T5Lk2y" name="BiquadFilter.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/BiquadFilter.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/BiquadFilter.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="eE59gV" name="BiquadFilter.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/BiquadFilter.h"/>
           <FILE id="QSwzW3" name="Buffer.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Buffer.h"/>
           <FILE id="N4q31z" name="CommonDefinitions.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/CommonDefinitions.h"/>
           <FILE id="zqfmfv" name="Conventions.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Conventions.h"/>
-          <FILE id="N7fU8b" name="Delay.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Delay.cpp"/>
+          <FILE id="N7fU8b" name="Delay.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Delay.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="vjVsom" name="Delay.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Delay.h"/>
           <FILE id="ZfTGCk" name="DistanceAttenuator.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DistanceAttenuator.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DistanceAttenuator.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="YhTbl3" name="DistanceAttenuator.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DistanceAttenuator.h"/>
           <FILE id="fzfscA" name="DynamicCompressorMono.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorMono.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorMono.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="u9dCbQ" name="DynamicCompressorMono.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorMono.h"/>
           <FILE id="bU0g4q" name="DynamicCompressorStereo.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorStereo.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorStereo.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="CaA0c2" name="DynamicCompressorStereo.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicCompressorStereo.h"/>
           <FILE id="wZnCzX" name="DynamicExpanderMono.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicExpanderMono.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicExpanderMono.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="waQspa" name="DynamicExpanderMono.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicExpanderMono.h"/>
           <FILE id="WqR2aH" name="DynamicProcessor.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/DynamicProcessor.h"/>
           <FILE id="S362a9" name="EnvelopeDetector.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/EnvelopeDetector.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/EnvelopeDetector.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="dnFUgC" name="EnvelopeDetector.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/EnvelopeDetector.h"/>
           <FILE id="iVehEJ" name="ErrorHandler.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/ErrorHandler.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/ErrorHandler.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="QbCVYc" name="ErrorHandler.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/ErrorHandler.h"/>
           <FILE id="sT0apa" name="FarDistanceEffects.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FarDistanceEffects.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FarDistanceEffects.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="BKnUUz" name="FarDistanceEffects.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FarDistanceEffects.h"/>
-          <FILE id="LCfbTx" name="fftsg.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/fftsg.cpp"/>
+          <FILE id="LCfbTx" name="fftsg.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/fftsg.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="nhPSl2" name="fftsg.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/fftsg.h"/>
-          <FILE id="gVbtj9" name="FiltersBank.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersBank.cpp"/>
+          <FILE id="gVbtj9" name="FiltersBank.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersBank.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="Jd00uk" name="FiltersBank.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersBank.h"/>
           <FILE id="TPirGJ" name="FiltersChain.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersChain.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersChain.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="TzdVxv" name="FiltersChain.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/FiltersChain.h"/>
-          <FILE id="aXS5TL" name="Fprocessor.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Fprocessor.cpp"/>
+          <FILE id="aXS5TL" name="Fprocessor.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Fprocessor.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="tuGI1w" name="Fprocessor.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Fprocessor.h"/>
-          <FILE id="NDyJXq" name="Magnitudes.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Magnitudes.cpp"/>
+          <FILE id="NDyJXq" name="Magnitudes.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Magnitudes.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="rBs8nN" name="Magnitudes.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Magnitudes.h"/>
           <FILE id="olBTeA" name="NoiseGenerator.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/NoiseGenerator.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/NoiseGenerator.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="ccG4d1" name="NoiseGenerator.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/NoiseGenerator.h"/>
-          <FILE id="CI4MhR" name="Profiler.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Profiler.cpp"/>
+          <FILE id="CI4MhR" name="Profiler.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Profiler.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="SEO2K9" name="Profiler.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Profiler.h"/>
-          <FILE id="VfJaJd" name="Quaternion.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Quaternion.cpp"/>
+          <FILE id="VfJaJd" name="Quaternion.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Quaternion.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="ZYsqrQ" name="Quaternion.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Quaternion.h"/>
-          <FILE id="oT0rE3" name="Transform.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Transform.cpp"/>
+          <FILE id="oT0rE3" name="Transform.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Transform.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="PfE1BF" name="Transform.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Transform.h"/>
           <FILE id="oSoCjw" name="UPCEnvironment.cpp" compile="1" resource="0"
-                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/UPCEnvironment.cpp"/>
+                file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/UPCEnvironment.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="srKHbB" name="UPCEnvironment.h" compile="0" resource="0"
                 file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/UPCEnvironment.h"/>
-          <FILE id="ROtfiy" name="Vector3.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Vector3.cpp"/>
+          <FILE id="ROtfiy" name="Vector3.cpp" compile="1" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Vector3.cpp"
+                compilerFlagScheme="NoDebug"/>
           <FILE id="pCCmYv" name="Vector3.h" compile="0" resource="0" file="libs/3dti_AudioToolkit/3dti_Toolkit/Common/Vector3.h"/>
         </GROUP>
       </GROUP>
@@ -420,13 +448,13 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" extraLinkerFlags="../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libcurl.a&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libhdf5_hl.a&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libhdf5.a&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libnetcdf.a&#10;../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos/libz.a&#10;"
-               vstLegacyFolder="~/SDKs/VST_SDK/VST2_SDK" microphonePermissionNeeded="0"
-               xcodeValidArchs="i386,x86_64">
+               vstLegacyFolder="~/SDKs/VST_SDK/VST2_SDK" microphonePermissionNeeded="1"
+               xcodeValidArchs="x86_64" NoDebug="-DNDEBUG -O3">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" libraryPath="../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos"
-                       targetName="3dti_Spatialisation"/>
+                       targetName="3DTI_Spatialisation"/>
         <CONFIGURATION isDebug="0" name="Release" libraryPath="../../libs/3dti_AudioToolkit/3dti_ResourceManager/third_party_libraries/sofacoustics/libsofa/dependencies/lib/macos"
-                       targetName="3dti_Spatialisation"/>
+                       targetName="3DTI_Spatialisation"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="libs/JUCE/modules"/>
@@ -449,8 +477,8 @@
     <VS2017 targetFolder="Builds/VisualStudio2017" extraLinkerFlags="..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\lib\libsofa_x64.lib&#10;..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libcurl_imp_x64.lib&#10;..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libhdf5_hl_x64.lib&#10;..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libhdf5_x64.lib&#10;..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\netcdf_x64.lib&#10;..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\zlib_x64.lib"
             vstLegacyFolder="C:\SDKs\VST_SDK\VST2_SDK">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug"/>
-        <CONFIGURATION isDebug="0" name="Release"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="3DTI_Spatialisation"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="3DTI_Spatialisation"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="libs\JUCE\modules"/>

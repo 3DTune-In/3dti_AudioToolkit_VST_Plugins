@@ -2,7 +2,7 @@
 * \class Utils
 *
 * \brief Declaration of Utils interface.
-* \date  June 2019
+* \date  October 2021
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -92,6 +92,28 @@ static inline int checkResourceSampleRate(const File& file, bool isHRTF) {
   }
 }
 
+//==============================================================================
+/*  Mapping and Conversion Functions
+ */
+struct AzimuthMapper
+{
+    static float fromToolkit (float degrees)
+    {
+        if (degrees <= 180.f)
+            return degrees * -1.f;
+        else
+            return 360.f - degrees;
+    }
+    
+    static float toToolkit (float degrees)
+    {
+        if (degrees >= 0.0f)
+            return 360.f - degrees;
+        else
+            return degrees * -1.f;
+    }
+};
+
 static inline Point<float> azimuthToPoint(float radians) {
   return Point<float>( sinf(radians), cosf(radians) * -1.f );
 }
@@ -101,18 +123,8 @@ static Point<T> vecToPoint( Common::CVector3 vec ) {
   return Point<T>( vec.x, vec.y );
 }
 
-static constexpr auto &vecToPointf = vecToPoint<float>;
-
 static inline String vectorToString( Common::CVector3& vec ) {
   return String (vec.x) + ", " + String (vec.y) + ", " + String (vec.z);
-}
-
-static inline void setLabelStyle( Label& label ) {
-  label.setFont (Font (15.0f, Font::plain));
-  label.setJustificationType (Justification::centred);
-  label.setEditable (false, false, false);
-  label.setColour (TextEditor::textColourId, Colours::black);
-  label.setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 }
 
 static inline float mapElevationToSliderValue(float e) {
@@ -176,7 +188,7 @@ static inline bool isWindows() {
 
 static inline juce::File resourceDirectory() {
   if ( isWindows() ) {
-    return File::getSpecialLocation(File::userApplicationDataDirectory).getChildFile("eu.3d-tune-in.toolkitplugin");
+    return File::getSpecialLocation(File::userApplicationDataDirectory).getChildFile("eu.3d-tune-in.plugins");
   }
   return File::getSpecialLocation(File::commonApplicationDataDirectory).getChildFile("Application Support").getChildFile("eu.3d-tune-in.plugins");
 }
@@ -202,4 +214,16 @@ static inline File getBundledHRTF(int index, double sampleRate) {
 static inline File getBundledBRIR(int index, double sampleRate) {
   auto brirName = "SOFA/" + BundledBRIRs[index] + "_" + String(sampleRate) + "Hz.sofa";
   return BRIRDirectory().getChildFile( brirName );
+}
+
+//==============================================================================
+/*  UI
+ */
+static inline void setLabelStyle( Label& label )
+{
+  label.setFont (Font (15.0f, Font::plain));
+  label.setJustificationType (Justification::centred);
+  label.setEditable (false, false, false);
+  label.setColour (TextEditor::textColourId, Colours::black);
+  label.setColour (TextEditor::backgroundColourId, Colour (0x00000000));
 }

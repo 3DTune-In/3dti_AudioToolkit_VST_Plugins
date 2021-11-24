@@ -2,7 +2,7 @@
  * \class ReverbPluginProcessor
  *
  * \brief Declaration of ReverbPluginProcessor interface.
- * \date  December 2020
+ * \date  November 2021
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||

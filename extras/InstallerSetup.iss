@@ -2,9 +2,9 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 ; Installation process based on https://github.com/olilarkin/wdl-ol/blob/master/IPlugExamples/IPlugEffect/installer/IPlugEffect.iss
 
-#define MyAppName "3DTI Toolkit VST"
+#define MyAppName "3DTI Toolkit VST Plugins"
 #define MyAppPublisher "3D Tune-In"
-#define MyAppURL "https://www.3d-tune-in.eu"
+#define MyAppURL "http://www.3d-tune-in.eu"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application.
@@ -12,85 +12,42 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{30BAF99F-B01C-4A65-ACCC-C7F997F22D58}
 AppName={#MyAppName}
-AppVersion=1.1.1
-;AppVerName={#MyAppName} {#MyAppVersion}
+AppVersion=1.1.3
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 UsePreviousAppDir=no
 DisableDirPage=no
-CreateAppDir=no       
-OutputBaseFilename=3DTI_Toolkit_VST_plugins_WIN_Installer_x64-v1.1.1
+; CreateAppDir=no
+DefaultDirName={cf}       
+OutputBaseFilename=3DTI_Toolkit_VST_plugins_WIN_Installer_x64-v1.1.3
 Compression=lzma
 SolidCompression=yes
-ArchitecturesInstallIn64BitMode=x64
-SetupLogging=yes
+ArchitecturesInstallIn64BitMode=x64                                                                                                                                     
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Types]
 Name: "full"; Description: "Full installation"
-;Name: "custom"; Description: "Custom installation"; Flags: iscustom
 
 [Components]
 Name: "vst2_64"; Description: "64-bit VST2 Plugins (.dll)"; Types: full; Check: Is64BitInstallMode;
+Name: "vst3_64"; Description: "64-bit VST3 Plugins (.vst3)"; Types: full; Check: Is64BitInstallMode;
 
 [Files]
-Source: "..\Builds\VisualStudio2017\x64\Release\VST\3DTI Spatialisation.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
-Source: "..\3dti_Anechoic\Builds\VisualStudio2017\x64\Release\VST\3dti_Anechoic.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
-Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST\3dti_Reverb.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
-Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST\3dti_Hearing_Aid_Simulator.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
-Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST\3dti_Hearing_Loss_Simulator.dll"; DestDir: {code:GetVST2Dir_64}; Check: Is64BitInstallMode; Components:vst2_64; Flags: ignoreversion;
-
-Source: "..\libs\3dti_AudioToolkit\resources\*"; DestDir: "{userappdata}\eu.3d-tune-in.toolkitplugin\Resources"; Flags:createallsubdirs recursesubdirs comparetimestamp;
+Source: "..\Builds\VisualStudio2017\x64\Release\VST\3DTI_Spatialisation.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Spatialisation.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\3dti_Anechoic\Builds\VisualStudio2017\x64\Release\VST\3DTI_AnechoicSpat.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Anechoic\Builds\VisualStudio2017\x64\Release\VST3\3DTI_AnechoicSpat.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST\3DTI_3DReverb.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST3\3DTI_3DReverb.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST\3DTI_Hearing_Aid_Simulator.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Hearing_Aid_Simulator.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST\3DTI_Hearing_Loss_Simulator.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Hearing_Loss_Simulator.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
+; Install Resources
+Source: "..\libs\3dti_AudioToolkit\resources\*"; DestDir: "{userappdata}\eu.3d-tune-in.plugins\Resources"; Flags:createallsubdirs recursesubdirs comparetimestamp;
 Source: "..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\x64\*"; DestDir: {sys};
 Source: "..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\lib\libsofa_x64.lib"; DestDir: {sys};
-
-[Code]
-var
-  OkToCopyLog : Boolean;
-  VST2DirPage_32: TInputDirWizardPage;
-  VST2DirPage_64: TInputDirWizardPage;
-
-procedure InitializeWizard;
-begin
-  if IsWin64 then begin
-    VST2DirPage_64 := CreateInputDirPage(wpSelectDir,
-    'Confirm 64-Bit VST2 Plugin Directory', '',
-    'Select the folder in which setup should install the 64-bit VST2 Plugin, then click Next.',
-    False, '');
-    VST2DirPage_64.Add('');
-    VST2DirPage_64.Values[0] := ExpandConstant('{reg:HKLM\SOFTWARE\VST,VSTPluginsPath|{pf}\Steinberg\VSTPlugins}\');
-  end else begin
-    VST2DirPage_32 := CreateInputDirPage(wpSelectDir,
-      'Confirm 32-Bit VST2 Plugin Directory', '',
-      'Select the folder in which setup should install the 32-bit VST2 Plugin, then click Next.',
-      False, '');
-    VST2DirPage_32.Add('');
-    VST2DirPage_32.Values[0] := ExpandConstant('{reg:HKLM\SOFTWARE\VST,VSTPluginsPath|{pf}\Steinberg\VSTPlugins}\');
-  end;
-end;
-function GetVST2Dir_32(Param: String): String;
-begin
-  Result := VST2DirPage_32.Values[0]
-end;
-function GetVST2Dir_64(Param: String): String;
-begin
-  Result := VST2DirPage_64.Values[0]
-end;
-procedure CurStepChanged(CurStep: TSetupStep);
-begin
-  if CurStep = ssDone then
-    OkToCopyLog := True;
-end;
-procedure DeinitializeSetup();
-begin
-  if OkToCopyLog then
-    FileCopy (ExpandConstant ('{log}'), ExpandConstant ('{app}\InstallationLogFile.log'), FALSE);
-  RestartReplace (ExpandConstant ('{log}'), '');
-end;
-
-[UninstallDelete]
-Type: files; Name: "{app}\InstallationLogFile.log"

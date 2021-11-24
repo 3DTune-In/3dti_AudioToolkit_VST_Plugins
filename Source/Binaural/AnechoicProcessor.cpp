@@ -2,7 +2,7 @@
  * \class AnechoicProcessor
  *
  * \brief Declaration of AnechoicProcessor interface.
- * \date  November 2020
+ * \date  November 2021
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -11,7 +11,7 @@
  * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
  * \b Website: http://3d-tune-in.eu/
  *
- * \b Copyright: University of Malaga and Imperial College London - 2020
+ * \b Copyright: University of Malaga and Imperial College London - 2021
  *
  * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
  *
@@ -44,7 +44,8 @@ AnechoicProcessor::AnechoicProcessor(Binaural::CCore& core)
   ,  enableFarDistanceEffect("3", "Far Distance Effect", false)
   ,  spatializationMode("4", "SpatializationMode", 0, 2, 2)
   ,  sourceDistanceAttenuation("5", "Source Distance Attenuation", NormalisableRange<float>(-6.f, 0.f, 0.1f), -6.f)
-  ,  reverbDistanceAttenuation("6", "Reverb Distance Attenuation", NormalisableRange<float>(-6.f, 0.f, 0.1f), -3.f)
+  ,  enableReverbDistanceAttenuation ("6", "Enable Rev Dist Attenuation", true)
+  ,  reverbDistanceAttenuation("7", "Reverb Distance Attenuation", NormalisableRange<float>(-6.f, 0.f, 0.1f), -3.f)
   ,  mCore (core)
   ,  mListener (core.CreateListener())
 {
@@ -126,6 +127,9 @@ void AnechoicProcessor::reset (const File& hrtf)
     
     // Re-enable processing
     isLoading.store (false);
+    
+    if (didReloadHRTF != nullptr)
+        didReloadHRTF();
 }
 
 void AnechoicProcessor::processBlock (AudioBuffer<float>& monoIn, AudioBuffer<float>& stereoOut)
@@ -205,6 +209,11 @@ void AnechoicProcessor::updateParameters()
         } else {
             source->DisableFarDistanceEffect();
         }
+        
+        if (enableReverbDistanceAttenuation)
+            source->EnableDistanceAttenuationReverb();
+        else
+            source->DisableDistanceAttenuationReverb();
         
         source->SetSourceTransform( mTransforms[i] );
     }

@@ -6,7 +6,7 @@
               pluginAAXCategory="512" pluginVSTCategory="kPlugCategEffect"
               pluginAUMainType="'aufx'" pluginFormats="buildAU,buildVST,buildVST3"
               pluginManufacturer="3D Tune-In" aaxIdentifier="eu.3d-tune-in.hlsplugin"
-              bundleIdentifier="eu.3d-tune-in.hlsplugin" version="1.1.1" companyWebsite="http://3d-tune-in.eu"
+              bundleIdentifier="eu.3d-tune-in.hlsplugin" version="1.1.3" companyWebsite="http://3d-tune-in.eu"
               jucerFormatVersion="1" pluginManufacturerCode="Dtun" pluginCode="Hlsm"
               displaySplashScreen="1">
   <MAINGROUP id="J6xy11" name="3DTI Hearing Loss Simulator">
@@ -206,10 +206,10 @@
   </MAINGROUP>
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX" vstLegacyFolder="~/SDKs/VST_SDK/VST2_SDK"
-               microphonePermissionNeeded="1">
+               microphonePermissionNeeded="1" xcodeValidArchs="arm64,arm64e,x86_64">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="3dti_Hearing_Loss_Simulator"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="3dti_Hearing_Loss_Simulator"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="3DTI_Hearing_Loss_Simulator"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="3DTI_Hearing_Loss_Simulator"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_core" path="../libs/JUCE/modules"/>
@@ -232,8 +232,8 @@
     <VS2017 targetFolder="Builds/VisualStudio2017" extraLinkerFlags="..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\lib\libsofa_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libcurl_imp_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libhdf5_hl_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\libhdf5_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\netcdf_x64.lib&#10;..\..\..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\zlib_x64.lib"
             vstLegacyFolder="C:\SDKs\VST_SDK\VST2_SDK">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="3dti_Hearing_Loss_Simulator"/>
-        <CONFIGURATION isDebug="0" name="Release" targetName="3dti_Hearing_Loss_Simulator"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="3DTI_Hearing_Loss_Simulator"/>
+        <CONFIGURATION isDebug="0" name="Release" targetName="3DTI_Hearing_Loss_Simulator"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_video" path="..\libs\JUCE\modules"/>

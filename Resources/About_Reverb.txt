@@ -1,4 +1,4 @@
-3DTI 3D REVERB v1.1.0
+3DTI 3D REVERB v1.1.3
 
 The 3DTI 3D Reverb plugin was developed by Ragnar Hrafnkelsson, under the supervision of Lorenzo Picinali and Arcadio Reyes-Lecuona, as a VST interface for the 3D Tune-In Toolkit. For technical details, please refer to:
 

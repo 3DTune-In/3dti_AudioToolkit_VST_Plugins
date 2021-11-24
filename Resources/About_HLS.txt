@@ -1,4 +1,4 @@
-3DTI HEARING LOSS SIMULATOR v1.1.0
+3DTI HEARING LOSS SIMULATOR v1.1.3
 
 The 3DTI Hearing Loss Simulator plugin was developed by Ragnar Hrafnkelsson, under the supervision of Lorenzo Picinali and Arcadio Reyes-Lecuona, as a VST interface for the hearing loss simulation within the 3D Tune-In Toolkit. 
 
