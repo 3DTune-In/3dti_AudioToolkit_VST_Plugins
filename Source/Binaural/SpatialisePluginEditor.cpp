@@ -2,7 +2,7 @@
 * \class Toolkit3dtiPluginAudioProcessorEditor
 *
 * \brief Declaration of Toolkit3dtiPluginAudioProcessorEditor interface.
-* \date  June 2019
+* \date  February 2022
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -24,24 +24,24 @@
 
 //==============================================================================
 Toolkit3dtiPluginAudioProcessorEditor::Toolkit3dtiPluginAudioProcessorEditor (Toolkit3dtiPluginAudioProcessor& p)
-    : AudioProcessorEditor(&p),
-      processor(p),
-      sourceControls(p.getCore()),
-      reverbControls(p),
-      anechoicControls(p.getCore()),
-      spatializerWidget(p.getCore())
+    : AudioProcessorEditor (&p),
+      processor (p),
+      sourceControls (p.getCore()),
+      reverbControls (p),
+      anechoicControls (p.getCore(), p.treeState),
+      spatializerWidget (p.getCore())
 {
   // Make sure that before the constructor has finished, you've set the
   // editor's size to whatever you need it to be.
   setSize (1024, 810);
   
-  addAndMakeVisible( sourceControls );
-  addAndMakeVisible( reverbControls );
-  addAndMakeVisible( anechoicControls );
-  addAndMakeVisible( spatializerWidget );
-  addAndMakeVisible( aboutText );
-  addAndMakeVisible( aboutButton );
-  addAndMakeVisible( toolkitVersionLabel );
+  addAndMakeVisible (sourceControls);
+  addAndMakeVisible (reverbControls);
+  addAndMakeVisible (anechoicControls);
+  addAndMakeVisible (spatializerWidget);
+  addAndMakeVisible (aboutText);
+  addAndMakeVisible (aboutButton);
+  addAndMakeVisible (toolkitVersionLabel);
   
   _3dTuneInLogo = ImageCache::getFromMemory(BinaryData::_3DTI_Logo_png, BinaryData::_3DTI_Logo_pngSize);
   imperialLogo = ImageCache::getFromMemory(BinaryData::Imperial_Logo_png, BinaryData::Imperial_Logo_pngSize);

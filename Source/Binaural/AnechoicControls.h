@@ -2,7 +2,7 @@
 * \class AnechoicControls
 *
 * \brief Declaration of AnechoicControls interface.
-* \date  June 2019
+* \date  February 2022
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2021
+* \b Copyright: University of Malaga and Imperial College London - 2022
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -26,39 +26,30 @@
 //==============================================================================
 /*
  */
-class AnechoicControls  : public Component, public Slider::Listener
+class AnechoicControls  : public Component,
+                          public ChangeListener,
+                          public Slider::Listener
 {
 public:
-  AnechoicControls (AnechoicProcessor& processor);
+  //============================================================================
+  AnechoicControls (AnechoicProcessor& processor, AudioProcessorValueTreeState& params);
   
-  ~AnechoicControls() {}
+  ~AnechoicControls();
   
   void updateGui();
   
-  void paint (Graphics& g) override {
-    g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
-    g.setColour(Colours::white);
-    g.setFont(18.0f);
-    g.drawText("Anechoic Path", getLocalBounds().withTrimmedBottom( getLocalBounds().getHeight() - 32 ),
-                Justification::centred, true);
-  }
+  void paint (Graphics& g) override;
   
   void resized() override;
   
-  void sliderValueChanged(Slider* slider) override {
-    if ( slider == &headCircumferenceSlider ) {
-      updateHeadCircumference();
-    } else {
-      mCore.sourceDistanceAttenuation = (float)slider->getValue();
-    }
-  }
+  void sliderValueChanged(Slider* slider) override;
+    
+  void changeListenerCallback (ChangeBroadcaster* source) override;
   
   ToggleButton bypassToggle;
   
 private:
-  
-  void hrtfMenuChanged();
-  void loadCustomHrtf(String fileTypes);
+  //============================================================================
   void updateBypass();
   void updateHeadCircumference();
   void updateHrtfLabelText();
@@ -68,8 +59,10 @@ private:
   void updateDistanceAttenuation();
   
   AnechoicProcessor& mCore;
+  AudioProcessorValueTreeState& mParameters;
   
   ComboBox hrtfMenu;
+  AudioProcessorValueTreeState::ComboBoxAttachment buttonAttachment;
   ToggleButton headCircumferenceToggle;
   Slider headCircumferenceSlider;
   std::unique_ptr<FileChooser> fc;

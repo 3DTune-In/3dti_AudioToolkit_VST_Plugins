@@ -2,7 +2,7 @@
  * \class AnechoicProcessor
  *
  * \brief Declaration of AnechoicProcessor interface.
- * \date  November 2021
+ * \date  February 2022
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -23,18 +23,20 @@
 #include <BinauralSpatializer/3DTI_BinauralSpatializer.h>
 #include <JuceHeader.h>
 
-using CListenerRef     = shared_ptr<Binaural::CListener>;
 using CSingleSourceRef = shared_ptr<Binaural::CSingleSourceDSP>;
 using CMonoBufferPair  = Common::CEarPair<CMonoBuffer<float>>;
 
 // Utility function to copy all settings to a new source. Does NOT update position
 void copySourceSettings(CSingleSourceRef oldSource, CSingleSourceRef newSource);
 
-class AnechoicProcessor : private Timer
+class AnechoicProcessor   : public  ChangeBroadcaster,
+                            public  AudioProcessorValueTreeState::Listener,
+                            private Timer
 {
 public:
     //============================================================================
     AnechoicProcessor (Binaural::CCore& core);
+    
     ~AnechoicProcessor();
     
     //============================================================================
@@ -48,14 +50,9 @@ public:
     const std::vector<CSingleSourceRef>& getSources() { return mSources; }
     
     //==========================================================================
-    bool loadHRTF (int bundledIndex); // A number between 0-6 for bundled HRTFs
     bool loadHRTF (const File& file);
     
-    int getHrtfIndex() const { return hrtfIndex; };
-    
-    const File& getHrtfPath() const { return hrtfPath; }
-    
-    std::function<void()> didReloadHRTF;
+    File getHrtfPath() const { return hrtfPath; }
     
     //==========================================================================
     inline float getHeadRadius() const {
@@ -112,6 +109,8 @@ public:
     
     std::atomic<bool> isLoading {false};
     
+    void parameterChanged (const String& parameterID, float newValue) override;
+    
 private:
     //============================================================================
     void updateParameters();
@@ -119,17 +118,19 @@ private:
     void reset(const File& hrtf);
     bool __loadHRTF (const File& file);
     bool __loadHRTF_ILD (const File& file);
-    bool loadResourceFile(const File& file, bool isHRTF);
+    bool loadResourceFile(const File& file);
+    void loadCustomHrtf (String fileTypes, std::function<void(File)> chosen);
     
     //============================================================================
+    double mSampleRate;
     Binaural::CCore& mCore;
-    CListenerRef                    mListener;
-    CMonoBufferPair                 mOutputBuffer;
-    std::vector<CSingleSourceRef>   mSources;
-    std::vector<Common::CTransform> mTransforms;
+    std::shared_ptr<Binaural::CListener>    mListener;
+    CMonoBufferPair                         mOutputBuffer;
+    std::vector<CSingleSourceRef>           mSources;
+    std::vector<Common::CTransform>         mTransforms;
     
-    Array<File, CriticalSection>    mHRTFsToLoad;
+    Array<File, CriticalSection>            mHRTFsToLoad;
     
-    int  hrtfIndex;
     File hrtfPath;
+    std::unique_ptr<FileChooser> fc;
 };

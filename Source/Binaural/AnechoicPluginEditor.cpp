@@ -27,7 +27,7 @@ AnechoicPluginProcessorEditor::AnechoicPluginProcessorEditor (AnechoicPluginProc
   :  AudioProcessorEditor (&p)
   ,  processor (p)
   ,  sourceControls (p.getCore())
-  ,  anechoicControls (p.getCore())
+  ,  anechoicControls (p.getCore(), p.treeState)
   ,  reverbControls (p)
   ,  spatializerWidget (p.getCore())
 {

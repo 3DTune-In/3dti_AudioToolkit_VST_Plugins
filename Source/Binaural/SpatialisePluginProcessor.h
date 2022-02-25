@@ -2,7 +2,7 @@
  * \class Toolkit3dtiPluginAudioProcessor
  *
  * \brief Declaration of Toolkit3dtiPluginAudioProcessor interface.
- * \date  November 2021
+ * \date  February 2022
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -29,7 +29,7 @@
 /**
 */
 
-class Toolkit3dtiPluginAudioProcessor : public AudioProcessor,
+class Toolkit3dtiPluginAudioProcessor : public  AudioProcessor,
                                         private AudioProcessorValueTreeState::Listener,
                                         private Timer
 {
@@ -72,7 +72,7 @@ public:
   void setStateInformation (const void* data, int sizeInBytes) override;
   
   //============================================================================
-  AnechoicProcessor& getCore()            { return mSpatializer; }
+  AnechoicProcessor& getCore()            { return mSpatialiser; }
   ReverbProcessor&   getReverbProcessor() { return mReverb; }
     
   const std::vector<CSingleSourceRef>& getSources() {
@@ -93,7 +93,7 @@ private:
   AudioBufferFIFO<float> inFifo, outFifo;
     
   Binaural::CCore mCore;
-  AnechoicProcessor mSpatializer {mCore};
+  AnechoicProcessor mSpatialiser {mCore};
   ReverbProcessor mReverb {mCore};
   
   //==============================================================================
