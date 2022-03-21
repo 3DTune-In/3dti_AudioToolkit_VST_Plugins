@@ -30,8 +30,7 @@ using CMonoBufferPair  = Common::CEarPair<CMonoBuffer<float>>;
 void copySourceSettings(CSingleSourceRef oldSource, CSingleSourceRef newSource);
 
 class AnechoicProcessor   : public  ChangeBroadcaster,
-                            public  AudioProcessorValueTreeState::Listener,
-                            private Timer
+                            public  AudioProcessorValueTreeState::Listener
 {
 public:
     //============================================================================
@@ -80,8 +79,8 @@ public:
     
     inline Common::CVector3 getSourcePosition (int index = 0)
     {
-        if (index > mSources.size() - 1)
-            return Common::CVector3();
+        if (index > (int)mSources.size() - 1)
+            return Common::CVector3 (0, 1, 0);
         
         return mTransforms[index].GetPosition();
     }
@@ -89,12 +88,10 @@ public:
     inline Common::CVector3 getSourcePosition (CSingleSourceRef source)
     {
         if (mSources.empty())
-            return Common::CVector3();
+            return Common::CVector3 (0, 1, 0);
         
         return getSourcePosition (0);
     }
-    
-    void timerCallback() override;
     
     //==========================================================================
     AudioParameterBool enableCustomizedITD;
@@ -114,12 +111,10 @@ public:
 private:
     //============================================================================
     void updateParameters();
-    
-    void reset(const File& hrtf);
     bool __loadHRTF (const File& file);
     bool __loadHRTF_ILD (const File& file);
-    bool loadResourceFile(const File& file);
-    void loadCustomHrtf (String fileTypes, std::function<void(File)> chosen);
+    bool loadResourceFile (const File& file);
+    void loadCustomHRTF (String fileTypes, std::function<void(File)> chosen);
     
     //============================================================================
     double mSampleRate;
@@ -128,8 +123,6 @@ private:
     CMonoBufferPair                         mOutputBuffer;
     std::vector<CSingleSourceRef>           mSources;
     std::vector<Common::CTransform>         mTransforms;
-    
-    Array<File, CriticalSection>            mHRTFsToLoad;
     
     File hrtfPath;
     std::unique_ptr<FileChooser> fc;
