@@ -37,16 +37,16 @@ Name: "vst2_64"; Description: "64-bit VST2 Plugins (.dll)"; Types: full; Check: 
 Name: "vst3_64"; Description: "64-bit VST3 Plugins (.vst3)"; Types: full; Check: Is64BitInstallMode;
 
 [Files]
-Source: "..\Builds\VisualStudio2017\x64\Release\VST\3DTI_Spatialisation.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
-Source: "..\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Spatialisation.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
-Source: "..\3dti_Anechoic\Builds\VisualStudio2017\x64\Release\VST\3DTI_AnechoicSpat.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
-Source: "..\3dti_Anechoic\Builds\VisualStudio2017\x64\Release\VST3\3DTI_AnechoicSpat.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
-Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST\3DTI_3DReverb.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
-Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST3\3DTI_3DReverb.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
-Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST\3DTI_Hearing_Aid_Simulator.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
-Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Hearing_Aid_Simulator.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
-Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST\3DTI_Hearing_Loss_Simulator.dll"; DestDir: "{app}\Steinberg\VST2"; Components:vst2_64; Flags: ignoreversion;
-Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Hearing_Loss_Simulator.vst3"; DestDir: "{app}\Steinberg\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\Builds\VisualStudio2017\x64\Release\VST\3DTI_Spatialisation.dll"; DestDir: "{app}\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Spatialisation.vst3"; DestDir: "{app}\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\3dti_Anechoic\Builds\VisualStudio2017\x64\Release\VST\3DTI_AnechoicSpat.dll"; DestDir: "{app}\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Anechoic\Builds\VisualStudio2017\x64\Release\VST3\3DTI_AnechoicSpat.vst3"; DestDir: "{app}\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST\3DTI_3DReverb.dll"; DestDir: "{app}\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Reverb\Builds\VisualStudio2017\x64\Release\VST3\3DTI_3DReverb.vst3"; DestDir: "{app}\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST\3DTI_Hearing_Aid_Simulator.dll"; DestDir: "{app}\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Aid_Simulator\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Hearing_Aid_Simulator.vst3"; DestDir: "{app}\VST3"; Components:vst3_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST\3DTI_Hearing_Loss_Simulator.dll"; DestDir: "{app}\VST2"; Components:vst2_64; Flags: ignoreversion;
+Source: "..\3dti_Hearing_Loss_Simulator\Builds\VisualStudio2017\x64\Release\VST3\3DTI_Hearing_Loss_Simulator.vst3"; DestDir: "{app}\VST3"; Components:vst3_64; Flags: ignoreversion;
 ; Install Resources
 Source: "..\libs\3dti_AudioToolkit\resources\*"; DestDir: "{userappdata}\eu.3d-tune-in.plugins\Resources"; Flags:createallsubdirs recursesubdirs comparetimestamp;
 Source: "..\libs\3dti_AudioToolkit\3dti_ResourceManager\third_party_libraries\sofacoustics\libsofa\dependencies\lib\win\x64\*"; DestDir: {sys};
