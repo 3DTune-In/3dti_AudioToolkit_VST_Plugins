@@ -2,7 +2,7 @@
 * \class AnechoicControls
 *
 * \brief Declaration of AnechoicControls interface.
-* \date  June 2019
+* \date  February 2022
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -11,7 +11,7 @@
 * \b Project: 3DTI (3D-games for TUNing and lEarnINg about hearing aids) ||
 * \b Website: http://3d-tune-in.eu/
 *
-* \b Copyright: University of Malaga and Imperial College London - 2021
+* \b Copyright: University of Malaga and Imperial College London - 2022
 *
 * \b Licence: This copy of the 3D Tune-In Toolkit Plugin is licensed to you under the terms described in the LICENSE.md file included in this distribution.
 *
@@ -21,18 +21,17 @@
 #include "Utils.h"
 #include "AnechoicControls.h"
 
-AnechoicControls::AnechoicControls (AnechoicProcessor& processor)
-  : mCore (processor),
-    distanceAttenuationLabel("Distance Label", "dB attenuation per double distance")
+AnechoicControls::AnechoicControls (AnechoicProcessor& processor,
+                                    AudioProcessorValueTreeState& params)
+  : mCore (processor)
+  , mParameters (params)
+  , buttonAttachment (params, "HRTF", hrtfMenu)
+  , distanceAttenuationLabel("Distance Label", "dB attenuation per double distance")
 {
   setOpaque (true);
     
-  for ( int i = 0; i < BundledHRTFs.size(); i++ ) {
-    hrtfMenu.addItem( BundledHRTFs[i], i+1 ); // IDs must be non-zero
-  }
-  hrtfMenu.onChange = [this] { hrtfMenuChanged(); };
-  hrtfMenu.setSelectedItemIndex(0, dontSendNotification);
-  addAndMakeVisible( hrtfMenu );
+  hrtfMenu.addItemList (BundledHRTFs, 1);
+  addAndMakeVisible (hrtfMenu);
   
   headCircumferenceToggle.setButtonText( "Custom Head Circumference" );
   headCircumferenceToggle.onClick = [this] { updateHeadCircumference(); };
@@ -80,10 +79,14 @@ AnechoicControls::AnechoicControls (AnechoicProcessor& processor)
   addAndMakeVisible( distanceAttenuationSlider );
   
   updateGui();
+  updateHrtfLabelText();
     
-  mCore.didReloadHRTF = [this] {
-    updateHrtfLabelText();
-  };
+  mCore.addChangeListener (this);
+}
+
+AnechoicControls::~AnechoicControls()
+{
+    mCore.removeChangeListener (this);
 }
 
 void AnechoicControls::updateGui() {
@@ -107,6 +110,15 @@ void AnechoicControls::updateGui() {
   qualityToggle.setToggleState( mCore.spatializationMode, dontSendNotification);
 }
 
+void AnechoicControls::paint (Graphics& g)
+{
+  g.fillAll (getLookAndFeel().findColour (ResizableWindow::backgroundColourId));   // clear the background
+  g.setColour (Colours::white);
+  g.setFont (18.0f);
+  g.drawText ("Anechoic Path", getLocalBounds().withTrimmedBottom( getLocalBounds().getHeight() - 32 ),
+              Justification::centred, true);
+}
+
 void AnechoicControls::resized() {
   auto area = getLocalBounds();
   bypassToggle.setBounds( 10, 4, 80, 24 );
@@ -121,6 +133,20 @@ void AnechoicControls::resized() {
   distanceAttenuationSlider.setBounds( 6, distanceAttenuationToggle.getBottom() + 4, area.getWidth()-20, 24);
 }
 
+void AnechoicControls::sliderValueChanged (Slider* slider)
+{
+  if ( slider == &headCircumferenceSlider ) {
+    updateHeadCircumference();
+  } else {
+    mCore.sourceDistanceAttenuation = (float)slider->getValue();
+  }
+}
+
+void AnechoicControls::changeListenerCallback (ChangeBroadcaster *source)
+{
+    updateHrtfLabelText();
+}
+
 void AnechoicControls::updateBypass() {
   bool enabled = bypassToggle.getToggleState();
   if ( enabled  ) {
@@ -129,46 +155,6 @@ void AnechoicControls::updateBypass() {
     mCore.getSources().front()->DisableAnechoicProcess();
   }
   setAlpha( enabled + 0.4f );
-}
-
-void AnechoicControls::hrtfMenuChanged() {
-  auto text = hrtfMenu.getText();
-  // Note(Ragnar): Windows FileChooser will only accept
-  // one filetype at a time so we provide separate options
-  if ( text == "Load 3DTI" ) {
-    loadCustomHrtf("*.3dti-hrtf");
-  } else if ( text == "Load SOFA" ) {
-    loadCustomHrtf("*.sofa");
-  } else {
-    mCore.loadHRTF(hrtfMenu.getSelectedItemIndex());
-  }
-}
-
-void AnechoicControls::loadCustomHrtf(String fileTypes) {
-    fc.reset (new FileChooser ("Choose a file to open...",
-                               HRTFDirectory(),
-                               fileTypes,
-                               true));
-  
-    fc->showDialog (FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles, nullptr);
-    
-    auto results = fc->getURLResults();
-    if (results.isEmpty())
-    {
-        updateHrtfLabelText();
-        return;
-    }
-    
-    auto result = results.getFirst();
-    
-    String chosen;
-    chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
-             : result.toString (false));
-
-    hrtfMenu.setText ("Loading...");
-    
-    if (! mCore.loadHRTF(File(chosen.removeCharacters("\n"))))
-        updateHrtfLabelText();
 }
 
 void AnechoicControls::updateHeadCircumference() {
@@ -181,14 +167,22 @@ void AnechoicControls::updateHeadCircumference() {
   headCircumferenceSlider.setEnabled(enabled);
 }
 
-void AnechoicControls::updateHrtfLabelText() {
-    auto hrtfIndex = mCore.getHrtfIndex();
-    if (hrtfIndex >= 0 && hrtfIndex < BundledHRTFs.size()-2) {
-        hrtfMenu.setSelectedItemIndex(hrtfIndex, dontSendNotification);
-    } else {
+void AnechoicControls::updateHrtfLabelText()
+{
+    auto* parameter = mParameters.getParameter ("HRTF");
+    
+    auto hrtfValue = parameter->getValue();
+    int  hrtfIndex = std::floor (parameter->convertFrom0to1 (hrtfValue));
+
+    if (hrtfIndex >= BundledHRTFs.size() - 2)
+    {
         // Show filename if custom file is selected
-        auto hrtf = mCore.getHrtfPath().getFileNameWithoutExtension().upToLastOccurrenceOf("_", false, false);;
-        hrtfMenu.setText(hrtf, dontSendNotification);
+        auto hrtf = mCore.getHrtfPath().getFileNameWithoutExtension().upToLastOccurrenceOf ("_", false, false);
+        hrtfMenu.setText (hrtf, dontSendNotification);
+    }
+    else
+    {
+        hrtfMenu.setSelectedItemIndex (hrtfIndex, dontSendNotification);
     }
 }
 

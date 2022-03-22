@@ -2,7 +2,7 @@
  * \class ReverbControls
  *
  * \brief Declaration of ReverbControls interface.
- * \date  November 2021
+ * \date  February 2022
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||

@@ -2,7 +2,7 @@
 * \class AnechoicPluginProcessor
 *
 * \brief Declaration of AnechoicPluginProcessor interface.
-* \date  November 2021
+* \date  February 2022
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -101,7 +101,7 @@ AnechoicPluginProcessor::AnechoicPluginProcessor()
     treeState.addParameterListener ("Enable Reverb", this);
     
     treeState.createAndAddParameter (std::make_unique<Parameter> ("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr));
-    treeState.addParameterListener ("HRTF", this);
+    treeState.addParameterListener ("HRTF", &mSpatializer);
   
     treeState.state = ValueTree("3DTI Anechoic Spatialisation Parameters");
     
@@ -111,10 +111,7 @@ AnechoicPluginProcessor::AnechoicPluginProcessor()
 #endif
 }
 
-AnechoicPluginProcessor::~AnechoicPluginProcessor()
-{
-    stopTimer();
-}
+AnechoicPluginProcessor::~AnechoicPluginProcessor() {}
 
 //==============================================================================
 const String AnechoicPluginProcessor::getName() const
@@ -205,8 +202,6 @@ void AnechoicPluginProcessor::prepareToPlay (double sampleRate, int samplesPerBl
   mCore.SetAudioState ({(int)sampleRate, blockSizeInternal});
     
   mSpatializer.setup (sampleRate/*,blockSizeInternal*/);
-    
-  startTimer (30);
 }
 
 void AnechoicPluginProcessor::releaseResources() {
@@ -351,8 +346,7 @@ void AnechoicPluginProcessor::updateHostParameters()
     {"Near Field", getCore().enableNearDistanceEffect},
     {"Far Field", getCore().enableFarDistanceEffect},
     {"Custom Head", getCore().enableCustomizedITD},
-    {"Head Circumference", getCore().headCircumference},
-    {"HRFT", getCore().getHrtfIndex() },
+    {"Head Circumference", getCore().headCircumference}
   };
 
   for (auto const & parameter : parameters)
@@ -421,8 +415,6 @@ void AnechoicPluginProcessor::parameterChanged (const String& parameterID, float
         sources.front()->DisableReverbProcess();
       }
     }
-  } else if ( parameterID == "HRTF" ) {
-    getCore().loadHRTF((int)newValue);
   }
 
   if (sources.size() > 0)

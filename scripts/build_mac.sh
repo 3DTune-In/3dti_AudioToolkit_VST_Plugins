@@ -12,6 +12,9 @@ rm -rf ../3dti_Hearing_Loss_Simulator/Builds/MacOSX/build/Release
 rm -rf ../3dti_Reverb/JuceLibraryCode
 rm -rf ../3dti_Reverb/Builds/MacOSX/build/Release
 
+echo "Build Projucer"
+xcodebuild -project ../libs/JUCE/extras/Projucer/Builds/MacOSX/Projucer.xcodeproj -scheme "Projucer - App" -configuration Release -jobs 8
+
 echo "Generate Xcode projects"
 ../libs/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer --resave ../3dti_Spatialisation.jucer
 ../libs/JUCE/extras/Projucer/Builds/MacOSX/build/Release/Projucer.app/Contents/MacOS/Projucer --resave ../3dti_Anechoic/3dti_Anechoic.jucer

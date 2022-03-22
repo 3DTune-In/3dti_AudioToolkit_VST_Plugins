@@ -2,7 +2,7 @@
  * \class AnechoicPluginProcessor
  *
  * \brief Declaration of AnechoicPluginProcessor interface.
- * \date  November 2021
+ * \date  February 2022
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -24,17 +24,13 @@
 #include <ff_buffers/ff_buffers_AudioBufferFIFO.h>
 #include "AnechoicProcessor.h"
 #include "AmbisonicEncoder.h"
-#include "ReverbProcessor.h"
 
 //==============================================================================
 /**
 */
 
-using CSingleSourceRef = std::shared_ptr<Binaural::CSingleSourceDSP>;
-
-class AnechoicPluginProcessor  :  public AudioProcessor
+class AnechoicPluginProcessor  :  public  AudioProcessor
                                 , private AudioProcessorValueTreeState::Listener
-                                , private Timer
 {
 public:
   //============================================================================
@@ -82,15 +78,9 @@ public:
   AnechoicProcessor& getCore()            { return mSpatializer; }
   
   AudioProcessorValueTreeState treeState;
-    
-  int pluginInstance{-1};
   
 private:
-    //==========================================================================
-  void timerCallback() override
-  {
-  }
-  
+  //============================================================================
   void updateHostParameters();
   
   void parameterChanged(const String& parameterID, float newValue) override;

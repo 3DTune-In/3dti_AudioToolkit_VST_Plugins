@@ -2,7 +2,7 @@
 * \class Toolkit3dtiPluginAudioProcessor
 *
 * \brief Declaration of Toolkit3dtiPluginAudioProcessor interface.
-* \date  November 2021
+* \date  February 2022
 *
 * \authors Reactify Music LLP: R. Hrafnkelsson ||
 * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -56,9 +56,7 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
       inFifo (2, 512),
       outFifo(2, 512)
 {
-  mSpatializer.addSoundSource (Common::CVector3 (0, 1, 0));
-    
-  auto position = getCore().getSourcePosition();
+  auto position = mSpatialiser.getSourcePosition();
   
   using Parameter = AudioProcessorValueTreeState::Parameter;
   treeState.createAndAddParameter (std::make_unique<Parameter> ("Azimuth", "Azimuth", "", NormalisableRange<float> (-180.f, 180.f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr));
@@ -81,25 +79,25 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
   
   treeState.createAndAddParameter (std::make_unique<Parameter> ("Source Attenuation", "Src Attenuation", "", getCore().sourceDistanceAttenuation.range, getCore().sourceDistanceAttenuation.get(), nullptr, nullptr));
   treeState.addParameterListener ("Source Attenuation", this);
-  
+
   treeState.createAndAddParameter (std::make_unique<Parameter> ("Reverb Level", "Reverb Level", "", getReverbProcessor().reverbLevel.range, getReverbProcessor().reverbLevel.get(), nullptr, nullptr));
   treeState.addParameterListener ("Reverb Level", this);
-  
+
   addBooleanHostParameter (treeState, "Enable Rev Dist Attenuation", getCore().enableReverbDistanceAttenuation.get());
   treeState.addParameterListener ("Enable Rev Dist Attenuation", this);
-    
+
   treeState.createAndAddParameter (std::make_unique<Parameter> ("Reverb Attenuation", "Rev Attenuation", "", getCore().reverbDistanceAttenuation.range, getCore().reverbDistanceAttenuation.get(), nullptr, nullptr));
   treeState.addParameterListener ("Reverb Attenuation", this);
-  
+
   addBooleanHostParameter(treeState, "Near Field", getCore().enableNearDistanceEffect);
   treeState.addParameterListener ("Near Field", this);
-  
+
   addBooleanHostParameter(treeState, "Far Field", getCore().enableFarDistanceEffect);
   treeState.addParameterListener ("Far Field", this);
-  
+
   addBooleanHostParameter(treeState, "Custom Head", getCore().enableCustomizedITD);
   treeState.addParameterListener ("Custom Head", this);
-  
+
   treeState.createAndAddParameter (std::make_unique<Parameter> ("Head Circumference", "Head Circumference", "", NormalisableRange<float>(getCore().headCircumference.getRange().getStart(), getCore().headCircumference.getRange().getEnd()), getCore().headCircumference.get(), [](float value) { return String (value, 0); }, nullptr));
   treeState.addParameterListener ("Head Circumference", this);
   
@@ -109,8 +107,8 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
   addBooleanHostParameter (treeState, "Enable Reverb", true);
   treeState.addParameterListener ("Enable Reverb", this);
   
-  treeState.createAndAddParameter (std::make_unique<Parameter> ("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()-1), 0, [](float value) { return String (value, 0); }, nullptr));
-  treeState.addParameterListener ("HRTF", this);
+  treeState.createAndAddParameter (std::make_unique<Parameter> ("HRTF", "HRTF", "", NormalisableRange<float>(0, BundledHRTFs.size()), 0, [](float value) { return String (value, 0); }, nullptr));
+  treeState.addParameterListener ("HRTF", &mSpatialiser);
   
   treeState.createAndAddParameter (std::make_unique<Parameter> ("BRIR", "BRIR", "", NormalisableRange<float>(0, getReverbProcessor().reverbBRIR.getRange().getEnd() - 1), 0, [](float value) { return String (value, 0); }, nullptr));
   treeState.addParameterListener ("BRIR", this);
@@ -206,7 +204,7 @@ void Toolkit3dtiPluginAudioProcessor::prepareToPlay (double sampleRate, int samp
   audioState.sampleRate = sampleRate;
   mCore.SetAudioState (audioState);
     
-  mSpatializer.setup (sampleRate);
+  mSpatialiser.setup (sampleRate);
   mReverb.setup (sampleRate, blockSizeInternal);
   
   startTimer(60);
@@ -267,7 +265,7 @@ void Toolkit3dtiPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, 
       inFifo.readFromFifo (monoIn, blockSizeInternal);
 
       // Main process
-      mSpatializer.processBlock (monoIn, scratchBuffer);
+      mSpatialiser.processBlock (monoIn, scratchBuffer);
 
       bool reverbEnabled = getSources().front()->IsReverbProcessEnabled();
       
@@ -344,7 +342,6 @@ void Toolkit3dtiPluginAudioProcessor::updateHostParameters() {
     {"Head Circumference", getCore().headCircumference},
     {"Enable Anechoic", getCore().getSources().front()->IsAnechoicProcessEnabled()},
     {"Enable Reverb", getCore().getSources().front()->IsReverbProcessEnabled()},
-    {"HRFT", getCore().getHrtfIndex()},
     {"BRIR", getReverbProcessor().reverbBRIR.get()},
   };
 
@@ -422,8 +419,6 @@ void Toolkit3dtiPluginAudioProcessor::parameterChanged(const String& parameterID
         getCore().getSources().front()->DisableReverbProcess();
       }
     }
-  } else if ( parameterID == "HRTF" ) {
-      getCore().loadHRTF (roundToInt (newValue));
   } else if ( parameterID == "BRIR" ) {
       getReverbProcessor().reverbBRIR = roundToInt (newValue);
   }

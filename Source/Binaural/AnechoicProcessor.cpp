@@ -2,7 +2,7 @@
  * \class AnechoicProcessor
  *
  * \brief Declaration of AnechoicProcessor interface.
- * \date  November 2021
+ * \date  February 2022
  *
  * \authors Reactify Music LLP: R. Hrafnkelsson ||
  * Coordinated by , A. Reyes-Lecuona (University of Malaga) and L.Picinali (Imperial College London) ||
@@ -37,7 +37,7 @@ void initSource (CSingleSourceRef source, const Common::CVector3& position)
     source->EnableDistanceAttenuationAnechoic();
 }
 
-AnechoicProcessor::AnechoicProcessor(Binaural::CCore& core)
+AnechoicProcessor::AnechoicProcessor (Binaural::CCore& core)
   :  enableCustomizedITD("0", "Custom Head Circumference", false)
   ,  headCircumference("1", "Head Circumference", 450, 620, 550)
   ,  enableNearDistanceEffect("2", "Near Distance Effect", true)
@@ -53,39 +53,49 @@ AnechoicProcessor::AnechoicProcessor(Binaural::CCore& core)
 
 AnechoicProcessor::~AnechoicProcessor()
 {
-    stopTimer();
 }
 
 void AnechoicProcessor::setup (double sampleRate)
 {
+    auto position = getSourcePosition();
+    
+    if (! mSources.empty())
+    {
+        mSources.clear();
+        mTransforms.clear();
+    }
+    
+    addSoundSource (position);
+    
     auto blockSize = mCore.GetAudioState().bufferSize;
     
     // Declaration and initialization of stereo buffer
     mOutputBuffer.left .resize (blockSize);
     mOutputBuffer.right.resize (blockSize);
-    // Load HRTF
-    // If we have an existing section we reload
-    // the same HRTF but of new sample rate
-    loadHRTF (getBundledHRTF (hrtfIndex, sampleRate));
     
-    JUCE_ASSERT_MESSAGE_MANAGER_EXISTS;
-    startTimerHz (2);
-    timerCallback();
-}
-
-void AnechoicProcessor::timerCallback()
-{
-    if (mHRTFsToLoad.size() > 0)
+    auto loadedHrtf = getHrtfPath();
+    
+    if (loadedHrtf.exists())
     {
-        if (isLoading.load())
-            return;
-
-        reset (mHRTFsToLoad[0]);
-        mHRTFsToLoad.remove (0);
+        if (sampleRate != mSampleRate)
+        {
+            int index = hrtfPathToBundledIndex (loadedHrtf);
+            
+            if (index >= 0)
+                loadHRTF (getBundledHRTF (index, sampleRate));
+        }
+        
+        mSampleRate = sampleRate;
+        
+        return;
     }
+    
+    loadHRTF (getBundledHRTF (0, sampleRate));
+    
+    mSampleRate = sampleRate;
 }
 
-void AnechoicProcessor::reset (const File& hrtf)
+bool AnechoicProcessor::loadHRTF (const File& hrtf)
 {
     isLoading.store (true);
     
@@ -93,7 +103,7 @@ void AnechoicProcessor::reset (const File& hrtf)
     {
         DBG ("HRTF file doesn't exist");
         isLoading.store (false);
-        return;
+        return false;
     }
     
     __loadHRTF(hrtf);
@@ -106,7 +116,7 @@ void AnechoicProcessor::reset (const File& hrtf)
     {
         DBG ("HRTF ILD file doesn't exist");
         isLoading.store (false);
-        return;
+        return false;
     }
     
     __loadHRTF_ILD (hrtfILD);
@@ -116,20 +126,22 @@ void AnechoicProcessor::reset (const File& hrtf)
     if (! nearFieldConf.existsAsFile() ) {
         DBG ("Near field ILD file doesn't exist");
         isLoading.store (false);
-        return;
+        return false;
     }
 
 
     DBG("Loading ILD (near field): " + nearFieldConf.getFullPathName());
     if ( !ILD::CreateFrom3dti_ILDNearFieldEffectTable( nearFieldConf.getFullPathName().toStdString(), mListener )) {
         DBG ("Unable to load ILD Near Field Effect simulation file. Near (ILD) will not work");
+        return false;
     }
     
     // Re-enable processing
     isLoading.store (false);
     
-    if (didReloadHRTF != nullptr)
-        didReloadHRTF();
+    sendChangeMessage();
+    
+    return true;
 }
 
 void AnechoicProcessor::processBlock (AudioBuffer<float>& monoIn, AudioBuffer<float>& stereoOut)
@@ -180,6 +192,25 @@ void AnechoicProcessor::processBlock (AudioBuffer<float>& monoIn, AudioBuffer<fl
     }
 }
 
+void AnechoicProcessor::parameterChanged (const String& parameterID, float newValue)
+{
+    int index = std::floor (newValue);
+    
+    if (index < BundledHRTFs.size() - 2)
+    {
+        auto sampleRate = mCore.GetAudioState().sampleRate;
+        loadHRTF (getBundledHRTF (index, sampleRate));
+    }
+    else
+    {
+        String fileTypes = index == BundledHRTFs.size() ? "*.sofa" : "*.3dti-hrtf";
+        
+        loadCustomHRTF (fileTypes, [this] (File hrtf) {
+            loadHRTF (hrtf);
+        });
+    }
+}
+
 void AnechoicProcessor::updateParameters()
 {
     if ( enableCustomizedITD ) {
@@ -224,32 +255,12 @@ void AnechoicProcessor::updateParameters()
     mCore.SetMagnitudes(magnitudes);
 }
 
-bool AnechoicProcessor::loadHRTF (int bundledIndex)
-{
-    if (bundledIndex == hrtfIndex)
-        return false;
-    
-    auto sampleRate = mCore.GetAudioState().sampleRate;
-    loadHRTF (getBundledHRTF (bundledIndex, sampleRate));
-    
-    return true;
-}
-
-bool AnechoicProcessor::loadHRTF (const File& file)
-{
-    if (file == hrtfPath)
-        return false;
-        
-    return mHRTFsToLoad.addIfNotAlreadyThere (file);
-}
-
 bool AnechoicProcessor::__loadHRTF (const File& file)
 {
     DBG("Loading HRTF: " << file.getFullPathName());
-    bool success = loadResourceFile(file, true);
+    bool success = loadResourceFile(file);
     if (success)
     {
-        hrtfIndex = hrtfPathToBundledIndex(file);
         hrtfPath = file;
     }
     return success;
@@ -274,10 +285,10 @@ bool AnechoicProcessor::__loadHRTF_ILD (const File& file)
     return success;
 }
 
-bool AnechoicProcessor::loadResourceFile(const File& file, bool isHRTF)
+bool AnechoicProcessor::loadResourceFile(const File& file)
 {
     int sampleRate = mCore.GetAudioState().sampleRate;
-    int fileSampleRate = checkResourceSampleRate (file, isHRTF);
+    int fileSampleRate = checkResourceSampleRate (file, true);
     // TODO: Throw exception / return error and trigger warning from editor
     if (fileSampleRate != sampleRate)
     {
@@ -287,16 +298,10 @@ bool AnechoicProcessor::loadResourceFile(const File& file, bool isHRTF)
         return false;
     }
     
-    bool success = false;
-    
-    if (isHRTF)
-    {
-        bool specificDelays;
-        auto path = file.getFullPathName().toStdString();
-        
-        success = isSofaFile(file) ? HRTF::CreateFromSofa (path, mListener, specificDelays)
-                                   : HRTF::CreateFrom3dti (path, mListener);
-    }
+    bool specificDelays;
+    auto path = file.getFullPathName().toStdString();
+    bool success = isSofaFile(file) ? HRTF::CreateFromSofa (path, mListener, specificDelays)
+                                    : HRTF::CreateFrom3dti (path, mListener);
     
     return success;
 }
@@ -308,6 +313,33 @@ void AnechoicProcessor::addSoundSource (const Common::CVector3& position) {
     mSources.push_back (source);
     mTransforms.push_back (Common::CTransform());
     mTransforms.back().SetPosition (Common::CVector3 (1,0,0));
+}
+
+void AnechoicProcessor::loadCustomHRTF (String fileTypes, std::function<void(File)> callback)
+{
+    fc.reset (new FileChooser ("Choose a file to open...",
+                               HRTFDirectory(),
+                               fileTypes,
+                               true));
+  
+    fc->launchAsync (FileBrowserComponent::openMode | FileBrowserComponent::canSelectFiles, [callback] (const FileChooser& fc)
+    {
+        auto results = fc.getURLResults();
+        
+        if (results.isEmpty())
+        {
+            callback (File());
+            return;
+        }
+        
+        auto result = results.getFirst();
+        
+        String chosen;
+        chosen << (result.isLocalFile() ? result.getLocalFile().getFullPathName()
+                 : result.toString (false));
+
+        callback (File (chosen.removeCharacters("\n")));
+    });
 }
 
 void copySourceSettings(CSingleSourceRef oldSource, CSingleSourceRef newSource) {

@@ -25,8 +25,7 @@
 
 //==============================================================================
 ReverbProcessor::ReverbProcessor (Binaural::CCore& core)
-  :  Thread ("ReverbProcessor")
-  ,  reverbEnabled ("Reverb Enabled", "Reverb Enabled", true)
+  :  reverbEnabled ("Reverb Enabled", "Reverb Enabled", true)
   ,  reverbLevel ("Reverb Level", "Reverb Level", NormalisableRange<float> (-30.f, 6.f, 0.1f), -3.f)
   ,  reverbOrder ("Reverb Order", "Reverb Order", 0, 2, 1)
   ,  reverbBRIR ("Reverb BRIR", "Reverb BRIR", 0, BundledBRIRs.size() + 1, 0)
@@ -42,8 +41,6 @@ ReverbProcessor::ReverbProcessor (Binaural::CCore& core)
 ReverbProcessor::~ReverbProcessor()
 {
     reverbBRIR.removeListener (this);
-    
-    stopThread (500);
 }
 
 //==============================================================================
@@ -140,37 +137,9 @@ void ReverbProcessor::process (AudioBuffer<float>& quadIn, AudioBuffer<float>& s
 }
 
 //==============================================================================
-bool ReverbProcessor::loadBRIR (const File& file)
-{
-    if (file == mBRIRPath)
-        return false;
-    
-    mBRIRsToLoad.clearQuick();
-    mBRIRsToLoad.add (file);
-
-    startThread();
-    
-    return true;
-}
-
-//==============================================================================
 StringArray ReverbProcessor::getBRIROptions()
 {
     return {"Small", "Medium", "Large", "Library", "Trapezoid", "Load File ..."};
-}
-
-//==============================================================================
-void ReverbProcessor::run()
-{
-    if (mBRIRsToLoad.size() > 0 && ! isLoading.load())
-    {
-        doLoadBRIR (mBRIRsToLoad.removeAndReturn (0));
-        
-        if (mBRIRsToLoad.isEmpty())
-            signalThreadShouldExit();
-    }
-    
-    sleep (100);
 }
 
 //==============================================================================
@@ -223,7 +192,7 @@ void ReverbProcessor::parameterGestureChanged (int parameterIndex, bool gestureI
 }
 
 //==============================================================================
-bool ReverbProcessor::doLoadBRIR (const File& file)
+bool ReverbProcessor::loadBRIR (const File& file)
 {
     isLoading.store (true);
     

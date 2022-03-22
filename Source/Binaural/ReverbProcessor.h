@@ -25,7 +25,6 @@
 
 //==============================================================================
 class ReverbProcessor  : public  ChangeBroadcaster,
-                         private Thread,
                          private AsyncUpdater,
                          private AudioProcessorParameter::Listener
 {
@@ -77,9 +76,6 @@ public:
     
 private:
     //==========================================================================
-    /** Thread */
-    void run() override;
-    
     /** AsyncUpdater */
     void handleAsyncUpdate() override;
     
@@ -88,8 +84,6 @@ private:
     void parameterGestureChanged (int parameterIndex, bool gestureIsStarting) override;
     
     //==========================================================================
-    bool doLoadBRIR (const File& file);
-    
     void resetBRIRIndex();
     
     void updateParameters();
@@ -103,7 +97,6 @@ private:
     std::shared_ptr<Binaural::CEnvironment> mEnvironment;
     
     File mBRIRPath;
-    Array<File, CriticalSection> mBRIRsToLoad;
     std::unique_ptr<FileChooser> fc;
     
     float mPower;
