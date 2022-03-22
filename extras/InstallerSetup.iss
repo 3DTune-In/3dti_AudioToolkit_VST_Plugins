@@ -12,7 +12,7 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{30BAF99F-B01C-4A65-ACCC-C7F997F22D58}
 AppName={#MyAppName}
-AppVersion=1.1.3
+AppVersion=1.1.4
 AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
@@ -21,7 +21,7 @@ UsePreviousAppDir=no
 DisableDirPage=no
 ; CreateAppDir=no
 DefaultDirName={cf}       
-OutputBaseFilename=3DTI_Toolkit_VST_plugins_WIN_Installer_x64-v1.1.3
+OutputBaseFilename=3DTI_Toolkit_VST_plugins_WIN_Installer_x64-v1.1.4
 Compression=lzma
 SolidCompression=yes
 ArchitecturesInstallIn64BitMode=x64                                                                                                                                     
