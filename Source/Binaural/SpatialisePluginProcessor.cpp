@@ -56,9 +56,7 @@ Toolkit3dtiPluginAudioProcessor::Toolkit3dtiPluginAudioProcessor()
       inFifo (2, 512),
       outFifo(2, 512)
 {
-  auto position = Common::CVector3 (0, 1, 0);
-    
-  mSpatialiser.addSoundSource (position);
+  auto position = mSpatialiser.getSourcePosition();
   
   using Parameter = AudioProcessorValueTreeState::Parameter;
   treeState.createAndAddParameter (std::make_unique<Parameter> ("Azimuth", "Azimuth", "", NormalisableRange<float> (-180.f, 180.f), position.GetAzimuthDegrees(), [](float value) { return String (value, 1); }, nullptr));

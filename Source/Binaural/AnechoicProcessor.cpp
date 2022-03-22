@@ -53,17 +53,25 @@ AnechoicProcessor::AnechoicProcessor (Binaural::CCore& core)
 
 AnechoicProcessor::~AnechoicProcessor()
 {
-    stopTimer();
 }
 
 void AnechoicProcessor::setup (double sampleRate)
 {
+    auto position = getSourcePosition();
+    
+    if (! mSources.empty())
+    {
+        mSources.clear();
+        mTransforms.clear();
+    }
+    
+    addSoundSource (position);
+    
     auto blockSize = mCore.GetAudioState().bufferSize;
     
     // Declaration and initialization of stereo buffer
     mOutputBuffer.left .resize (blockSize);
     mOutputBuffer.right.resize (blockSize);
-    // Load HRTF
     
     auto loadedHrtf = getHrtfPath();
     
@@ -74,9 +82,7 @@ void AnechoicProcessor::setup (double sampleRate)
             int index = hrtfPathToBundledIndex (loadedHrtf);
             
             if (index >= 0)
-            {
                 loadHRTF (getBundledHRTF (index, sampleRate));
-            }
         }
         
         mSampleRate = sampleRate;
@@ -87,28 +93,9 @@ void AnechoicProcessor::setup (double sampleRate)
     loadHRTF (getBundledHRTF (0, sampleRate));
     
     mSampleRate = sampleRate;
-    
-    JUCE_ASSERT_MESSAGE_MANAGER_EXISTS;
-    startTimerHz (2);
-    
-    timerCallback();
 }
 
-void AnechoicProcessor::timerCallback()
-{
-    if (mHRTFsToLoad.size() > 0)
-    {
-        if (isLoading.load())
-            return;
-
-        auto path = mHRTFsToLoad[0];
-        reset (path);
-        
-        mHRTFsToLoad.removeAllInstancesOf (path);
-    }
-}
-
-void AnechoicProcessor::reset (const File& hrtf)
+bool AnechoicProcessor::loadHRTF (const File& hrtf)
 {
     isLoading.store (true);
     
@@ -116,7 +103,7 @@ void AnechoicProcessor::reset (const File& hrtf)
     {
         DBG ("HRTF file doesn't exist");
         isLoading.store (false);
-        return;
+        return false;
     }
     
     __loadHRTF(hrtf);
@@ -129,7 +116,7 @@ void AnechoicProcessor::reset (const File& hrtf)
     {
         DBG ("HRTF ILD file doesn't exist");
         isLoading.store (false);
-        return;
+        return false;
     }
     
     __loadHRTF_ILD (hrtfILD);
@@ -139,19 +126,22 @@ void AnechoicProcessor::reset (const File& hrtf)
     if (! nearFieldConf.existsAsFile() ) {
         DBG ("Near field ILD file doesn't exist");
         isLoading.store (false);
-        return;
+        return false;
     }
 
 
     DBG("Loading ILD (near field): " + nearFieldConf.getFullPathName());
     if ( !ILD::CreateFrom3dti_ILDNearFieldEffectTable( nearFieldConf.getFullPathName().toStdString(), mListener )) {
         DBG ("Unable to load ILD Near Field Effect simulation file. Near (ILD) will not work");
+        return false;
     }
     
     // Re-enable processing
     isLoading.store (false);
     
     sendChangeMessage();
+    
+    return true;
 }
 
 void AnechoicProcessor::processBlock (AudioBuffer<float>& monoIn, AudioBuffer<float>& stereoOut)
@@ -215,7 +205,7 @@ void AnechoicProcessor::parameterChanged (const String& parameterID, float newVa
     {
         String fileTypes = index == BundledHRTFs.size() ? "*.sofa" : "*.3dti-hrtf";
         
-        loadCustomHrtf (fileTypes, [this] (File hrtf) {
+        loadCustomHRTF (fileTypes, [this] (File hrtf) {
             loadHRTF (hrtf);
         });
     }
@@ -263,14 +253,6 @@ void AnechoicProcessor::updateParameters()
     magnitudes.SetAnechoicDistanceAttenuation (sourceDistanceAttenuation);
     magnitudes.SetReverbDistanceAttenuation (reverbDistanceAttenuation);    
     mCore.SetMagnitudes(magnitudes);
-}
-
-bool AnechoicProcessor::loadHRTF (const File& file)
-{
-    if (file == hrtfPath)
-        return false;
-    
-    return mHRTFsToLoad.addIfNotAlreadyThere (file);
 }
 
 bool AnechoicProcessor::__loadHRTF (const File& file)
@@ -333,7 +315,7 @@ void AnechoicProcessor::addSoundSource (const Common::CVector3& position) {
     mTransforms.back().SetPosition (Common::CVector3 (1,0,0));
 }
 
-void AnechoicProcessor::loadCustomHrtf (String fileTypes, std::function<void(File)> callback)
+void AnechoicProcessor::loadCustomHRTF (String fileTypes, std::function<void(File)> callback)
 {
     fc.reset (new FileChooser ("Choose a file to open...",
                                HRTFDirectory(),
