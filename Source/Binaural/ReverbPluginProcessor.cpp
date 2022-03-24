@@ -138,19 +138,23 @@ void ReverbPluginProcessor::changeProgramName (int index, const String& newName)
 }
 
 //==============================================================================
-void ReverbPluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
+void ReverbPluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+{
   const int blockSizeInternal = kTOOLKIT_BUFFER_SIZE;
     
-  auto numInputs = getBus (true, 1)->getNumberOfChannels();
+  auto numSideChainInputs = getChannelCountOfBus (true, 1);
         
+  inFifo.setSize (numSideChainInputs, std::max (blockSizeInternal, samplesPerBlock) + 1);
   inFifo.clear();
-  inFifo.setSize (numInputs,  std::max (blockSizeInternal, samplesPerBlock) + 1);
   
-  outFifo.clear();
   outFifo.setSize (2, std::max (samplesPerBlock, blockSizeInternal) * 2);
+  outFifo.clear();
    
   scratchBufferStereo.setSize (2, blockSizeInternal);
-  scratchBufferQuad.setSize (4, blockSizeInternal);
+  scratchBufferStereo.clear();
+
+  scratchBufferQuad.setSize (numSideChainInputs, blockSizeInternal);
+  scratchBufferQuad.clear();
     
   mCore.SetAudioState ({(int)sampleRate, blockSizeInternal});
     
@@ -192,7 +196,6 @@ void ReverbPluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer
     auto reverbInputs = getBusBuffer (buffer, true, 1); // Quad side chain input
     
     auto numSamples = mainInput.getNumSamples();
-    // auto numReverbChannels = reverbInputs.getNumChannels();
     
     const int blockSizeInternal = kTOOLKIT_BUFFER_SIZE;
     // Some hosts send buffers of varying sizes so we maintain

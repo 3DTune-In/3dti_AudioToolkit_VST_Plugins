@@ -90,29 +90,29 @@ void ReverbProcessor::process (AudioBuffer<float>& buffer)
 
 void ReverbProcessor::process (AudioBuffer<float>& quadIn, AudioBuffer<float>& stereoOut)
 {
-    if (isLoading.load() || !reverbEnabled.get())
+    if (isLoading.load() || ! reverbEnabled.get())
     {
         stereoOut.clear();
         return;
     }
     
-    jassert (quadIn.getNumChannels() == 4);
-    jassert (stereoOut.getNumChannels()  >= 2);
+    jassert (stereoOut.getNumChannels() == 2);
     
     updateParameters();
     
     int numSamples = stereoOut.getNumSamples();
     
-    CMonoBuffer<float>   input (numSamples);
-    CStereoBuffer<float> outputBuffer;
+    CMonoBuffer<float> input (numSamples);
     
     for (int ch = 0; ch < quadIn.getNumChannels(); ch++)
     {
         // Fill input buffer with incoming audio
         std::memcpy (input.data(), quadIn.getReadPointer (ch), numSamples*sizeof(float));
         
-        mEnvironment->ProcessEncodedChannelReverb (TBFormatChannel(ch), input, outputBuffer);
+        CStereoBuffer<float> outputBuffer;
         
+        mEnvironment->ProcessEncodedChannelReverb (TBFormatChannel(ch), input, outputBuffer);
+
         // Fill the output with processed audio
         jassert (outputBuffer.GetNChannels() == 2);
         
@@ -240,6 +240,7 @@ bool ReverbProcessor::loadBRIR (const File& file)
     }
     
     isLoading.store (false);
+    isLoaded.store (true);
     
     return success;
 }
