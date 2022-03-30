@@ -37,7 +37,7 @@ void initSource (CSingleSourceRef source, const Common::CVector3& position)
     source->EnableDistanceAttenuationAnechoic();
 }
 
-AnechoicProcessor::AnechoicProcessor (Binaural::CCore& core)
+AnechoicProcessor::AnechoicProcessor (Binaural::CCore& core) 
   :  enableCustomizedITD("0", "Custom Head Circumference", false)
   ,  headCircumference("1", "Head Circumference", 450, 620, 550)
   ,  enableNearDistanceEffect("2", "Near Distance Effect", true)
