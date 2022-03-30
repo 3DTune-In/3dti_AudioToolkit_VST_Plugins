@@ -240,7 +240,6 @@ bool ReverbProcessor::loadBRIR (const File& file)
     }
     
     isLoading.store (false);
-    isLoaded.store (true);
     
     return success;
 }
